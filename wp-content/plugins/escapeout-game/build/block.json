@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "create-block/escapeout-game",
+  "version": "0.1.0",
+  "title": "EscapeOut Game",
+  "category": "widgets",
+  "attributes": {
+    "gameName": {
+      "type": "string",
+      "default": "game name"
+    },
+    "zoneText": {
+      "type": "string",
+      "default": "Zones are the play area. Clues are usually within 100 feet of Zone Center."
+    },
+    "playZones": {
+      "type": "array",
+      "default": [
+        {
+          "id": "1"
+        }
+      ]
+    },
+    "bgColor": {
+      "type": "string",
+      "default": "#EBEBEB"
+    },
+    "waiverBody": {
+      "type": "string",
+      "default": "I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\n\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."
+    },
+    "waiverTop": {
+      "type": "string",
+      "default": "I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."
+    },
+    "waiverSigned": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "icon": "media-interactive",
+  "description": "Allows user to create a game",
+  "example": {},
+  "supports": {
+    "interactivity": true
+  },
+  "textdomain": "escapeout-game",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScriptModule": "file:./view.js"
+}

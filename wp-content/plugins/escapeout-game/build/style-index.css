@@ -1,0 +1,515 @@
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/style.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+:root {
+  --amplify-colors-primary-80: #0D5189;
+  --amplify-components-tabs-item-active-border-color: var(--amplify-components-alert-info-background-color);
+  --amplify-components-button-primary-background-color: #0D5189; /*old blue color */
+  --blue-color-alert: #e6eefe; /* info variation from amplify */
+  --blue-color-light: #B8CEF9; /* old light blue */
+  --blue-color: #0d4b89; /*old blue color */
+  --blue-duke: #012169;
+  --background-dark: #262626;
+  --color-light: #ffffff;
+  --color-dark: #000000;
+  --gray: #808080FF;
+  --black: #000;
+  --red-alert: #7e0b0b;
+  --background-light: #ffffff;
+  --yellow-boarder: rgba(255, 255, 0, 0.5);
+  --red-border: #8B0000FF;
+  --zone-border: #8B0000FF;
+  --amplify-components-button-hover-background-color: transparent;
+}
+
+.game-block-frontend {
+  background-color: #EBEBEB;
+  overflow: hidden;
+  position: relative;
+  border: none;
+  padding: 0px;
+  border-radius: 4px;
+  margin-bottom: 35px;
+  /* game styles */
+}
+.game-block-frontend.dark-theme {
+  background: #333 !important;
+  color: #fff;
+}
+.game-block-frontend.dark-theme button {
+  background: #555;
+  color: #fff;
+  /*border: 1px solid #777;*/
+}
+.game-block-frontend.dark-theme p {
+  color: #ddd;
+}
+.game-block-frontend.dark-theme .game-start-bar {
+  background: #333;
+}
+.game-block-frontend.dark-theme .modalContainer .modal {
+  background: #333;
+  color: #ddd;
+}
+.game-block-frontend p {
+  font-size: 1rem;
+  margin: 0 0 15px 0 !important;
+}
+.game-block-frontend ul {
+  margin: 0;
+  padding: 0;
+}
+@media screen and (min-width: 767px) {
+  .game-block-frontend ul {
+    margin: 0 -20px 0 0;
+    display: flex;
+  }
+}
+.game-block-frontend li {
+  vertical-align: middle;
+  font-size: 0.93rem;
+  flex: 1;
+  margin: 0 0 15px 0;
+  padding: 0;
+  list-style: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+@media screen and (min-width: 767px) {
+  .game-block-frontend li {
+    margin: 0 20px 0 0;
+  }
+}
+.game-block-frontend li:hover {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+.game-block-frontend li svg {
+  fill: rgb(0, 158, 47);
+  margin-right: 5px;
+  margin-bottom: -5px;
+}
+.game-block-frontend .no-click {
+  cursor: auto;
+}
+.game-block-frontend .no-click:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.game-block-frontend .fade-incorrect {
+  cursor: auto;
+  opacity: 0.25;
+}
+.game-block-frontend .fade-incorrect svg {
+  fill: rgb(235, 0, 0);
+}
+.game-block-frontend .correct-message,
+.game-block-frontend .incorrect-message {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.35);
+  transition: all 0.33s ease-out;
+  transform-origin: 50% 50%;
+}
+.game-block-frontend .correct-message--visible,
+.game-block-frontend .incorrect-message--visible {
+  animation: 1.6s showModal;
+}
+.game-block-frontend .correct-message svg,
+.game-block-frontend .incorrect-message svg {
+  margin-right: 12px;
+}
+.game-block-frontend .correct-message p,
+.game-block-frontend .incorrect-message p {
+  margin: 0 !important;
+}
+.game-block-frontend .correct-message {
+  background-color: rgb(156, 226, 177);
+}
+.game-block-frontend .incorrect-message {
+  background-color: rgb(224, 176, 176);
+}
+.game-block-frontend .game-start-bar {
+  padding: 20px;
+}
+.game-block-frontend .show-score {
+  font-size: 1.5em;
+  padding: 20px;
+  margin: 20px;
+}
+.game-block-frontend .game-score {
+  font-weight: bold;
+}
+.game-block-frontend .game-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 10px;
+  margin: 0 auto;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+.game-block-frontend .hide-game-container {
+  display: none;
+}
+.game-block-frontend .logo-top {
+  color: white;
+  top: 0;
+  left: 0;
+  height: 20px;
+  padding-top: 5px;
+  position: absolute;
+  line-height: 1em;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+}
+.game-block-frontend .zone-holder, .game-block-frontend .puzzle-holder {
+  display: flex;
+  flex-flow: row wrap;
+  place-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  /*overflow-x: auto;
+  overscroll-behavior: contain ;
+  scrollbar-width: none;  // Firefox
+  .zone-holder::-webkit-scrollbar {
+  	display: none;  // Safari and Chrome
+  }*/
+}
+.game-block-frontend .clue-holder, .game-block-frontend .hint-holder {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  gap: 5px;
+  width: 100%;
+  justify-content: center;
+}
+.game-block-frontend .clue-item, .game-block-frontend .hint-item {
+  width: 150px;
+  text-align: center;
+}
+.game-block-frontend .zone-border {
+  border: 1px solid #0D5189;
+  box-shadow: 0 0 5px #0D5189;
+}
+.game-block-frontend .zone-icon-container {
+  height: 60px;
+  width: 50px;
+  position: relative;
+  text-align: center;
+  display: block;
+  font-size: 12px;
+}
+.game-block-frontend .zone-text {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  text-align: center;
+  font-size: small;
+  font-size: 12px;
+}
+.game-block-frontend .zone-description {
+  text-align: center;
+}
+.game-block-frontend .time {
+  text-align: center;
+}
+.game-block-frontend .button-bar {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.game-block-frontend .button {
+  border: 1px outset buttonborder;
+  border-radius: 3px;
+  background-color: inherit !important;
+  text-decoration: none;
+  padding: 0.2em 0.5em;
+  font-size: 0.8em;
+  line-height: 1em;
+}
+.game-block-frontend .puzzle-solved {
+  text-align: center;
+}
+.game-block-frontend .item-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  display: block;
+}
+.game-block-frontend .show-clue-row {
+  display: flex;
+  gap: 1rem;
+}
+.game-block-frontend .question {
+  margin-bottom: 5px;
+}
+.game-block-frontend .text-area {
+  width: 100%;
+  box-sizing: border-box;
+  transition: 250ms;
+  border-radius: 0.25rem;
+  border: 1px solid hsl(210, 10%, 58%);
+  outline-color: transparent;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: text;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+          user-select: text;
+  white-space: pre-wrap;
+}
+.game-block-frontend .alert-container {
+  position: absolute;
+  top: 20%;
+  right: 20%;
+  left: 20%;
+  width: 60%;
+  z-index: 115;
+  text-align: center;
+}
+.game-block-frontend .alert-inner {
+  display: inline-block;
+  padding: 8px 16px;
+  color: white;
+  background-color: #7e0b0b;
+  box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+  -webkit-box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+}
+.game-block-frontend .help-container {
+  position: absolute;
+  top: 20%;
+  right: 20%;
+  left: 20%;
+  width: 60%;
+  z-index: 115;
+  text-align: center;
+}
+.game-block-frontend .help-inner {
+  display: inline-block;
+  padding: 8px 16px;
+  color: white;
+  background-color: #0b567e;
+  box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+  -webkit-box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+}
+.game-block-frontend .game-header {
+  margin: 0;
+}
+.game-block-frontend .red-alert {
+  color: var(--red-alert);
+}
+
+/* end game-block-frontend */
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+.waiver-container {
+  border: 1px solid #ddddd;
+  box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+  -webkit-box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 1px 2px 10px -3px rgba(0, 0, 0, 0.7);
+}
+
+.waiver-top {
+  text-align: center;
+  background: white;
+  color: black;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.waiver-body {
+  text-align: center;
+  background: white;
+  color: black;
+  padding: 10px;
+  font-size: 15px;
+}
+
+/* for edit.js */
+.buttons {
+  margin-bottom: 10px;
+}
+
+.zoneDiv, .puzzleDiv, .clueDiv {
+  position: relative;
+}
+
+.disabled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+@keyframes showModal {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.2);
+  }
+  15% {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+  85% {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.2);
+  }
+}
+.modalContainer {
+  align-items: center;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  top: 30px;
+  transition: all 0.2s ease;
+  visibility: hidden;
+  width: 100%;
+  height: 300px;
+}
+.modalContainer .modal {
+  background-color: rgb(255, 255, 255);
+  color: #000;
+  width: 90vw;
+  margin: 20px auto;
+  border-radius: 20px;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  height: auto;
+  max-height: 95vh;
+  /*overflow-y: scroll;*/
+  padding: 10px;
+  max-width: 450px;
+}
+.modalContainer .modal_header {
+  border-bottom: 1px solid #ddd;
+  position: relative;
+  padding: 10px;
+}
+.modalContainer .modal_header .close {
+  background: transparent;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.modalContainer .modal_header .close img {
+  height: auto;
+  transition: all 0.2s ease;
+  width: 1rem;
+}
+.modalContainer .modal_header .close:hover img {
+  transform: scale(1.1);
+}
+.modalContainer .modal_header-title {
+  text-align: center;
+}
+.modalContainer .modal_content {
+  border-bottom: 1px solid #ddd;
+  padding: 1rem 0;
+}
+@media all and (max-width: 400px) {
+  .modalContainer .modalContainer .modal_content {
+    font-size: 0.9rem;
+  }
+}
+.modalContainer .modal_footer {
+  padding: 20px 0 0 0;
+  text-align: center;
+}
+.modalContainer .modal_footer button {
+  border-radius: 8px;
+  /*float: right;*/
+  padding: 0.5rem;
+}
+.modalContainer modal_footer .submit {
+  background-color: #364348;
+  color: #fff;
+  margin-right: 1rem;
+}
+.modalContainer .modal_footer .submit:hover {
+  background-color: rgba(54, 67, 72, 0.8);
+}
+.modalContainer .modal_footer .modal-close {
+  background-color: transparent;
+  font-weight: 600;
+}
+.modalContainer .modal_footer .modal-close:hover {
+  color: rgba(54, 67, 72, 0.8);
+}
+
+.from-top {
+  transform: translateY(-600px);
+  transition: all 0.4s ease;
+}
+
+.from-left {
+  transform: translateX(-600px);
+  transition: all 0.4s ease;
+}
+
+.from-right {
+  transform: translateX(600px);
+  transition: all 0.4s ease;
+}
+
+.showmodal {
+  opacity: 1;
+  visibility: visible;
+}
+.showmodal .modal.from-left {
+  transform: translateX(0);
+}
+.showmodal .modal.from-right {
+  transform: translateX(0);
+}
+.showmodal .modal.from-top {
+  transform: translateY(0);
+}
+
+#gameMap {
+  opacity: 0;
+}
+
+/*# sourceMappingURL=style-index.css.map*/
