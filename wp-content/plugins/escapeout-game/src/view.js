@@ -369,6 +369,20 @@ const { state } = store( 'create-block', {
 				return true
 			}
 		},
+		hideItemByZoneID: () => {
+			const context = getContext();
+			//console.log("context.zoneID: " + context.zoneID);
+			console.log("context.id: " + context.id);
+			console.log("context.firstZoneID: " + context.firstZoneID);
+			console.log("state.zoneID: " + state.zoneID);
+			if ((context.id == state.zoneID) || (state.zoneID === '' && context.id === context.firstZoneID)) {
+				console.log("don't hide zone");
+				return false
+			} else {
+				console.log("hide zone");
+				return true
+			}
+		},
 		setAlertText: () => {
 			state.alertVisible = true;
 			setTimeout(() => {

@@ -59,6 +59,7 @@ for ($i = 0; $i < count($attributes['playZones']); $i++) {
     if ($attributes['playZones'][$i]["disabled"] === "No") {
         $playZones[$i]['index'] = $i;
         $playZones[$i]['id'] = $attributes['playZones'][$i]["id"];
+	    $playZones[$i]['zoneID'] = $attributes['playZones'][$i]["id"];
         $playZones[$i]['name'] = $attributes['playZones'][$i]["name"];
         $playZones[$i]['description'] = $attributes['playZones'][$i]["description"];
         $playZones[$i]['order'] = $attributes['playZones'][$i]["order"];
@@ -136,7 +137,7 @@ wp_interactivity_state(
         'themeText'	=> esc_html__( 'Switch to Dark', 'game-block' ),
         'userID' => get_current_user_id(),
         'zoneID' => '',
-        'zoneDescription' => '',
+        'zoneDescription' => $playZones[0]['description'],
         'puzzleModalVisible' => false,
         'puzzleAnswer' => '',
         'alertVisible' => false,
@@ -186,6 +187,7 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
 		id="<?php echo esc_attr( $unique_id ); ?>"
 		data-wp-bind--hidden="context.gameStart"
 	><div>
+            <a href="<?php echo $siteUrl ?>">home</a>
         <h2><?php echo $attributes['gameName'] ?></h2>
 
         <div>
@@ -281,17 +283,19 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                     <img src="<?php echo $siteUrl . $assetDir . "zone.svg" ?>" alt="<?php echo $playZone['name'] ?>" data-wp-bind--hidden="state.isDark" />
                     <div class="zone-text"><?php echo $playZone['name'] ?></div>
                 </div>
+
             <?php } ?>
         </div>
-        <div class="zone-description" data-wp-bind--hidden="callbacks.zoneDescription"><?php echo $playZone['description'] ?></div>
+       <!--<div class="zone-description" data-wp-bind--hidden="callbacks.zoneDescription"><?php echo $playZone['description'] ?>7</div>-->
         <div class="zone-description" data-wp-text="state.zoneDescription" data-wp-bind--hidden="!callbacks.zoneDescription"></div>
-        <div class="zone-description">
-            <div data-wp-bind--hidden="context.zoneHasImage" data-wp-on--click="actions.setClueBigImageToggle">
-                <?php echo wp_get_attachment_image( $playZone["imageID"], "thumbnail", "", array( "class" => "img-responsive" ) );  ?>
+	    <?php foreach($ourContext['playZones'] as $playZone) { ?>
+            <div class="zone-description" <?php echo wp_interactivity_data_wp_context($playZone) ?>>
+                <div data-wp-bind--hidden="callbacks.hideItemByZone">
+				    <?php echo wp_get_attachment_image( $playZone["imageID"], "thumbnail", "", array( "class" => "img-responsive" ) );  ?>
+                </div>
             </div>
+	    <?php } ?>
 
-
-        </div>
         <div class="item-header">Puzzles</div>
         <div class="puzzle-holder">
             <?php foreach($ourContext['puzzleArray'] as $puzzle) { ?>
@@ -446,14 +450,14 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                 </div>
             <?php } ?>
         </div>
-        <div class="textArea-Container">
+       <!-- <div class="textArea-Container">
             <div class="amplify-flex amplify-field amplify-textareafield">
                 <label for="textArea">Notes</label>
                 <textarea data-wp-on--input="callbacks.saveNotes" id="textArea"  aria-invalid="false" class="text-area"
                           aria-describedby="textArea"  rows="5">
                 </textarea>
             </div>
-        </div>
+        </div>-->
         <div class="help-container" data-wp-bind--hidden="!state.helpVisible">
             <div class='help-inner'>
                 <div data-wp-bind--hidden="!state.zoneHelpVisible"><?php echo $attributes["zoneText"] ?></div>
@@ -485,8 +489,6 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
             </button>
         </div>
         </div>
-
-        <a href="#game">back to game</a>
     </div>
 
 </div>
