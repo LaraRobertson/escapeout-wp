@@ -136,6 +136,7 @@ wp_interactivity_state(
         'lightText' => esc_html__( 'Switch to Dark', 'game-block' ),
         'themeText'	=> esc_html__( 'Switch to Dark', 'game-block' ),
         'userID' => get_current_user_id(),
+        'user' => get_current_user(),
         'zoneID' => '',
         'zoneDescription' => $playZones[0]['description'],
         'puzzleModalVisible' => false,
@@ -146,6 +147,7 @@ wp_interactivity_state(
         'hintWarningVisible'=> false,
         'helpVisible' => false,
         'zoneHelpVisible'=> false,
+        'teamHelpVisible'=> false,
         'solvedCount' => 0,
         'puzzleTotal' => count($puzzleArray),
         'showWaiver' => false,
@@ -166,12 +168,16 @@ usort($playZones, fn($a, $b) => $a['order'] <=> $b['order']);
 usort($puzzleArray, fn($a, $b) => $a['order'] <=> $b['order']);
 usort($clueArray, fn($a, $b) => $a['order'] <=> $b['order']);
 $current_user_id = get_current_user_id();
+$current_user = wp_get_current_user();
+$user_email = $current_user->user_email;
+$designer_email = get_the_author_meta('user_email', get_the_author_meta( 'ID' ));
+$designer_name = get_the_author_meta('display_name', get_the_author_meta( 'ID' ));
 $gamePost_id = get_the_ID();
 $upload_dir   = wp_upload_dir();
 
 $assetDir = "/wp-content/plugins/escapeout-game/assets/";
 $firstZoneID = $playZones[0]['id'];
-$ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'gameStart' => false, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
+$ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
 //print_r($ourContext);
 ?>
 <div
@@ -186,56 +192,67 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
 	<div class="game-start-bar"
 		id="<?php echo esc_attr( $unique_id ); ?>"
 		data-wp-bind--hidden="context.gameStart"
-	><div>
-            <a href="<?php echo $siteUrl ?>">home</a>
+	>
+            <!--<a href="<?php echo $siteUrl ?>">home</a>-->
         <h2><?php echo $attributes['gameName'] ?></h2>
-
         <div>
-            <?php echo $content; ?></div>
+            <?php echo $content; ?>
 	    </div>
+            <hr/>
         <div class="show-score" data-wp-bind--hidden="!state.showGameScore" >
             <div class="game-score" data-wp-text="state.gameScore"></div>
             <div>You can play again but only scores where first time = "yes" are counted for the leader board.</div>
             <hr />
         </div>
-        <div>Waiver:
-            <span class="red-alert" data-wp-bind--hidden="context.waiverSigned">waiver needs to be signed</span>
-            <span class="red-alert" data-wp-bind--hidden="!context.waiverSigned">waiver is signed</span></div>
-        <button
-                data-wp-bind--hidden="state.showWaiver"
-                data-wp-on-async--click="actions.showWaiverToggle"
-                aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-        >
-            <?php esc_html_e( 'Show Waiver', 'game-block' ); ?>
-        </button>
-        <div class="waiver-container" data-wp-bind--hidden="!state.showWaiver">
-        <div class="waiver-top"><?php echo $attributes["waiverTop"] ?></div>
-        <div class="waiver-body"><?php echo $attributes["waiverBody"] ?></div>
-            <button
-                    data-wp-bind--hidden="context.waiverSigned"
-                    data-wp-on-async--click="actions.signWaiver"
-                    aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-            >
-                <?php esc_html_e( 'Sign Waiver', 'game-block' ); ?>
-            </button>
-            <button
-                    data-wp-bind--hidden="!context.waiverSigned"
-                    data-wp-on-async--click="actions.showWaiverToggle"
-                    aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-            >
-                <?php esc_html_e( 'Close Waiver', 'game-block' ); ?>
-            </button>
-        </div>
-        <h4 class="game-header">Pick Team Name</h4>
+        <div class="game-text">Before Starting the Game you must Sign the Waiver and Pick a Team Name
+            <img data-wp-on--click="actions.setTeamHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
+            <img data-wp-on--click="actions.setTeamHelpVisible" class="question"  src="<?php echo $siteUrl . $assetDir . "question.svg" ?>" alt="question about zones" data-wp-bind--hidden="state.isDark" />
+            </div>
+        <ul>
+
+            <li>
+        <div>Pick Team Name</div>
         <input
                 id="team-name"
                 aria-invalid="false"
                 type="text"
                 value="<?php echo $ourContext['teamName'] ?>"
         />
+        </li>
+            <li>
+                <div>Waiver:
+                    <span class="red-alert" data-wp-bind--hidden="context.waiverSigned">waiver needs to be signed</span>
+                    <span class="red-alert" data-wp-bind--hidden="!context.waiverSigned">waiver is signed</span></div>
+                <button class="button"
+                        data-wp-bind--hidden="state.showWaiver"
+                        data-wp-on-async--click="actions.showWaiverToggle"
+                        aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                >
+			        <?php esc_html_e( 'Show Waiver', 'game-block' ); ?>
+                </button>
+                <div class="waiver-container" data-wp-bind--hidden="!state.showWaiver">
+                    <div class="waiver-top"><?php echo $attributes["waiverTop"] ?></div>
+                    <div class="waiver-body"><?php echo $attributes["waiverBody"] ?></div>
+                    <button class="button"
+                            data-wp-bind--hidden="context.waiverSigned"
+                            data-wp-on-async--click="actions.signWaiver"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+				        <?php esc_html_e( 'Sign Waiver', 'game-block' ); ?>
+                    </button>
+                    <button class="button"
+                            data-wp-bind--hidden="!context.waiverSigned"
+                            data-wp-on-async--click="actions.showWaiverToggle"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+				        <?php esc_html_e( 'Close Waiver', 'game-block' ); ?>
+                    </button>
+                </div>
+            </li>
+        </ul>
         <div class="red-alert" data-wp-text="state.errorMessage"></div>
         <div>
-            <button
+            <button class="button"
                     data-wp-bind--aria-expanded="context.isOpen"
                     data-wp-on-async--click="actions.gameStart"
                     aria-controls="<?php echo esc_attr( $unique_id ); ?>"
@@ -243,10 +260,36 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                 <?php esc_html_e( 'Start Game - Time Starts', 'game-block' ); ?>
             </button>
         </div>
+        <div class="help-container-start" data-wp-bind--hidden="!state.helpVisible">
+            <div class='help-inner'>
+                <div data-wp-bind--hidden="!state.teamHelpVisible">
+                    Making the player sign the waiver helps the player understand that they should not harm their surroundings.
+                    <br ><br />
+                    The Team Name is the public name for game results. Your team can be 1 person or many.
+                    It is simply the name associated with the playing of this game, this time.
+
+
+                </div>
+                <button class="button"
+                        data-wp-on--click="actions.closeHelp"
+                        aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                >
+					<?php esc_html_e( 'Close', 'game-block' ); ?>
+                </button>
+            </div>
+        </div>
     </div>
+    <!-- end game start bar - hidden while playing game -->
     <!--<div class="game-containerx" data-wp-class--hide-game-container="!context.gameStart">gameStart true</div><br />
     <div class="game-containery" data-wp-class--hide-game-container="context.gameStart">gameStart false</div>-->
-    <div class="game-container" data-wp-class--hide-game-container="!context.gameStart" >
+
+    <div class="modalContainer2 gameModal"
+         data-wp-class--showmodal="context.gameStart" >
+        <div class="modal from-top">
+
+    <div class="game-container"
+         style="background-color:<?php echo $attributes['bgColor']?>"
+         data-wp-class--dark-theme="state.isDark">
         <div class="puzzle-solved" data-wp-context='{ "counter": 0 }' data-wp-watch="callbacks.logCounter">
             <p>Puzzles Solved? <span data-wp-text="state.solvedCount"></span>/<span data-wp-text="state.puzzleTotal"></span></p>
             <!--<button data-wp-on--click="actions.increaseCounter">+</button>
@@ -337,8 +380,8 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                 <!-- puzzle modal / puzzle needs an id-->
 
                 <div>
-                    <div class="modalContainer puzzleModal " data-wp-class--showmodal="context.modalOpen" data-wp-bind--hidden="context.solved">
-                        <div class="modal dark from-right">
+                    <div class="modalContainer" data-wp-class--showmodal="context.modalOpen" data-wp-bind--hidden="context.solved">
+                        <div class="modal from-right">
                             <header class="modal_header">
                                 <div class="modal_header-clueDetails"><?php echo $puzzle["name"] ?></div>
                                 <button class="close" data-wp-on--click="actions.setPuzzleModalHidden">
@@ -461,7 +504,6 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
         <div class="help-container" data-wp-bind--hidden="!state.helpVisible">
             <div class='help-inner'>
                 <div data-wp-bind--hidden="!state.zoneHelpVisible"><?php echo $attributes["zoneText"] ?></div>
-
                 <button class="button"
                         data-wp-on--click="actions.closeHelp"
                         aria-controls="<?php echo esc_attr( $unique_id ); ?>"
@@ -488,6 +530,10 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                 <?php esc_html_e( 'No', 'game-block' ); ?>
             </button>
         </div>
+        </div>
+    </div>
+
+
         </div>
     </div>
 

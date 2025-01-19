@@ -6,7 +6,8 @@
 	"title": "EscapeOut Game",
 	"category": "widgets",
 	"attributes": {
-		"gameName": { "type": "string", "default": "game name" },
+		"gameID": {"type": "string", "default": "zoneID_gameName" },
+		"gameName": { "type": "string", "default": "update game name" },
 		"zoneText": { "type": "string", "default": "Zones are the play area. Clues are usually within 100 feet of Zone Center." },
 		"playZones": { "type": "array", "default": [{"id": "1"}] },
 		"bgColor": { "type": "string", "default": "#EBEBEB" },

@@ -1,1 +1,1655 @@
-(()=>{"use strict";var e,l={215:()=>{const e=window.wp.blocks,l=window.wp.blockEditor,n=(window.wp.richText,window.wp.i18n),a=window.wp.components,t=window.React,o=window.wp.data,s=window.ReactJSXRuntime;function i({imageId:e,size:l="thumbnail"}){const{image:n}=(0,o.useSelect)((l=>({image:l("core").getMedia(e)})));return(0,s.jsx)(s.Fragment,{children:n&&(0,s.jsx)("img",{...(()=>{let e={src:n.source_url,alt:n.alt_text,className:`attachment-${l} size-${l}`,width:n.media_details.width,height:n.media_details.height};return n.media_details&&n.media_details.sizes&&n.media_details.sizes[l]&&(e.src=n.media_details.sizes[l].source_url,e.width=n.media_details.sizes[l].width,e.height=n.media_details.sizes[l].height),e})()})})}function r({iconPath:e}){const l=window.my_data.siteUrl+e+".svg";return""!==e?(0,s.jsx)("div",{children:(0,s.jsx)("img",{src:l})}):(0,s.jsx)("div",{children:"icon not set"})}function c(e,l,n,a,t,o,s){const i=o.playZones.concat([]);switch(e){case"puzzle":i[a].puzzleArray[t][l]=n;break;case"clue":if(i[a].clueArray[t][l]=n,"iconName"===l){const e="/wp-content/plugins/escapeout-game/assets/"+n;i[a].clueArray[t].iconPath=e}break;case"hint":i[a].hintArray[t][l]=n}s({playZones:i})}function d(e,l,n,a,t,o){const s=t.playZones.concat([]),i=l.filter((function(e,l){return l!=a}));switch(e){case"puzzle":console.log("delete puzzle"),0===i.length?delete s[n].puzzleArray:s[n].puzzleArray=i;break;case"clue":console.log("delete clue"),0===i.length?delete s[n].clueArray:s[n].clueArray=i;break;case"hint":console.log("delete hint"),0===i.length?delete s[n].hintArray:s[n].hintArray=i}o({playZones:s})}function u({puzzleArray:e,index:l,attributes:n,setAttributes:t,playZoneName:o}){return void 0!==e?(0,s.jsx)(s.Fragment,{children:e?.map((function(i,r){return(0,s.jsxs)("div",{className:"puzzleDiv",children:[(0,s.jsx)("div",{className:"Yes"==i.disabled?"disabled":""}),(0,s.jsxs)("div",{className:"item-title-edit",children:["Puzzles ",r+1," (zone name: ",o,"):"]}),(0,s.jsxs)(a.Flex,{children:[(0,s.jsxs)(a.FlexBlock,{children:[(0,s.jsx)(a.TextControl,{label:"Puzzle Name",autoFocus:null==i.name,value:i.name,onChange:e=>{c("puzzle","name",e,l,r,n,t)}}),(0,s.jsx)(a.TextControl,{label:"Puzzle Description",autoFocus:null==i.description,value:i.description,onChange:e=>{c("puzzle","description",e,l,r,n,t)}})]}),(0,s.jsxs)(a.FlexBlock,{children:[(0,s.jsx)(a.TextControl,{label:"Puzzle Question",autoFocus:null==i.question,value:i.question,onChange:e=>{c("puzzle","question",e,l,r,n,t)}}),(0,s.jsx)(a.TextControl,{label:"Puzzle Answer",autoFocus:null==i.answer,value:i.answer,onChange:e=>{c("puzzle","answer",e,l,r,n,t)}})]}),(0,s.jsxs)(a.Flex,{direction:"column",children:[(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.RadioControl,{selected:i.disabled,options:[{label:"Live",value:"No"},{label:"Disabled",value:"Yes"}],onChange:e=>{c("puzzle","disabled",e,l,r,n,t)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.TextControl,{label:"Order",style:{width:"50px"},type:"number",autoFocus:null==i.order,value:i.order,onChange:e=>{c("puzzle","order",e,l,r,n,t)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isLink:!0,className:"attention-delete",onClick:()=>d("puzzle",e,l,r,n,t),children:"Delete"})})]})]})]},r)}))}):(0,s.jsx)("div",{children:"no puzzles"})}function x({clueArray:e,index:t,attributes:o,setAttributes:i,playZoneName:u}){const x=["image"];return void 0!==e?(0,s.jsx)(s.Fragment,{children:e?.map((function(h,m){return(0,s.jsxs)("div",{className:"clueDiv",children:[(0,s.jsx)("div",{className:"Yes"==h.disabled?"disabled":""}),(0,s.jsxs)("div",{className:"item-title-edit",children:["Clues ",m+1," (zone name:  ",u,"):"]}),(0,s.jsxs)(a.Flex,{children:[(0,s.jsxs)(a.FlexBlock,{children:[(0,s.jsx)(a.TextControl,{label:"Clue Name",autoFocus:null==h.name,value:h.name,onChange:e=>{c("clue","name",e,t,m,o,i)}}),(0,s.jsx)(a.TextControl,{label:"Clue Text",autoFocus:null==h.text,value:h.text,onChange:e=>{c("clue","text",e,t,m,o,i)}}),(0,s.jsx)(a.SelectControl,{label:"Icon",value:h.iconName,options:[{label:"choose icon",value:""},{label:"magnifying glass",value:"magnifying-glass"},{label:"torn paper",value:"torn-paper"},{label:"envelope",value:"envelope"},{label:"message in a bottle",value:"message-in-a-bottle"},{label:"note question",value:"note-question"},{label:"diary",value:"diary"}],onChange:e=>{c("clue","iconName",e,t,m,o,i)},__nextHasNoMarginBottom:!0}),(0,s.jsx)("div",{children:(0,s.jsx)(r,{iconPath:h.iconPath})})]}),(0,s.jsx)(a.FlexBlock,{children:(0,s.jsx)(l.MediaUploadCheck,{children:(0,s.jsx)(l.MediaUpload,{onSelect:e=>{!function(e,l,n,a,t){const o=a.playZones.concat([]);o[l].clueArray[n].imageID=e.id,o[l].clueArray[n].imageURL=e.url,t({playZones:o})}(e,t,m,o,i)},title:(0,n.__)("Clue Image","game-block"),allowedTypes:x,multiple:!1,value:h.imageID,render:({open:e})=>(0,s.jsxs)(s.Fragment,{children:[(0,s.jsx)(a.Button,{className:"button",onClick:e,children:"Open Media Library"}),h.imageURL&&(0,s.jsx)("img",{src:h.imageURL,alt:(0,n.__)("Clue Image","game-block"),style:{display:"block",maxWidth:"250px",height:"auto"}})]})})})}),(0,s.jsxs)(a.Flex,{direction:"column",children:[(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.RadioControl,{selected:h.disabled,options:[{label:"Live",value:"No"},{label:"Disabled",value:"Yes"}],onChange:e=>{c("clue","disabled",e,t,m,o,i)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.TextControl,{label:"Order",style:{width:"50px"},type:"number",autoFocus:null==h.order,value:h.order,onChange:e=>{c("clue","order",e,t,m,o,i)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isLink:!0,className:"attention-delete",onClick:()=>d("clue",e,t,m,o,i),children:"Delete"})})]})]})]},m)}))}):(0,s.jsx)("div",{children:"no clues"})}function h({hintArray:e,index:l,attributes:n,setAttributes:t,playZoneName:o}){return void 0!==e?(0,s.jsx)(s.Fragment,{children:e?.map((function(i,r){return(0,s.jsxs)("div",{className:"puzzleDiv",children:[(0,s.jsx)("div",{className:"Yes"==i.disabled?"disabled":""}),(0,s.jsxs)("div",{className:"item-title-edit",children:["Hints ",r+1," (zone name: ",o,"):"]}),(0,s.jsxs)(a.Flex,{children:[(0,s.jsxs)(a.FlexBlock,{children:[(0,s.jsx)(a.TextControl,{label:"Hint Name",autoFocus:null==i.name,value:i.name,onChange:e=>{c("hint","name",e,l,r,n,t)}}),(0,s.jsx)(a.TextControl,{label:"Hint Text",autoFocus:null==i.text,value:i.text,onChange:e=>{c("hint","text",e,l,r,n,t)}})]}),(0,s.jsxs)(a.Flex,{direction:"column",children:[(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.RadioControl,{selected:i.disabled,options:[{label:"Live",value:"No"},{label:"Disabled",value:"Yes"}],onChange:e=>{c("hint","disabled",e,l,r,n,t)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.TextControl,{label:"Order",style:{width:"50px"},type:"number",autoFocus:null==i.order,value:i.order,onChange:e=>{c("hint","order",e,l,r,n,t)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isLink:!0,className:"attention-delete",onClick:()=>d("hint",e,l,r,n,t),children:"Delete"})})]})]})]},r)}))}):(0,s.jsx)("div",{children:"no hints"})}function m({playZone:e,index:t,editZoneMedia:o,editZone:r,deletePlayZone:c}){return(0,s.jsxs)(s.Fragment,{children:[(0,s.jsx)("div",{className:"Yes"==e.disabled?"disabled":""}),(0,s.jsxs)("div",{className:"item-title-edit",children:["Zones ",t+1,":"]}),(0,s.jsxs)(a.Flex,{children:[(0,s.jsxs)(a.FlexBlock,{children:[(0,s.jsx)(a.TextControl,{label:"Zone Name",autoFocus:null==e.name,value:e.name,onChange:e=>{r("name",e,t)}}),(0,s.jsx)(a.TextControl,{label:"Zone Description",autoFocus:null==e.description,value:e.description,onChange:e=>{r("description",e,t)}}),(0,s.jsx)(a.TextControl,{label:"Latitude",autoFocus:null==e.lat,value:e.lat,onChange:e=>{r("lat",e,t)}}),(0,s.jsx)(a.TextControl,{label:"Longitude",autoFocus:null==e.long,value:e.long,onChange:e=>{r("long",e,t)}})]}),(0,s.jsx)(a.FlexBlock,{className:"image-holder",children:(0,s.jsx)(l.MediaUploadCheck,{children:(0,s.jsx)(l.MediaUpload,{onSelect:e=>{o(e,t)},title:(0,n.__)("Zone Image","game-block"),allowedTypes:["image"],multiple:!1,value:e.imageID,render:({open:l})=>(0,s.jsxs)(s.Fragment,{children:[(0,s.jsx)(a.Button,{className:"button",onClick:l,children:"Open Media Library"}),(0,s.jsx)(i,{imageId:e.imageID})]})})})}),(0,s.jsxs)(a.Flex,{direction:"column",children:[(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.RadioControl,{selected:e.disabled,options:[{label:"Live",value:"No"},{label:"Disabled",value:"Yes"}],onChange:e=>{r("disabled",e,t)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.TextControl,{label:"Order",style:{width:"50px"},type:"number",autoFocus:null==e.order,value:e.order,onChange:e=>{r("order",e,t)}})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isLink:!0,className:"attention-delete",onClick:()=>c(t),children:"Delete"})})]})]})]})}const p=JSON.parse('{"UU":"create-block/escapeout-game"}');(0,e.registerBlockType)(p.UU,{edit:function({attributes:e,setAttributes:n}){const[o,i]=(0,t.useState)(!1),[r,c]=(0,t.useState)("test"),d=(0,l.useBlockProps)(),p={id:"",name:"",description:"",lat:"",long:"",imageID:"",order:"",disabled:"No"},j={name:"",description:"",question:"",answer:"",order:"",disabled:"No"},g={name:"",text:"",iconName:"",iconPath:"",imageID:"",order:"",disabled:"No"},b={name:"",text:"",order:"",disabled:"No"};function v(l){console.log("deletePlayZone");const a=e.playZones.filter((function(e,n){return n!=l}));n({playZones:a})}function y(){console.log("addZone!");const l=(e=>{const l=[...Array.from({length:10},((e,l)=>String.fromCharCode("0".charCodeAt(0)+l))),...Array.from({length:26},((e,l)=>String.fromCharCode("a".charCodeAt(0)+l)))];return Array.from({length:e},(()=>{return l[(e=l.length,Math.floor(Math.random()*e))];var e})).join("")})(6);console.log("zoneID: "+l);let a={...p};a.id=l,n({playZones:e.playZones.concat([a])})}function C(l,a,t){const o=e.playZones.concat([]);o[t][l]=a,console.log("playZones newArray: "+JSON.stringify(o)),n({playZones:o})}function z(l,a){const t=e.playZones.concat([]);t[a].imageID=l.id,t[a].imageURL=l.url,n({playZones:t})}return(0,t.useEffect)((()=>{1===e.playZones.length&&"1"===e.playZones[0].id&&(console.log("playZones.length: "+e.playZones.length),console.log("playZones id: "+JSON.stringify(e.playZones)),v(0))}),[]),e.playZones.length>0?(0,s.jsx)("div",{...d,children:(0,s.jsxs)("div",{className:"game-block-edit-block",style:{backgroundColor:e.bgColor},children:[(0,s.jsx)("div",{className:"like-label",children:"Go To:"}),(0,s.jsxs)(a.Flex,{children:[(0,s.jsx)("a",{href:"#zone-help-text",className:"button",children:"Zone Help Text"}),(0,s.jsx)("a",{href:"#puzzle-help-text",className:"button",children:"Puzzle Help Text"}),(0,s.jsx)("a",{href:"#clue-help-text",className:"button",children:"Clue Help Text"}),(0,s.jsx)("a",{href:"#hint-help-text",className:"button",children:"Hint Help Text"}),(0,s.jsx)("a",{href:"#waiver-text",className:"button",children:"Waiver Text"})]}),(0,s.jsx)("div",{className:"like-label",children:"Game Text:"}),(0,s.jsx)("div",{style:{backgroundColor:"white",padding:"10px",marginBottom:"10px"},children:(0,s.jsx)(l.InnerBlocks,{allowedBlocks:["core/heading","core/paragraph"],template:[["core/heading",{level:3,placeholder:"Insert your heading here..."}],["core/paragraph",{placeholder:"Write some description text here..."}]],templateLock:"all"})}),(0,s.jsx)(l.BlockControls,{}),(0,s.jsx)(l.InspectorControls,{children:(0,s.jsx)(a.PanelBody,{title:"Background Color",initialOpen:!0,children:(0,s.jsx)(a.PanelRow,{children:(0,s.jsx)(a.ColorPicker,{color:e.bgColor,onChange:e=>n({bgColor:e}),enableAlpha:!0,defaultValue:"#000"})})})}),(0,s.jsx)(a.TextControl,{label:"Game Name:",value:e.gameName,onChange:function(e){console.log("update game name"),n({gameName:e})},style:{fontSize:"20px"}}),(0,s.jsx)("div",{className:"item-holder-edit",children:e.playZones.map((function(l,t){return(0,s.jsxs)("div",{className:"zoneDiv",children:[(0,s.jsx)(m,{playZone:l,index:t,editZoneMedia:z,editZone:C,deletePlayZone:v}),(0,s.jsxs)(a.Flex,{justify:"flex-start",className:"buttons",children:[(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isPrimary:!0,onClick:()=>{!function(l){console.log("addClue");const a=e.playZones.concat([]),t=a[l];Object.hasOwn(t,"clueArray")?t.clueArray.push(g):t.clueArray=[g],n({playZones:a})}(t)},children:"Add Clue"})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isPrimary:!0,onClick:()=>{!function(l){console.log("addHint");const a=e.playZones.concat([]),t=a[l];Object.hasOwn(t,"hintArray")?t.hintArray.push(b):t.hintArray=[b],n({playZones:a})}(t)},children:"Add Hint"})}),(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isPrimary:!0,onClick:()=>{!function(l){console.log("addPuzzle");const a=e.playZones.concat([]),t=a[l];Object.hasOwn(t,"puzzleArray")?t.puzzleArray.push(j):t.puzzleArray=[j],n({playZones:a})}(t)},children:"Add Puzzle"})})]}),(0,s.jsx)("div",{className:"item-holder-edit",children:(0,s.jsx)(u,{puzzleArray:l.puzzleArray,index:t,attributes:e,setAttributes:n,playZoneName:l.name})}),(0,s.jsx)("div",{className:"item-holder-edit",children:(0,s.jsx)(x,{clueArray:l.clueArray,index:t,attributes:e,setAttributes:n,playZoneName:l.name})}),(0,s.jsx)("div",{className:"item-holder-edit",children:(0,s.jsx)(h,{hintArray:l.hintArray,index:t,attributes:e,setAttributes:n,playZoneName:l.name})})]},t)}))}),(0,s.jsx)(a.Flex,{children:(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isPrimary:!0,onClick:()=>{y()},children:"Add Another Zone"})})}),(0,s.jsx)("div",{className:"text-area-container",id:"zone-help-text",children:(0,s.jsx)(a.TextareaControl,{label:"Zone Help Text':",value:e.zoneText,onChange:function(e){console.log("update zone text"),n({zoneText:e})},style:{fontSize:"15px"}})}),(0,s.jsx)("div",{className:"like-label",id:"waiver-text",children:"Waiver Text:"}),(0,s.jsxs)("div",{className:"text-area-container",children:[(0,s.jsx)(a.TextareaControl,{label:"Waiver Top:",value:e.waiverTop,onChange:function(e){console.log("update waiver top"),n({waiverTop:e})},style:{fontSize:"15px"}}),(0,s.jsx)(a.TextareaControl,{label:"Waiver Body':",value:e.waiverBody,onChange:function(e){console.log("update waiver body"),n({waiverBody:e})},style:{fontSize:"15px"}}),(0,s.jsxs)(a.Button,{isPrimary:!0,onClick:()=>{i(!o)},children:[(0,s.jsx)("div",{className:o?"hide":"show",children:"View Waiver Text"}),(0,s.jsx)("div",{className:o?"show":"hide",children:"Close Waiver Text"})]}),(0,s.jsxs)("div",{className:o?"waiver-container show":"hide",children:[(0,s.jsx)("div",{className:"waiver-top",children:e.waiverTop}),(0,s.jsx)("div",{className:"waiver-body",children:e.waiverBody})]})]})]})}):(0,s.jsx)("div",{...d,children:(0,s.jsxs)("div",{className:"game-block-edit-block",style:{backgroundColor:e.bgColor},children:[(0,s.jsx)("h4",{children:"The first step to creating a game is adding a Zone."}),(0,s.jsx)("div",{children:"Zones are areas where people will play. Your Clues and Puzzles should be about things in the Zone area. Typically Zones have a center and the play area is about 100 feet around center. Games can have more than 1 Zone."}),(0,s.jsx)("br",{}),(0,s.jsx)(a.Flex,{children:(0,s.jsx)(a.FlexItem,{children:(0,s.jsx)(a.Button,{isPrimary:!0,onClick:()=>{y()},children:"Add A Zone"})})})]})})},save:e=>(0,s.jsx)(l.InnerBlocks.Content,{})})}},n={};function a(e){var t=n[e];if(void 0!==t)return t.exports;var o=n[e]={exports:{}};return l[e](o,o.exports,a),o.exports}a.m=l,e=[],a.O=(l,n,t,o)=>{if(!n){var s=1/0;for(d=0;d<e.length;d++){n=e[d][0],t=e[d][1],o=e[d][2];for(var i=!0,r=0;r<n.length;r++)(!1&o||s>=o)&&Object.keys(a.O).every((e=>a.O[e](n[r])))?n.splice(r--,1):(i=!1,o<s&&(s=o));if(i){e.splice(d--,1);var c=t();void 0!==c&&(l=c)}}return l}o=o||0;for(var d=e.length;d>0&&e[d-1][2]>o;d--)e[d]=e[d-1];e[d]=[n,t,o]},a.o=(e,l)=>Object.prototype.hasOwnProperty.call(e,l),(()=>{var e={57:0,350:0};a.O.j=l=>0===e[l];var l=(l,n)=>{var t,o,s=n[0],i=n[1],r=n[2],c=0;if(s.some((l=>0!==e[l]))){for(t in i)a.o(i,t)&&(a.m[t]=i[t]);if(r)var d=r(a)}for(l&&l(n);c<s.length;c++)o=s[c],a.o(e,o)&&e[o]&&e[o][0](),e[o]=0;return a.O(d)},n=self.webpackChunkgame_block=self.webpackChunkgame_block||[];n.forEach(l.bind(null,0)),n.push=l.bind(null,n.push.bind(n))})();var t=a.O(void 0,[350],(()=>a(215)));t=a.O(t)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/components/AttachmentImage.js":
+/*!*******************************************!*\
+  !*** ./src/components/AttachmentImage.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AttachmentImage)
+/* harmony export */ });
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/**
+ * AttachmentImage
+ *
+ * This component is used to display an image from the media library.
+ * It's meant as a JS companion to the PHP function `wp_get_attachment_image()`.
+ *
+ * @link https://www.briancoords.com/getting-wordpress-media-library-images-in-javascript/
+ *
+ * @param {object} props
+ * @param {number} props.imageId The ID of the image to display.
+ * @param {string} props.size The size of the image to display. Defaults to 'full'.
+ * @returns {*} React JSX
+ */
+
+function AttachmentImage({
+  imageId,
+  size = 'thumbnail'
+}) {
+  const {
+    image
+  } = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.useSelect)(select => ({
+    image: select('core').getMedia(imageId)
+  }));
+  const imageAttributes = () => {
+    let attributes = {
+      src: image.source_url,
+      alt: image.alt_text,
+      className: `attachment-${size} size-${size}`,
+      width: image.media_details.width,
+      height: image.media_details.height
+    };
+    if (image.media_details && image.media_details.sizes && image.media_details.sizes[size]) {
+      attributes.src = image.media_details.sizes[size].source_url;
+      attributes.width = image.media_details.sizes[size].width;
+      attributes.height = image.media_details.sizes[size].height;
+    }
+    return attributes;
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+    children: image && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
+      ...imageAttributes()
+    })
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/ClueEdit.js":
+/*!************************************!*\
+  !*** ./src/components/ClueEdit.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ClueEdit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _IconDisplay__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IconDisplay */ "./src/components/IconDisplay.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _manageArrayItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./manageArrayItem */ "./src/components/manageArrayItem.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+
+function editClueMedia(media, index, index2, attributes, setAttributes) {
+  //console.log("editClueMedia: " + JSON.stringify(media));
+  const newArray = attributes.playZones.concat([]);
+  newArray[index]["clueArray"][index2]["imageID"] = media.id;
+  newArray[index]["clueArray"][index2]["imageURL"] = media.url;
+  //console.log("playZones newArray: " + JSON.stringify(newArray));
+  setAttributes({
+    playZones: newArray
+  });
+}
+function ClueEdit({
+  clueArray,
+  index,
+  attributes,
+  setAttributes,
+  playZoneName
+}) {
+  const ALLOWED_MEDIA_TYPES = ['image'];
+  if (typeof clueArray != "undefined") {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+      children: clueArray?.map(function (clue, index2) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+          className: "clueDiv",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+            className: clue.disabled == "Yes" ? "disabled" : ""
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+            className: "item-title-edit",
+            children: ["Clues ", index2 + 1, " (zone name:  ", playZoneName, "):"]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Flex, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexBlock, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+                label: "Clue Name",
+                autoFocus: clue.name == undefined,
+                value: clue.name,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "name", newValue, index, index2, attributes, setAttributes);
+                }
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+                label: "Clue Text",
+                autoFocus: clue.text == undefined,
+                value: clue.text,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "text", newValue, index, index2, attributes, setAttributes);
+                }
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+                label: "Icon",
+                value: clue.iconName,
+                options: [{
+                  label: 'choose icon',
+                  value: ''
+                }, {
+                  label: 'magnifying glass',
+                  value: 'magnifying-glass'
+                }, {
+                  label: 'torn paper',
+                  value: 'torn-paper'
+                }, {
+                  label: 'envelope',
+                  value: 'envelope'
+                }, {
+                  label: 'message in a bottle',
+                  value: 'message-in-a-bottle'
+                }, {
+                  label: 'note question',
+                  value: 'note-question'
+                }, {
+                  label: 'diary',
+                  value: 'diary'
+                }],
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "iconName", newValue, index, index2, attributes, setAttributes);
+                },
+                __nextHasNoMarginBottom: true
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_IconDisplay__WEBPACK_IMPORTED_MODULE_2__.IconDisplay, {
+                  iconPath: clue.iconPath
+                })
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexBlock, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.MediaUploadCheck, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.MediaUpload, {
+                  onSelect: media => {
+                    editClueMedia(media, index, index2, attributes, setAttributes);
+                  },
+                  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Clue Image', 'game-block'),
+                  allowedTypes: ALLOWED_MEDIA_TYPES,
+                  multiple: false,
+                  value: clue.imageID,
+                  render: ({
+                    open
+                  }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                      className: "button",
+                      onClick: open,
+                      children: "Open Media Library"
+                    }), clue.imageURL && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("img", {
+                      src: clue.imageURL,
+                      alt: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Clue Image', 'game-block'),
+                      style: {
+                        display: 'block',
+                        maxWidth: '250px',
+                        height: 'auto'
+                      }
+                    })]
+                  })
+                })
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Flex, {
+              direction: "column",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.RadioControl, {
+                  selected: clue.disabled,
+                  options: [{
+                    label: 'Live',
+                    value: 'No'
+                  }, {
+                    label: 'Disabled',
+                    value: 'Yes'
+                  }],
+                  onChange: newValue => {
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "disabled", newValue, index, index2, attributes, setAttributes);
+                  }
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+                  label: "Order",
+                  style: {
+                    width: "50px"
+                  },
+                  type: "number",
+                  autoFocus: clue.order == undefined,
+                  value: clue.order,
+                  onChange: newValue => {
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "order", newValue, index, index2, attributes, setAttributes);
+                  }
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                  isLink: true,
+                  className: "attention-delete",
+                  onClick: () => (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.deleteArrayItem)("clue", clueArray, index, index2, attributes, setAttributes),
+                  children: "Delete"
+                })
+              })]
+            })]
+          })]
+        }, index2);
+      })
+    });
+  } else {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+      children: "no clues"
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./src/components/HintEdit.js":
+/*!************************************!*\
+  !*** ./src/components/HintEdit.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ HintEdit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _manageArrayItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./manageArrayItem */ "./src/components/manageArrayItem.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+function HintEdit({
+  hintArray,
+  index,
+  attributes,
+  setAttributes,
+  playZoneName
+}) {
+  if (typeof hintArray != "undefined") {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+      children: hintArray?.map(function (hint, index2) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+          className: "puzzleDiv",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+            className: hint.disabled == "Yes" ? "disabled" : ""
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "item-title-edit",
+            children: ["Hints ", index2 + 1, " (zone name: ", playZoneName, "):"]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                label: "Hint Name",
+                autoFocus: hint.name == undefined,
+                value: hint.name,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "name", newValue, index, index2, attributes, setAttributes);
+                }
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                label: "Hint Text",
+                autoFocus: hint.text == undefined,
+                value: hint.text,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "text", newValue, index, index2, attributes, setAttributes);
+                }
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+              direction: "column",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.RadioControl, {
+                  selected: hint.disabled,
+                  options: [{
+                    label: 'Live',
+                    value: 'No'
+                  }, {
+                    label: 'Disabled',
+                    value: 'Yes'
+                  }],
+                  onChange: newValue => {
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "disabled", newValue, index, index2, attributes, setAttributes);
+                  }
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                  label: "Order",
+                  style: {
+                    width: "50px"
+                  },
+                  type: "number",
+                  autoFocus: hint.order == undefined,
+                  value: hint.order,
+                  onChange: newValue => {
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "order", newValue, index, index2, attributes, setAttributes);
+                  }
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+                  isLink: true,
+                  className: "attention-delete",
+                  onClick: () => (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.deleteArrayItem)("hint", hintArray, index, index2, attributes, setAttributes),
+                  children: "Delete"
+                })
+              })]
+            })]
+          })]
+        }, index2);
+      })
+    });
+  } else {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      children: "no hints"
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./src/components/IconDisplay.js":
+/*!***************************************!*\
+  !*** ./src/components/IconDisplay.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   IconDisplay: () => (/* binding */ IconDisplay)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+
+function IconDisplay({
+  iconPath
+}) {
+  //console.log("name: " + iconName);
+  const siteURL = window.my_data.siteUrl;
+  //console.log("siteURL:" + siteURL);
+  //console.log("window.my_data.siteUrl:" + window.my_data.siteUrl);
+  const imageURL = siteURL + iconPath + ".svg";
+  if (iconPath !== "") {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+        src: imageURL
+      })
+    });
+  } else {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: "icon not set"
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./src/components/PuzzleEdit.js":
+/*!**************************************!*\
+  !*** ./src/components/PuzzleEdit.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ PuzzleEdit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _manageArrayItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./manageArrayItem */ "./src/components/manageArrayItem.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+function PuzzleEdit({
+  puzzleArray,
+  index,
+  attributes,
+  setAttributes,
+  playZoneName
+}) {
+  if (typeof puzzleArray != "undefined") {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+      children: puzzleArray?.map(function (puzzle, index2) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+          className: "puzzleDiv",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+            className: puzzle.disabled == "Yes" ? "disabled" : ""
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "item-title-edit",
+            children: ["Puzzles ", index2 + 1, " (zone name: ", playZoneName, "):"]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                label: "Puzzle Name",
+                autoFocus: puzzle.name == undefined,
+                value: puzzle.name,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "name", newValue, index, index2, attributes, setAttributes);
+                }
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                label: "Puzzle Description",
+                autoFocus: puzzle.description == undefined,
+                value: puzzle.description,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "description", newValue, index, index2, attributes, setAttributes);
+                }
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                label: "Puzzle Question",
+                autoFocus: puzzle.question == undefined,
+                value: puzzle.question,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "question", newValue, index, index2, attributes, setAttributes);
+                }
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                label: "Puzzle Answer",
+                autoFocus: puzzle.answer == undefined,
+                value: puzzle.answer,
+                onChange: newValue => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "answer", newValue, index, index2, attributes, setAttributes);
+                }
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+              direction: "column",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.RadioControl, {
+                  selected: puzzle.disabled,
+                  options: [{
+                    label: 'Live',
+                    value: 'No'
+                  }, {
+                    label: 'Disabled',
+                    value: 'Yes'
+                  }],
+                  onChange: newValue => {
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "disabled", newValue, index, index2, attributes, setAttributes);
+                  }
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                  label: "Order",
+                  style: {
+                    width: "50px"
+                  },
+                  type: "number",
+                  autoFocus: puzzle.order == undefined,
+                  value: puzzle.order,
+                  onChange: newValue => {
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "order", newValue, index, index2, attributes, setAttributes);
+                  }
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+                  isLink: true,
+                  className: "attention-delete",
+                  onClick: () => (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.deleteArrayItem)("puzzle", puzzleArray, index, index2, attributes, setAttributes),
+                  children: "Delete"
+                })
+              })]
+            })]
+          })]
+        }, index2);
+      })
+    });
+  } else {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      children: "no puzzles"
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./src/components/ZoneEdit.js":
+/*!************************************!*\
+  !*** ./src/components/ZoneEdit.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ZoneEdit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _AttachmentImage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AttachmentImage */ "./src/components/AttachmentImage.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+function ZoneEdit({
+  playZone,
+  index,
+  editZoneMedia,
+  editZone,
+  deletePlayZone
+}) {
+  const ALLOWED_MEDIA_TYPES = ['image'];
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      className: playZone.disabled == "Yes" ? "disabled" : ""
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "item-title-edit",
+      children: ["Zones ", index + 1, ":"]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Flex, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexBlock, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Zone Name",
+          autoFocus: playZone.name == undefined,
+          value: playZone.name,
+          onChange: newValue => {
+            editZone("name", newValue, index);
+          }
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Zone Description",
+          autoFocus: playZone.description == undefined,
+          value: playZone.description,
+          onChange: newValue => {
+            editZone("description", newValue, index);
+          }
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Latitude",
+          autoFocus: playZone.lat == undefined,
+          value: playZone.lat,
+          onChange: newValue => {
+            editZone("lat", newValue, index);
+          }
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Longitude",
+          autoFocus: playZone.long == undefined,
+          value: playZone.long,
+          onChange: newValue => {
+            editZone("long", newValue, index);
+          }
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexBlock, {
+        className: "image-holder",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.MediaUploadCheck, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.MediaUpload, {
+            onSelect: media => {
+              editZoneMedia(media, index);
+            },
+            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Zone Image', 'game-block'),
+            allowedTypes: ALLOWED_MEDIA_TYPES,
+            multiple: false,
+            value: playZone.imageID,
+            render: ({
+              open
+            }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                className: "button",
+                onClick: open,
+                children: "Open Media Library"
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_AttachmentImage__WEBPACK_IMPORTED_MODULE_3__["default"], {
+                imageId: playZone.imageID
+              })]
+            })
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Flex, {
+        direction: "column",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.RadioControl, {
+            selected: playZone.disabled,
+            options: [{
+              label: 'Live',
+              value: 'No'
+            }, {
+              label: 'Disabled',
+              value: 'Yes'
+            }],
+            onChange: newValue => {
+              editZone("disabled", newValue, index);
+            }
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+            label: "Order",
+            style: {
+              width: "50px"
+            },
+            type: "number",
+            autoFocus: playZone.order == undefined,
+            value: playZone.order,
+            onChange: newValue => {
+              editZone("order", newValue, index);
+            }
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+            isLink: true,
+            className: "attention-delete",
+            onClick: () => deletePlayZone(index),
+            children: "Delete"
+          })
+        })]
+      })]
+    })]
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/manageArrayItem.js":
+/*!*******************************************!*\
+  !*** ./src/components/manageArrayItem.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deleteArrayItem: () => (/* binding */ deleteArrayItem),
+/* harmony export */   editArrayItem: () => (/* binding */ editArrayItem)
+/* harmony export */ });
+function editArrayItem(itemType, field, newValue, index, index2, attributes, setAttributes) {
+  const newArray = attributes.playZones.concat([]);
+  switch (itemType) {
+    case "puzzle":
+      newArray[index]["puzzleArray"][index2][field] = newValue;
+      break;
+    case "clue":
+      newArray[index]["clueArray"][index2][field] = newValue;
+      if (field === "iconName") {
+        //const siteURL =window.my_data.siteUrl;
+        //console.log("siteURL:" + siteURL);
+        //console.log("window.my_data.siteUrl:" + window.my_data.siteUrl);
+        const imageURL = "/wp-content/plugins/escapeout-game/assets/" + newValue;
+        newArray[index]["clueArray"][index2]["iconPath"] = imageURL;
+      }
+      break;
+    case "hint":
+      newArray[index]["hintArray"][index2][field] = newValue;
+      break;
+  }
+  setAttributes({
+    playZones: newArray
+  });
+}
+function deleteArrayItem(itemType, itemArray, zoneIndex, indexToDelete, attributes, setAttributes) {
+  const newArray = attributes.playZones.concat([]);
+  const newItemArray = itemArray.filter(function (x, index) {
+    return index != indexToDelete;
+  });
+  switch (itemType) {
+    case "puzzle":
+      console.log("delete puzzle");
+      if (newItemArray.length === 0) {
+        const newObject = newArray[zoneIndex];
+        delete newObject.puzzleArray;
+      } else {
+        newArray[zoneIndex]["puzzleArray"] = newItemArray;
+      }
+      break;
+    case "clue":
+      console.log("delete clue");
+      if (newItemArray.length === 0) {
+        const newObject = newArray[zoneIndex];
+        delete newObject.clueArray;
+      } else {
+        newArray[zoneIndex]["clueArray"] = newItemArray;
+      }
+      break;
+    case "hint":
+      console.log("delete hint");
+      if (newItemArray.length === 0) {
+        const newObject = newArray[zoneIndex];
+        delete newObject.hintArray;
+      } else {
+        newArray[zoneIndex]["hintArray"] = newItemArray;
+      }
+      break;
+  }
+  setAttributes({
+    playZones: newArray
+  });
+}
+
+/***/ }),
+
+/***/ "./src/components/randID.js":
+/*!**********************************!*\
+  !*** ./src/components/randID.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   randID: () => (/* binding */ randID)
+/* harmony export */ });
+const randID = size => {
+  const nums = Array.from({
+    length: 10
+  }, (_, i) => String.fromCharCode("0".charCodeAt(0) + i));
+  const alphabets = Array.from({
+    length: 26
+  }, (_, i) => String.fromCharCode("a".charCodeAt(0) + i));
+  const chars = [...nums, ...alphabets];
+  const rand = length => Math.floor(Math.random() * length);
+  return Array.from({
+    length: size
+  }, () => chars[rand(chars.length)]).join("");
+};
+
+/***/ }),
+
+/***/ "./src/edit.js":
+/*!*********************!*\
+  !*** ./src/edit.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Edit)
+/* harmony export */ });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/rich-text */ "@wordpress/rich-text");
+/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _components_AttachmentImage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/AttachmentImage */ "./src/components/AttachmentImage.js");
+/* harmony import */ var _components_randID__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/randID */ "./src/components/randID.js");
+/* harmony import */ var _components_IconDisplay__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/IconDisplay */ "./src/components/IconDisplay.js");
+/* harmony import */ var _components_PuzzleEdit__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/PuzzleEdit */ "./src/components/PuzzleEdit.js");
+/* harmony import */ var _components_ClueEdit__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/ClueEdit */ "./src/components/ClueEdit.js");
+/* harmony import */ var _components_HintEdit__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/HintEdit */ "./src/components/HintEdit.js");
+/* harmony import */ var _components_ZoneEdit__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/ZoneEdit */ "./src/components/ZoneEdit.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__);
+/**
+ * Retrieves the translation of text.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
+ */
+
+
+
+
+
+
+
+/**
+ * React hook that is used to mark the block wrapper element.
+ * It provides all the necessary props like the class name.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
+ */
+
+
+
+
+
+
+
+
+
+/**
+ * The edit function describes the structure of your block in the context of the
+ * editor. This represents what the editor will render when the block is used.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
+ *
+ * @param {Object}   props               Properties passed to the function.
+ * @param {Object}   props.attributes    Available block attributes.
+ * @param {Function} props.setAttributes Function that updates individual attributes.
+ *
+ * @return {Element} Element to render.
+ */
+
+function Edit({
+  attributes,
+  setAttributes
+}) {
+  const [showWaiver, setShowWaiver] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false);
+  const [gameNameError, setGameNameError] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)("");
+  const [showHelp, setShowHelp] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(false);
+  const [showWaiver2, setShowWaiver2] = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)("test");
+  const allowedBlocks = ['core/heading', 'core/paragraph'];
+  const MY_TEMPLATE = [['core/heading', {
+    level: 3,
+    placeholder: 'Insert your heading here...'
+  }], ['core/paragraph', {
+    placeholder: 'Write some description text here...'
+  }]];
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)();
+  const playZoneObject = {
+    "id": "",
+    "name": "",
+    "description": "",
+    "lat": "",
+    "long": "",
+    "imageID": "",
+    "order": "",
+    "disabled": "No"
+  };
+  const puzzleObject = {
+    "name": "",
+    "description": "",
+    "question": "",
+    "answer": "",
+    "order": "",
+    "disabled": "No"
+  };
+  const clueObject = {
+    "name": "",
+    "text": "",
+    "iconName": "",
+    "iconPath": "",
+    "imageID": "",
+    "order": "",
+    "disabled": "No"
+  };
+  const hintObject = {
+    "name": "",
+    "text": "",
+    "order": "",
+    "disabled": "No"
+  };
+  // When the block loads, set playZones Array if not set or is just using default data
+  (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
+    if (attributes.playZones.length === 1 && attributes.playZones[0].id === "1") {
+      console.log("playZones.length: " + attributes.playZones.length);
+      console.log("playZones id: " + JSON.stringify(attributes.playZones));
+      //add object to array
+      /* edit zone id */
+      //const zoneID = randID(6)
+      //setAttributes({playZones: attributes.playZones.concat([{"id": zoneID,"name": "", "description": "", "lat": "", "long": "", "order": ""}])})
+      // delete first index of playZone array because it just wasn't editable
+      deletePlayZone(0);
+    }
+  }, []);
+  function updateGameName(value) {
+    console.log("update game name");
+    setAttributes({
+      gameName: value
+    });
+  }
+  function updateGameText(value) {
+    setAttributes({
+      gameText: value
+    });
+  }
+  function updateZoneText(value) {
+    console.log("update zone text");
+    setAttributes({
+      zoneText: value
+    });
+  }
+  function updateWaiverTop(value) {
+    console.log("update waiver top");
+    setAttributes({
+      waiverTop: value
+    });
+  }
+  function updateWaiverBody(value) {
+    console.log("update waiver body");
+    setAttributes({
+      waiverBody: value
+    });
+  }
+  function deletePlayZone(indexToDelete) {
+    console.log("deletePlayZone");
+    const newPlayZones = attributes.playZones.filter(function (x, index) {
+      return index != indexToDelete;
+    });
+    setAttributes({
+      playZones: newPlayZones
+    });
+  }
+  function addZoneInit() {
+    console.log("addZone!");
+    /* check zone id */
+    const zoneID = (0,_components_randID__WEBPACK_IMPORTED_MODULE_6__.randID)(6);
+    console.log("zoneID: " + zoneID);
+    /* check game name */
+    if (attributes.gameName === "update game name") {
+      /* error */
+      setGameNameError("please provide a game name");
+    } else {
+      /* set first zone */
+      let newPlayZoneObject = {
+        ...playZoneObject
+      };
+      newPlayZoneObject.id = zoneID;
+      setAttributes({
+        playZones: attributes.playZones.concat([newPlayZoneObject])
+      });
+      /* set gameID */
+      let gameIDnew = zoneID + "-" + attributes.gameName.replace(/ /g, "-");
+      ;
+      setAttributes({
+        gameID: gameIDnew
+      });
+    }
+  }
+  function addZone() {
+    console.log("addZone!");
+    /* check zone id */
+    const zoneID = (0,_components_randID__WEBPACK_IMPORTED_MODULE_6__.randID)(6);
+    console.log("zoneID: " + zoneID);
+    let newPlayZoneObject = {
+      ...playZoneObject
+    };
+    newPlayZoneObject.id = zoneID;
+    setAttributes({
+      playZones: attributes.playZones.concat([newPlayZoneObject])
+    });
+  }
+  function addPuzzleObject(index) {
+    console.log("addPuzzle");
+    const newArray = attributes.playZones.concat([]);
+    const newObject = newArray[index];
+    /* check for puzzleArray on object */
+    if (Object.hasOwn(newObject, 'puzzleArray')) {
+      newObject.puzzleArray.push(puzzleObject);
+    } else {
+      newObject.puzzleArray = [puzzleObject];
+    }
+    // ****
+    // using = to copy keeps all the references so don't have to do this 2nd equal after changing
+    // note, if the object has more levels the first level copying with spread (...) will still have reference if you copy
+    // that way.   JSON.parse(JSON.stringify) will copy all levels without reference but messes up on undefines, symbols, etc
+    // -> don't need: newArray[index] = newObject;
+    // ******
+    //console.log("puzzleArray newArray[index]1: " + JSON.stringify(newArray[index]));
+    //console.log("puzzleArray newObject2: " + JSON.stringify(newObject));
+    //console.log("puzzleArray newArray: " + JSON.stringify(newArray));
+    setAttributes({
+      playZones: newArray
+    });
+  }
+  function addClueObject(index) {
+    console.log("addClue");
+    const newArray = attributes.playZones.concat([]);
+    const newObject = newArray[index];
+    /* check for clueArray on object */
+    if (Object.hasOwn(newObject, 'clueArray')) {
+      newObject.clueArray.push(clueObject);
+    } else {
+      newObject.clueArray = [clueObject];
+    }
+    setAttributes({
+      playZones: newArray
+    });
+  }
+  function addHintObject(index) {
+    console.log("addHint");
+    const newArray = attributes.playZones.concat([]);
+    const newObject = newArray[index];
+    /* check for clueArray on object */
+    if (Object.hasOwn(newObject, 'hintArray')) {
+      newObject.hintArray.push(hintObject);
+    } else {
+      newObject.hintArray = [hintObject];
+    }
+    setAttributes({
+      playZones: newArray
+    });
+  }
+  function editZone(field, newValue, index) {
+    const newArray = attributes.playZones.concat([]);
+    /*if (Object.hasOwn(newArray[index], field)) {
+    	console.log("has field: ");
+    } else {
+    	console.log("does not has field: ");
+    }*/
+    newArray[index][field] = newValue;
+    console.log("playZones newArray: " + JSON.stringify(newArray));
+    setAttributes({
+      playZones: newArray
+    });
+  }
+  function editZoneMedia(media, index) {
+    //console.log("editClueMedia: " + JSON.stringify(media));
+    const newArray = attributes.playZones.concat([]);
+    newArray[index]["imageID"] = media.id;
+    newArray[index]["imageURL"] = media.url;
+    //console.log("playZones newArray: " + JSON.stringify(newArray));
+    setAttributes({
+      playZones: newArray
+    });
+  }
+  if (attributes.playZones.length > 0) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+      ...blockProps,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        className: "game-block-edit-block",
+        style: {
+          backgroundColor: attributes.bgColor
+        },
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          isPrimary: true,
+          onClick: () => {
+            setShowHelp(!showHelp);
+          },
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+            className: showHelp ? "hide" : "show",
+            children: "Show Help"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+            className: showHelp ? "show" : "hide",
+            children: "Close Help"
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          className: showHelp ? "show" : "hide",
+          children: ["HOW TO CREATE A GAME:", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("ul", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+              children: "Do Not Publish Game for public until you are done testing. Create a private page with a password."
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+              children: "Games are based on Zones. Create a Zone and then create clues, puzzles hints"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+              children: "Zones are area with a radius of about 100 feet. Let the player know the center of the zone AND/OR if it does not have a diameter of 100feet (see zone text help at bottom)."
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+              children: "Each game has a waiver - default text at bottom (you can change)"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+              children: "Each game has a help area for player - default text at bottom (you can change)"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+              children: "You can change color of background of game - see tool on right"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+              children: "You can add a header and description for each game."
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("a", {
+            href: "#zone-help-text",
+            className: "button",
+            children: "Go To Bottom to See Help and Waiver Text."
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Flex, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("a", {
+            href: "#zone-help-text",
+            className: "button hide",
+            children: "Zone Help Text"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("a", {
+            href: "#puzzle-help-text",
+            className: "button hide",
+            children: "Puzzle Help Text"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("a", {
+            href: "#clue-help-text",
+            className: "button hide",
+            children: "Clue Help Text"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("a", {
+            href: "#hint-help-text",
+            className: "button hide",
+            children: "Hint Help Text"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("a", {
+            href: "#waiver-text",
+            className: "button hide",
+            children: "Waiver Text"
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+          className: "like-label",
+          children: "Game Header and Description:"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+          style: {
+            backgroundColor: "white",
+            padding: "10px",
+            marginBottom: "10px"
+          },
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks, {
+            allowedBlocks: allowedBlocks,
+            template: MY_TEMPLATE,
+            templateLock: "all"
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.BlockControls, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+            title: "Background Color",
+            initialOpen: true,
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelRow, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ColorPicker, {
+                color: attributes.bgColor,
+                onChange: x => setAttributes({
+                  bgColor: x
+                }),
+                enableAlpha: true,
+                defaultValue: "#000"
+              })
+            })
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+          label: "Game Name:",
+          value: attributes.gameName,
+          onChange: updateGameName,
+          style: {
+            fontSize: "20px"
+          }
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+          className: "item-holder-edit",
+          children: attributes.playZones.map(function (playZone, index) {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+              className: "zoneDiv",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components_ZoneEdit__WEBPACK_IMPORTED_MODULE_11__["default"], {
+                playZone: playZone,
+                index: index,
+                editZoneMedia: editZoneMedia,
+                editZone: editZone,
+                deletePlayZone: deletePlayZone
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Flex, {
+                justify: "flex-start",
+                className: "buttons",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+                    isPrimary: true,
+                    onClick: () => {
+                      addClueObject(index);
+                    },
+                    children: "Add Clue"
+                  })
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+                    isPrimary: true,
+                    onClick: () => {
+                      addHintObject(index);
+                    },
+                    children: "Add Hint"
+                  })
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+                    isPrimary: true,
+                    onClick: () => {
+                      addPuzzleObject(index);
+                    },
+                    children: "Add Puzzle"
+                  })
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+                className: "item-holder-edit",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components_PuzzleEdit__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                  puzzleArray: playZone.puzzleArray,
+                  index: index,
+                  attributes: attributes,
+                  setAttributes: setAttributes,
+                  playZoneName: playZone.name
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+                className: "item-holder-edit",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components_ClueEdit__WEBPACK_IMPORTED_MODULE_9__["default"], {
+                  clueArray: playZone.clueArray,
+                  index: index,
+                  attributes: attributes,
+                  setAttributes: setAttributes,
+                  playZoneName: playZone.name
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+                className: "item-holder-edit",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components_HintEdit__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                  hintArray: playZone.hintArray,
+                  index: index,
+                  attributes: attributes,
+                  setAttributes: setAttributes,
+                  playZoneName: playZone.name
+                })
+              })]
+            }, index);
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Flex, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+              isPrimary: true,
+              onClick: () => {
+                addZone();
+              },
+              children: "Add Another Zone"
+            })
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+          className: "text-area-container",
+          id: "zone-help-text",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextareaControl, {
+            label: "Zone Help Text':",
+            value: attributes.zoneText,
+            onChange: updateZoneText,
+            style: {
+              fontSize: "15px"
+            }
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+          className: "like-label",
+          id: "waiver-text",
+          children: "Waiver Text:"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+          className: "text-area-container",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextareaControl, {
+            label: "Waiver Top:",
+            value: attributes.waiverTop,
+            onChange: updateWaiverTop,
+            style: {
+              fontSize: "15px"
+            }
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextareaControl, {
+            label: "Waiver Body':",
+            value: attributes.waiverBody,
+            onChange: updateWaiverBody,
+            style: {
+              fontSize: "15px"
+            }
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+            isPrimary: true,
+            onClick: () => {
+              setShowWaiver(!showWaiver);
+            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+              className: showWaiver ? "hide" : "show",
+              children: "View Waiver Text"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+              className: showWaiver ? "show" : "hide",
+              children: "Close Waiver Text"
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+            className: showWaiver ? "waiver-container show" : "hide",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+              className: "waiver-top",
+              children: attributes.waiverTop
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+              className: "waiver-body",
+              children: attributes.waiverBody
+            })]
+          })]
+        })]
+      })
+    });
+  } else {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+      ...blockProps,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        className: "game-block-edit-block",
+        style: {
+          backgroundColor: attributes.bgColor
+        },
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("h4", {
+          children: "The first step to creating a game is adding a Zone."
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+          children: "Zones are areas where people will play. Your Clues and Puzzles should be about things in the Zone area. Typically Zones have a center and the play area is about 100 feet around center. Games can have more than 1 Zone."
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("br", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Flex, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+              label: "Game Name:",
+              value: attributes.gameName,
+              onChange: updateGameName,
+              style: {
+                fontSize: "20px"
+              }
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+              style: {
+                color: 'red'
+              },
+              children: gameNameError
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+              isPrimary: true,
+              onClick: () => {
+                addZoneInit();
+              },
+              children: "Add A Zone"
+            })]
+          })
+        })]
+      })
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/rich-text */ "@wordpress/rich-text");
+/* harmony import */ var _wordpress_rich_text__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_rich_text__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style.scss */ "./src/style.scss");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./editor.scss */ "./src/editor.scss");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./edit */ "./src/edit.js");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./block.json */ "./src/block.json");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+/**
+ * Registers a new block provided a unique name and an object defining its behavior.
+ *
+ * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
+ */
+
+
+
+
+/**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * All files containing `style` keyword are bundled together. The code used
+ * gets applied both to the front of your site and to the editor. All other files
+ * get applied to the editor only.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+/**
+ * Every block starts by registering a new block type definition.
+ *
+ * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
+ */
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_6__.name, {
+  /**
+   * @see ./edit.js
+   */
+  edit: _edit__WEBPACK_IMPORTED_MODULE_5__["default"],
+  save: props => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks.Content, {});
+  }
+});
+
+/***/ }),
+
+/***/ "./src/editor.scss":
+/*!*************************!*\
+  !*** ./src/editor.scss ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./src/style.scss":
+/*!************************!*\
+  !*** ./src/style.scss ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "react":
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = window["React"];
+
+/***/ }),
+
+/***/ "react/jsx-runtime":
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = window["ReactJSXRuntime"];
+
+/***/ }),
+
+/***/ "@wordpress/block-editor":
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["blockEditor"];
+
+/***/ }),
+
+/***/ "@wordpress/blocks":
+/*!********************************!*\
+  !*** external ["wp","blocks"] ***!
+  \********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["blocks"];
+
+/***/ }),
+
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["components"];
+
+/***/ }),
+
+/***/ "@wordpress/data":
+/*!******************************!*\
+  !*** external ["wp","data"] ***!
+  \******************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["data"];
+
+/***/ }),
+
+/***/ "@wordpress/i18n":
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ }),
+
+/***/ "@wordpress/rich-text":
+/*!**********************************!*\
+  !*** external ["wp","richText"] ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["richText"];
+
+/***/ }),
+
+/***/ "./src/block.json":
+/*!************************!*\
+  !*** ./src/block.json ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/escapeout-game","version":"0.1.0","title":"EscapeOut Game","category":"widgets","attributes":{"gameID":{"type":"string","default":"zoneID_gameName"},"gameName":{"type":"string","default":"update game name"},"zoneText":{"type":"string","default":"Zones are the play area. Clues are usually within 100 feet of Zone Center."},"playZones":{"type":"array","default":[{"id":"1"}]},"bgColor":{"type":"string","default":"#EBEBEB"},"waiverBody":{"type":"string","default":"I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\\n\\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."},"waiverTop":{"type":"string","default":"I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."},"waiverSigned":{"type":"boolean","default":false}},"icon":"media-interactive","description":"Allows user to create a game","example":{},"supports":{"interactivity":true},"textdomain":"escapeout-game","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var chunkIds = deferred[i][0];
+/******/ 				var fn = deferred[i][1];
+/******/ 				var priority = deferred[i][2];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"index": 0,
+/******/ 			"./style-index": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var chunkIds = data[0];
+/******/ 			var moreModules = data[1];
+/******/ 			var runtime = data[2];
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunkgame_block"] = self["webpackChunkgame_block"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-index"], () => (__webpack_require__("./src/index.js")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;
+//# sourceMappingURL=index.js.map

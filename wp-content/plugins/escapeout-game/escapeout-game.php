@@ -47,6 +47,12 @@ function escapeout_table() {
       id mediumint(9) NOT NULL AUTO_INCREMENT,
       postID varchar (100) NOT NULL,
       userID varchar (100) NOT NULL,
+      gameID varchar (200) NOT NULL,
+      userEmail varchar (200) NOT NULL,
+      gameName varchar (200) NOT NULL,
+      designerEmail varchar (200) NOT NULL,
+      designerName varchar (200),
+      gameComments text,
       timeStart varchar (100),
       timeEnd varchar (100),
       totalTime varchar (100),
@@ -134,6 +140,12 @@ function escapeout_admin_require_permissions() {
 function escapeout_get_game_score($request) {
     $postID = $request->get_param('postID');
     $userID = $request->get_param('userID');
+	$gameID = $request->get_param('gameID');
+	$gameName = $request->get_param('gameName');
+	$designerEmail = $request->get_param('designerEmail');
+	$designerName = $request->get_param('designerName');
+	$gameComments = $request->get_param('gameComments');
+	$userEmail = $request->get_param('userEmail');
     $timeStart = $request->get_param('timeStart');
     $firstTime = $request->get_param('firstTime');
     $completed = $request->get_param('completed');
@@ -141,9 +153,9 @@ function escapeout_get_game_score($request) {
     global $wpdb;
     $table_name = $wpdb->prefix . 'game_score';
 
-    if ($userID && $postID && $timeStart) {
+    if ($userEmail && $gameID && $timeStart) {
 
-        $results = $wpdb->get_results("SELECT * FROM $table_name WHERE postID = $postID AND userID = $userID AND timeStart = $timeStart");
+        $results = $wpdb->get_results("SELECT * FROM $table_name WHERE gameID = $gameID AND userEmail = $userEmail AND timeStart = $timeStart");
 
     } else {
 
@@ -170,6 +182,12 @@ function escapeout_create_game_score( $request ){
         array(
             'postID' => $request['postID'],
             'userID' => $request['userID'],
+            'gameID' => $request['gameID'],
+            'gameName' => $request['gameName'],
+            'gameComments' => $request['gameComments'],
+            'userEmail' => $request['userEmail'],
+            'designerEmail' => $request['designerEmail'],
+            'designerName' => $request['designerName'],
             'timeStart' => $request['timeStart'],
             'timeEnd' => $request['timeEnd'],
             'totalTime' => $request['totalTime'],

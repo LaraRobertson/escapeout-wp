@@ -44,6 +44,8 @@ import ZoneEdit from "./components/ZoneEdit";
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const [showWaiver, setShowWaiver] = useState(false);
+	const [gameNameError, setGameNameError] = useState("");
+	const [showHelp, setShowHelp] = useState(false);
 	const [showWaiver2, setShowWaiver2] = useState("test");
 	const allowedBlocks = [ 'core/heading','core/paragraph' ];
 
@@ -125,6 +127,25 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes({ playZones: newPlayZones })
 	}
 
+	function addZoneInit() {
+		console.log("addZone!")
+		/* check zone id */
+		const zoneID = randID(6)
+		console.log("zoneID: " + zoneID)
+		/* check game name */
+		if (attributes.gameName === "update game name") {
+			/* error */
+			setGameNameError("please provide a game name");
+		} else {
+			/* set first zone */
+			let newPlayZoneObject = {...playZoneObject}
+			newPlayZoneObject.id = zoneID
+			setAttributes({playZones: attributes.playZones.concat([newPlayZoneObject])})
+			/* set gameID */
+			let gameIDnew = zoneID + "-" + attributes.gameName.replace(/ /g, "-");;
+			setAttributes({ gameID: gameIDnew })
+		}
+	}
 	function addZone() {
 		console.log("addZone!")
 		/* check zone id */
@@ -133,6 +154,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		let newPlayZoneObject = {...playZoneObject}
 		newPlayZoneObject.id = zoneID
 		setAttributes({playZones: attributes.playZones.concat([newPlayZoneObject])})
+
 	}
 	function addPuzzleObject(index) {
 		console.log("addPuzzle")
@@ -203,15 +225,38 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<div {...blockProps}>
 			<div className="game-block-edit-block" style={{backgroundColor: attributes.bgColor}}>
-				<div className="like-label">Go To:</div>
+				<Button
+					isPrimary
+					onClick={() => {
+						setShowHelp(!showHelp);
+					}}
+				>
+					<div className={showHelp ? "hide" : "show"}>Show Help</div>
+					<div className={showHelp ? "show" : "hide"}>Close Help</div>
+				</Button>
+				<div className={showHelp ? "show" : "hide"}>
+					HOW TO CREATE A GAME:
+					<ul>
+						<li>Do Not Publish Game for public until you are done testing. Create a private page with a password.</li>
+						<li>Games are based on Zones. Create a Zone and then create clues, puzzles hints</li>
+						<li>Zones are area with a radius of about 100 feet. Let the player know the center of the zone
+							AND/OR if it does not have a diameter of 100feet (see zone text help at bottom).
+						</li>
+						<li>Each game has a waiver - default text at bottom (you can change)</li>
+						<li>Each game has a help area for player - default text at bottom (you can change)</li>
+						<li>You can change color of background of game - see tool on right</li>
+						<li>You can add a header and description for each game.</li>
+					</ul>
+					<a href="#zone-help-text" className={"button"}>Go To Bottom to See Help and Waiver Text.</a>
+				</div>
 				<Flex>
-					<a href="#zone-help-text" className={"button"}>Zone Help Text</a>
-					<a href="#puzzle-help-text" className={"button"}>Puzzle Help Text</a>
-					<a href="#clue-help-text" className={"button"}>Clue Help Text</a>
-					<a href="#hint-help-text" className={"button"}>Hint Help Text</a>
-					<a href="#waiver-text" className={"button"}>Waiver Text</a>
+					<a href="#zone-help-text" className={"button hide"}>Zone Help Text</a>
+					<a href="#puzzle-help-text" className={"button hide"}>Puzzle Help Text</a>
+					<a href="#clue-help-text" className={"button hide"}>Clue Help Text</a>
+					<a href="#hint-help-text" className={"button hide"}>Hint Help Text</a>
+					<a href="#waiver-text" className={"button hide"}>Waiver Text</a>
 				</Flex>
-				<div className="like-label">Game Text:</div>
+				<div className="like-label">Game Header and Description:</div>
 				<div style={{backgroundColor: "white", padding: "10px", marginBottom: "10px"}}><InnerBlocks
 					allowedBlocks={allowedBlocks} template={MY_TEMPLATE}
 					templateLock="all"/></div>
@@ -339,14 +384,19 @@ export default function Edit( { attributes, setAttributes } ) {
 				<br />
 				<Flex>
 					<FlexItem>
+						<TextControl label="Game Name:" value={attributes.gameName} onChange={updateGameName}
+									 style={{fontSize: "20px"}}/>
+						<div style={{color: 'red'}}>{gameNameError}</div>
 						<Button
 							isPrimary
 							onClick={() => {
-								addZone();
+								addZoneInit();
 							}}
 						>
 							Add A Zone
 						</Button>
+
+
 					</FlexItem>
 				</Flex>
 			</div>

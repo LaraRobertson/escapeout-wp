@@ -74,7 +74,7 @@ const saveScore = async () => {
 const getScoreByID = async ({postID, userID, realTimeStart}) => {
 }
 
-const createScore = async ({postID, userID, timeStart, teamName}) => {
+const createScore = async ({postID, userID, gameID, gameName, userEmail, designerEmail, designerName, timeStart, teamName}) => {
 	/* note - can only update fields that you created, probably because of authorization... */
 	const myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
@@ -104,6 +104,11 @@ const createScore = async ({postID, userID, timeStart, teamName}) => {
 		const raw = JSON.stringify({
 			"postID": postID,
 			"userID": userID,
+			"gameID": gameID,
+			"gameName": gameName,
+			"userEmail": userEmail,
+			"designerEmail": designerEmail,
+			"designerName": designerName,
 			"timeStart": timeStart,
 			"teamName": teamName,
 			"firstTime": state.firstTime
@@ -245,10 +250,15 @@ const { state } = store( 'create-block', {
 		},
 		closeHelp: () => {
 			state.zoneHelpVisible = false;
+			state.teamHelpVisible = false;
 			state.helpVisible = false;
 		},
 		setZoneHelpVisible: () => {
 			state.zoneHelpVisible = true;
+			state.helpVisible = true;
+		},
+		setTeamHelpVisible: () => {
+			state.teamHelpVisible = true;
 			state.helpVisible = true;
 		},
 		guessAttempt: () => {
@@ -303,8 +313,8 @@ const { state } = store( 'create-block', {
 		quit() {
 			const context = getContext();
 			removeLocalStorage();
-			state.quitVisible = false
-			context.gameStart = false;
+			window.location.reload();
+			window.scrollTo(0, 0);
 		},
 		showWaiverToggle() {
 			state.showWaiver = ! state.showWaiver;
@@ -318,7 +328,8 @@ const { state } = store( 'create-block', {
 			const input = document.getElementById("team-name").value;
 			context.teamName = input;
 			console.log("context.teamName: " + context.teamName);
-			state.showGameScore			//check waiver
+			//state.showGameScore
+			// check waiver
 			if (context.waiverSigned === true) {
 				//check teamName
 				if (context.teamName !== '') {
@@ -329,8 +340,11 @@ const { state } = store( 'create-block', {
 						context.teamName="";
 					} else {
 						state.errorMessage="";
+						/* need teamName in localstorage? */
 						localStorage.setItem("teamName", context.teamName);
+						/* this is timeStart */
 						const date = new Date().getTime();
+						/* ... */
 						state.timeStart = date;
 						localStorage.setItem("timeStart", date);
 						state.formattedTimeStart =  format(date, "MM/dd/yy h:mma");
@@ -340,7 +354,7 @@ const { state } = store( 'create-block', {
 						state.hintTime=0;
 						state.showWaiver=false;
 
-						createScore({postID:context.postID, userID:context.userID, timeStart:date, teamName: context.teamName});
+						createScore({postID:context.postID, userID:context.userID, gameID:context.gameID, gameName:context.gameName, userEmail:context.userEmail, designerEmail: context.designerEmail, designerName: context.designerName, timeStart:date, teamName: context.teamName});
 						/* get gameScoreID */
 					}
 				} else {

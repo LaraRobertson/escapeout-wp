@@ -161,14 +161,31 @@
 		font-weight: bold;
 	}
 	.game-container {
-		position: relative;
+		/*position: relative;
+		position:fixed;
+		background:white;
+		z-index:1;
+		top:0;
+		right:0;
+		left:0;
+		width:100%;*/
+		bottom: 100px;
+		left: 0;
+		overflow: auto ; /* The panel becomes SCROLLABLE due to content overflow. */
+		position: absolute ;
+		right: 0px ;
+		top: 0px ;
+		overflow-y: scroll;
+		overscroll-behavior: contain ; /* Prevent SCROLL-CHAINING to parent elements. */
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
 		padding:10px;
 		margin: 0 auto;
 		box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
-		position:relative;
+		&.dark-theme {
+			background: #333 !important;
+			color: #fff;}
 	}
 	.hide-game-container {
 		display:none;
@@ -210,6 +227,11 @@
 	.clue-item, .hint-item {
 		width: 150px;
 		text-align:center;
+	}
+	.hint-item {
+		width: 150px;
+		text-align:center;
+		padding-bottom:10px;
 	}
 	.zone-border {
 		border: 1px solid #0D5189;
@@ -311,6 +333,14 @@
 		z-index: 115;
 		text-align: center;
 	}
+	.help-container-start {
+		position: absolute;
+		top:10px;
+		right: 10px;
+		left:10px;
+		z-index: 115;
+		text-align: center;
+	}
 
 	.help-inner {
 		display: inline-block;
@@ -336,6 +366,9 @@
 }
 .hide {
 	display:none;
+}
+.game-text {
+	font-size:.8em;
 }
 .waiver-container {
 	border: 1px solid #ddddd;
@@ -413,7 +446,7 @@
 	transition: all .2s ease;
 	visibility: hidden;
 	width: 100%;
-	height: 300px;
+	height: 300px !important;
 
 	.modal {
 		background-color: rgba(255, 255, 255, 1);
@@ -498,6 +531,96 @@
 		color: rgba(54, 67, 72, 0.8);
 	}
 }
+
+.modalContainer2 {
+	top:0;
+	left:0;
+	right:0;
+	opacity: 0;
+	position: fixed;
+	transition: all .2s ease;
+	visibility: hidden;
+	width: 100%;
+	min-height: 100%;
+	z-index:1;
+
+	.modal {
+		color: #000;
+		margin: 0 auto;
+		box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+		max-width: 450px;
+	}
+
+	.modal_header {
+		border-bottom: 1px solid #ddd;
+		position: relative;
+		padding: 10px;
+	}
+
+	.modal_header .close {
+		background: transparent;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+
+	.modal_header .close img {
+		height: auto;
+		transition: all .2s ease;
+		width: 1rem;
+	}
+
+	.modal_header .close:hover img {
+		-webkit-transform: scale(1.1);
+		transform: scale(1.1);
+	}
+
+	.modal_header-title {
+		text-align: center;
+	}
+
+	.modal_content {
+		border-bottom: 1px solid #ddd;
+		padding: 1rem 0;
+	}
+
+	@media all and (max-width: 400px) {
+		.modalContainer .modal_content {
+			font-size: .9rem;
+		}
+	}
+
+	.modal_footer {
+		padding: 20px 0 0 0;
+		text-align: center;
+	}
+
+	.modal_footer button {
+		border-radius: 8px;
+		/*float: right;*/
+		padding: .5rem;
+	}
+
+	modal_footer .submit {
+		background-color: #364348;
+		color: #fff;
+		margin-right: 1rem;
+	}
+
+	.modal_footer .submit:hover {
+		background-color: rgba(54, 67, 72, 0.8);
+	}
+
+	.modal_footer .modal-close {
+		background-color: transparent;
+		font-weight: 600;
+	}
+
+	.modal_footer .modal-close:hover {
+		color: rgba(54, 67, 72, 0.8);
+	}
+}
+
 
 .from-top {
 	-webkit-transform: translateY(-600px);

@@ -6,9 +6,13 @@
   "title": "EscapeOut Game",
   "category": "widgets",
   "attributes": {
+    "gameID": {
+      "type": "string",
+      "default": "zoneID_gameName"
+    },
     "gameName": {
       "type": "string",
-      "default": "game name"
+      "default": "update game name"
     },
     "zoneText": {
       "type": "string",
