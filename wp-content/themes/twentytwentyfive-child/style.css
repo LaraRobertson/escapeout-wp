@@ -57,21 +57,34 @@ Tags: one-column, custom-colors, custom-menu, custom-logo, editor-style, feature
 }
 .inline-button {
     display: block;
-    width:120px;
+    width:15%;
+    text-align: center;
 }
 .inline-button button{
     background-color: rgb(0, 0, 0, 0.1);
     padding: .1em .3em;
     font-size: .6em;
-    width:110px;
+    width:95%;
+    margin: 0 auto;
 }
 .flex-button {
     display:flex;
     flex-wrap: wrap;
     gap: .2rem ;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: stretch;
     margin:0;
+}
+.sticky-tool-bar {
+    position:sticky;
+    top:0;
+    background-color: white;
+    width: 100%;
+    padding-top:10px;
+}
+.admin-bar .sticky-tool-bar {
+    padding-top:40px;
 }
 .inner-game-card1 {
     background-color: rgb(0, 0, 0, 0.3);

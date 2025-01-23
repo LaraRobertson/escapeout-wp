@@ -39,18 +39,6 @@ if (!$cityURL && !$locationURL && !$authorURL) {?>
 		'hide_empty' => true
 	) );
 	?>
-	<div class="flex-button" >
-		<div class="inline-button"><button class="level0-hide button-hide show" data-name="level0">hide level 0</button>
-			<button id="level0Show" class="level0-show  button-show hide" data-name="level0">show level 0</button></div>
-		<div class="inline-button"><button class="level1-hide button-hide show" data-name="level1">hide level 1</button>
-			<button class="level1-show  button-show hide" data-name="level1">show level 1</button></div>
-		<div class="inline-button"><button class="level2-hide button-hide show" data-name="level2">hide level 2</button>
-			<button class="level2-show  button-show hide" data-name="level2">show level 2</button></div>
-		<div class="inline-button"><button class="level3-hide button-hide show" data-name="level3">hide level 2</button>
-			<button class="level3-show  button-show hide" data-name="level3">show level 3</button></div>
-		<div class="inline-button"><button class="eo-test-game-hide button-hide show" data-name="eo-test-game">hide testing</button>
-			<button class="eo-test-game-show  button-show hide" data-name="eo-test-game">show testing</button></div>
-	</div>
 	<p <?php echo get_block_wrapper_attributes(); ?>>
 	<h2>Locations</h2>
 	<?php if ( !empty($locations) ) {
@@ -69,17 +57,19 @@ if (!$cityURL && !$locationURL && !$authorURL) {?>
 } else if ($locationURL) {
 	$locationURLstrip = strtr($locationURL, '-', ' ');?>
 	<div>Location: <?php echo ucwords($locationURLstrip) ;?></div>
-	<div class="flex-button" >
-		<div class="inline-button"><button class="level0-hide button-hide show" data-name="level0">hide level 0</button>
-			<button id="level0Show" class="level0-show  button-show hide" data-name="level0">show level 0</button></div>
-		<div class="inline-button"><button class="level1-hide button-hide show" data-name="level1">hide level 1</button>
-			<button class="level1-show  button-show hide" data-name="level1">show level 1</button></div>
-		<div class="inline-button"><button class="level2-hide button-hide show" data-name="level2">hide level 2</button>
-			<button class="level2-show  button-show hide" data-name="level2">show level 2</button></div>
-		<div class="inline-button"><button class="level3-hide button-hide show" data-name="level3">hide level 2</button>
-			<button class="level3-show  button-show hide" data-name="level3">show level 3</button></div>
-		<div class="inline-button"><button class="eo-test-game-hide button-hide show" data-name="eo-test-game">hide testing</button>
-			<button class="eo-test-game-show  button-show hide" data-name="eo-test-game">show testing</button></div>
+	<div class="sticky-tool-bar">
+		<div class="flex-button" >
+			<div class="inline-button"><button class="level0-hide button-hide show" data-name="level0">hide level 0</button>
+				<button id="level0Show" class="level0-show  button-show hide" data-name="level0">show level 0</button></div>
+			<div class="inline-button"><button class="level1-hide button-hide show" data-name="level1">hide level 1</button>
+				<button class="level1-show  button-show hide" data-name="level1">show level 1</button></div>
+			<div class="inline-button"><button class="level2-hide button-hide show" data-name="level2">hide level 2</button>
+				<button class="level2-show  button-show hide" data-name="level2">show level 2</button></div>
+			<div class="inline-button"><button class="level3-hide button-hide show" data-name="level3">hide level 2</button>
+				<button class="level3-show  button-show hide" data-name="level3">show level 3</button></div>
+			<div class="inline-button"><button class="eo-test-game-hide button-hide show" data-name="eo-test-game">hide testing</button>
+				<button class="eo-test-game-show  button-show hide" data-name="eo-test-game">show testing</button></div>
+		</div>
 	</div>
 <?php } ?>
 <?php
