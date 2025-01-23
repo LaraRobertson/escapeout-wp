@@ -14,6 +14,14 @@
       "type": "string",
       "default": "update game name"
     },
+    "map1": {
+      "type": "string",
+      "default": ""
+    },
+    "walkingDistance": {
+      "type": "string",
+      "default": "this game has 2 zones and the distance between is 100 yards."
+    },
     "zoneText": {
       "type": "string",
       "default": "Zones are the play area. Clues are usually within 100 feet of Zone Center."

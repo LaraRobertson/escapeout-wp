@@ -63,6 +63,8 @@ for ($i = 0; $i < count($attributes['playZones']); $i++) {
         $playZones[$i]['name'] = $attributes['playZones'][$i]["name"];
         $playZones[$i]['description'] = $attributes['playZones'][$i]["description"];
         $playZones[$i]['order'] = $attributes['playZones'][$i]["order"];
+	    $playZones[$i]['lat'] = $attributes['playZones'][$i]["lat"];
+	    $playZones[$i]['long'] = $attributes['playZones'][$i]["long"];
         $playZones[$i]['imageID'] = $attributes['playZones'][$i]["imageID"];
         if ($attributes['playZones'][$i]["imageID"] != '') {
             $playZones[$i]['zoneHasImage'] = true;
@@ -148,6 +150,9 @@ wp_interactivity_state(
         'helpVisible' => false,
         'zoneHelpVisible'=> false,
         'teamHelpVisible'=> false,
+        'modalPublicMapOpen'=> false,
+        'modalPublicImageOpen'=> false,
+        'modalGameMapOpen'=> false,
         'solvedCount' => 0,
         'puzzleTotal' => count($puzzleArray),
         'showWaiver' => false,
@@ -198,6 +203,28 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
         <div>
             <?php echo $content; ?>
 	    </div>
+        <div class="details">
+            <ul>
+
+                <li><div>Public Map shows some Zone Locations, others may be revealed in game:</div>
+            <button class="button"
+                    data-wp-on-async--click="actions.togglePublicMap"
+                    aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+            >
+		        <?php esc_html_e( 'View Public Map', 'game-block' ); ?>
+            </button>
+                    <button class="button"
+                            data-wp-on-async--click="actions.togglePublicImage"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+		                <?php esc_html_e( 'View Zone 1 Image', 'game-block' ); ?>
+                    </button>
+                </li>
+                <li>
+            <strong>walking distance</strong>: <?php echo $attributes['walkingDistance'] ?>
+                </li>
+            </ul>
+        </div>
             <hr/>
         <div class="show-score" data-wp-bind--hidden="!state.showGameScore" >
             <div class="game-score" data-wp-text="state.gameScore"></div>
@@ -267,8 +294,6 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                     <br ><br />
                     The Team Name is the public name for game results. Your team can be 1 person or many.
                     It is simply the name associated with the playing of this game, this time.
-
-
                 </div>
                 <button class="button"
                         data-wp-on--click="actions.closeHelp"
@@ -277,6 +302,32 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
 					<?php esc_html_e( 'Close', 'game-block' ); ?>
                 </button>
             </div>
+        </div>
+        <div>
+            <div class="modalContainerMap" data-wp-class--showmodal="state.modalPublicMapOpen" data-wp-on--click="actions.togglePublicMap">
+                <div class="modal from-right">
+                    <header class="modal_header">
+                        <div><strong>Public Map</strong> <span class="small">(click on right arrow or icons for zone name(s))</span> </div>
+                    </header>
+                    <main class="modal_content">
+                        <iframe src="<?php echo $attributes['map1'] ?>" width="100%" height="400px"></iframe>
+                    </main>
+                    <footer class="modal_footer">
+                        <button class="modal-close">Close</button>
+                    </footer>
+                </div>
+            </div>
+            <div class="modalContainerMap" data-wp-class--showmodal="state.modalPublicImageOpen" data-wp-on--click="actions.togglePublicImage">
+                <div class="modal from-right">
+                    <header class="modal_header">
+                        <div><strong>First Zone - Image of Center</strong></div>
+                    </header>
+                    <main class="modal_content">
+	        <?php echo wp_get_attachment_image( $attributes['playZones'][0]["imageID"], "thumbnail", "", array( "class" => "img-responsive" ) );  ?>
+                        <footer class="modal_footer">
+                            <button class="modal-close">Close</button>
+                        </footer>
+                </div>
         </div>
     </div>
     <!-- end game start bar - hidden while playing game -->
@@ -380,7 +431,7 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                 <!-- puzzle modal / puzzle needs an id-->
 
                 <div>
-                    <div class="modalContainer" data-wp-class--showmodal="context.modalOpen" data-wp-bind--hidden="context.solved">
+                    <div class="modalContainerPuzzle" data-wp-class--showmodal="context.modalOpen" data-wp-bind--hidden="context.solved">
                         <div class="modal from-right">
                             <header class="modal_header">
                                 <div class="modal_header-clueDetails"><?php echo $puzzle["name"] ?></div>
@@ -417,10 +468,6 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                             </footer>
                         </div>
                     </div>
-
-
-
-
                 </div>
 
             </div>
@@ -493,14 +540,8 @@ $ourContext = array('teamName' => '', "waiverSigned" => $attributes["waiverSigne
                 </div>
             <?php } ?>
         </div>
-       <!-- <div class="textArea-Container">
-            <div class="amplify-flex amplify-field amplify-textareafield">
-                <label for="textArea">Notes</label>
-                <textarea data-wp-on--input="callbacks.saveNotes" id="textArea"  aria-invalid="false" class="text-area"
-                          aria-describedby="textArea"  rows="5">
-                </textarea>
-            </div>
-        </div>-->
+
+    </div>
         <div class="help-container" data-wp-bind--hidden="!state.helpVisible">
             <div class='help-inner'>
                 <div data-wp-bind--hidden="!state.zoneHelpVisible"><?php echo $attributes["zoneText"] ?></div>

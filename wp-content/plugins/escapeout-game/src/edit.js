@@ -22,13 +22,12 @@ import { useState, useEffect} from 'react';
  */
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
-import AttachmentImage from './components/AttachmentImage';
 import {randID} from "./components/randID";
-import {IconDisplay} from "./components/IconDisplay";
 import PuzzleEdit from "./components/PuzzleEdit";
 import ClueEdit from "./components/ClueEdit";
 import HintEdit from "./components/HintEdit";
 import ZoneEdit from "./components/ZoneEdit";
+import FlexButtons from "./components/FlexButtons";
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -43,15 +42,12 @@ import ZoneEdit from "./components/ZoneEdit";
  * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const [showWaiver, setShowWaiver] = useState(false);
 	const [gameNameError, setGameNameError] = useState("");
-	const [showHelp, setShowHelp] = useState(false);
-	const [showWaiver2, setShowWaiver2] = useState("test");
 	const allowedBlocks = [ 'core/heading','core/paragraph' ];
 
 	const MY_TEMPLATE = [
 		['core/heading', { level: 3, placeholder: 'Insert your heading here...' }],
-		['core/paragraph', { placeholder: 'Write some description text here...' }],
+		['core/paragraph', { placeholder: 'Write some description about game here - goals, notes about play area, etc ...' }],
 	]
 	const blockProps = useBlockProps();
 	const playZoneObject = {
@@ -104,20 +100,9 @@ export default function Edit( { attributes, setAttributes } ) {
 		console.log("update game name");
 		setAttributes({ gameName: value })
 	}
-	function updateGameText(value) {
-		setAttributes({ gameText: value })
-	}
-	function updateZoneText(value) {
-		console.log("update zone text");
-		setAttributes({ zoneText: value })
-	}
-	function updateWaiverTop(value) {
-		console.log("update waiver top");
-		setAttributes({ waiverTop: value })
-	}
-	function updateWaiverBody(value) {
-		console.log("update waiver body");
-		setAttributes({ waiverBody: value })
+	function updateWalkingDistance(value) {
+		console.log("update walking distance");
+		setAttributes({ walkingDistance: value })
 	}
 	function deletePlayZone(indexToDelete) {
 		console.log("deletePlayZone")
@@ -225,41 +210,14 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<div {...blockProps}>
 			<div className="game-block-edit-block" style={{backgroundColor: attributes.bgColor}}>
-				<Button
-					isPrimary
-					onClick={() => {
-						setShowHelp(!showHelp);
-					}}
-				>
-					<div className={showHelp ? "hide" : "show"}>Show Help</div>
-					<div className={showHelp ? "show" : "hide"}>Close Help</div>
-				</Button>
-				<div className={showHelp ? "show" : "hide"}>
-					HOW TO CREATE A GAME:
-					<ul>
-						<li>Do Not Publish Game for public until you are done testing. Create a private page with a password.</li>
-						<li>Games are based on Zones. Create a Zone and then create clues, puzzles hints</li>
-						<li>Zones are area with a radius of about 100 feet. Let the player know the center of the zone
-							AND/OR if it does not have a diameter of 100feet (see zone text help at bottom).
-						</li>
-						<li>Each game has a waiver - default text at bottom (you can change)</li>
-						<li>Each game has a help area for player - default text at bottom (you can change)</li>
-						<li>You can change color of background of game - see tool on right</li>
-						<li>You can add a header and description for each game.</li>
-					</ul>
-					<a href="#zone-help-text" className={"button"}>Go To Bottom to See Help and Waiver Text.</a>
-				</div>
-				<Flex>
-					<a href="#zone-help-text" className={"button hide"}>Zone Help Text</a>
-					<a href="#puzzle-help-text" className={"button hide"}>Puzzle Help Text</a>
-					<a href="#clue-help-text" className={"button hide"}>Clue Help Text</a>
-					<a href="#hint-help-text" className={"button hide"}>Hint Help Text</a>
-					<a href="#waiver-text" className={"button hide"}>Waiver Text</a>
-				</Flex>
+
+				<FlexButtons attributes={attributes} setAttributes={setAttributes}/>
 				<div className="like-label">Game Header and Description:</div>
-				<div style={{backgroundColor: "white", padding: "10px", marginBottom: "10px"}}><InnerBlocks
-					allowedBlocks={allowedBlocks} template={MY_TEMPLATE}
-					templateLock="all"/></div>
+				<div style={{backgroundColor: "white", padding: "10px", marginBottom: "10px"}}>
+					<InnerBlocks
+						allowedBlocks={allowedBlocks} template={MY_TEMPLATE}
+						templateLock="all"/>
+				</div>
 				<BlockControls>
 
 				</BlockControls>
@@ -278,6 +236,10 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				<TextControl label="Game Name:" value={attributes.gameName} onChange={updateGameName}
 							 style={{fontSize: "20px"}}/>
+				<TextControl
+					label="Walking Distance (estimated total walking distance for player, usually based on zones and how far apart):"
+					value={attributes.walkingDistance} onChange={updateWalkingDistance}
+					style={{fontSize: "20px"}}/>
 
 				<div className={"item-holder-edit"}>
 					{attributes.playZones.map(function (playZone, index) {
@@ -347,38 +309,16 @@ export default function Edit( { attributes, setAttributes } ) {
 						</Button>
 					</FlexItem>
 				</Flex>
-				<div className="text-area-container" id={"zone-help-text"}>
-					<TextareaControl label="Zone Help Text':" value={attributes.zoneText} onChange={updateZoneText}
-									 style={{fontSize: "15px"}}/>
-				</div>
-				<div className="like-label" id={"waiver-text"}>Waiver Text:</div>
-				<div className="text-area-container" >
-					<TextareaControl label="Waiver Top:" value={attributes.waiverTop} onChange={updateWaiverTop}
-									 style={{fontSize: "15px"}}/>
-					<TextareaControl label="Waiver Body':" value={attributes.waiverBody} onChange={updateWaiverBody}
-									 style={{fontSize: "15px"}}/>
-					<Button
-						isPrimary
-						onClick={() => {
-							setShowWaiver(!showWaiver);
-						}}
-					>
-						<div className={showWaiver ? "hide" : "show"}>View Waiver Text</div>
-						<div className={showWaiver ? "show" : "hide"}>Close Waiver Text</div>
-					</Button>
-					<div className={showWaiver ? "waiver-container show" : "hide"}>
-						<div className={"waiver-top"}>{attributes.waiverTop}</div>
-						<div className={"waiver-body"}>{attributes.waiverBody}</div>
-					</div>
-				</div>
+
+
 			</div>
 		</div>
 	);
 	} else {
 		return (
 			<div {...blockProps}>
-		<div className="game-block-edit-block" style={{backgroundColor: attributes.bgColor}}>
-				<h4>The first step to creating a game is adding a Zone.</h4>
+				<div className="game-block-edit-block" style={{backgroundColor: attributes.bgColor}}>
+					<h4>The first step to creating a game is adding a Zone.</h4>
 				<div>Zones are areas where people will play. Your Clues and Puzzles should be about things in the Zone area.
 				Typically Zones have a center and the play area is about 100 feet around center. Games can have more than 1 Zone.</div>
 				<br />

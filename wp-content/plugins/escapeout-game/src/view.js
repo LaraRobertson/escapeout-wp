@@ -261,6 +261,12 @@ const { state } = store( 'create-block', {
 			state.teamHelpVisible = true;
 			state.helpVisible = true;
 		},
+		togglePublicMap() {
+			state.modalPublicMapOpen = !state.modalPublicMapOpen;
+		},
+		togglePublicImage() {
+			state.modalPublicImageOpen = !state.modalPublicImageOpen;
+		},
 		guessAttempt: () => {
 			const context = getContext();
 			console.log( "userID: " + context.userID);
