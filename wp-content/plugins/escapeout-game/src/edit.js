@@ -6,7 +6,7 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, BlockControls, AlignmentToolbar,RichText,RichTextToolbarButton  } from "@wordpress/block-editor";
 import { TextControl, TextareaControl, Flex, FlexItem, Button, PanelBody, PanelRow,
-	ColorPicker, Toolbar, ToolbarButton, Dashicon, TextDecorationControl} from "@wordpress/components";
+	ColorPicker, RadioControl, Toolbar, ToolbarButton, Dashicon, TextDecorationControl} from "@wordpress/components";
 import { formatBold, formatItalic, link } from '@wordpress/icons';
 import { registerFormatType, toggleFormat } from '@wordpress/rich-text';
 import { useState, useEffect} from 'react';
@@ -28,6 +28,7 @@ import ClueEdit from "./components/ClueEdit";
 import HintEdit from "./components/HintEdit";
 import ZoneEdit from "./components/ZoneEdit";
 import FlexButtons from "./components/FlexButtons";
+import {editArrayItem} from "./components/manageArrayItem";
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -103,6 +104,14 @@ export default function Edit( { attributes, setAttributes } ) {
 	function updateWalkingDistance(value) {
 		console.log("update walking distance");
 		setAttributes({ walkingDistance: value })
+	}
+	function updateUserMustBeLoggedIn(value) {
+		console.log("update userMustBeLoggedIn");
+		setAttributes({ userMustBeLoggedIn: value })
+	}
+	function updatePublicMapText(value) {
+		console.log("update publicMapText");
+		setAttributes({ publicMapText: value })
 	}
 	function deletePlayZone(indexToDelete) {
 		console.log("deletePlayZone")
@@ -205,6 +214,14 @@ export default function Edit( { attributes, setAttributes } ) {
 		//console.log("playZones newArray: " + JSON.stringify(newArray));
 		setAttributes({playZones: newArray});
 	}
+	function removeImage(index) {
+		//console.log("editClueMedia: " + JSON.stringify(media));
+		const newArray = attributes.playZones.concat([]);
+		newArray[index]["imageID"] = "";
+		newArray[index]["imageURL"] = "";
+		//console.log("playZones newArray: " + JSON.stringify(newArray));
+		setAttributes({playZones: newArray});
+	}
 
 	if (attributes.playZones.length>0) {
 	return (
@@ -236,16 +253,29 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				<TextControl label="Game Name:" value={attributes.gameName} onChange={updateGameName}
 							 style={{fontSize: "20px"}}/>
+				<RadioControl
+					label="User Logged In?"
+					selected={ attributes.userMustBeLoggedIn }
+					options={ [
+						{ label: 'User Must Be Logged in to Play', value: "yes"},
+						{ label: 'Anyone can play, User does not need to log in', value: "no" },
+					] }
+					onChange={ ( value ) => updateUserMustBeLoggedIn( value ) }
+				/>
 				<TextControl
 					label="Walking Distance (estimated total walking distance for player, usually based on zones and how far apart):"
 					value={attributes.walkingDistance} onChange={updateWalkingDistance}
+					style={{fontSize: "20px"}}/>
+				<TextControl
+					label="Public Map (description of what is on public map):"
+					value={attributes.publicMapText} onChange={updatePublicMapText}
 					style={{fontSize: "20px"}}/>
 
 				<div className={"item-holder-edit"}>
 					{attributes.playZones.map(function (playZone, index) {
 						return (
 							<div key={index} className={"zoneDiv"}>
-								<ZoneEdit playZone={playZone} index={index} editZoneMedia={editZoneMedia}
+								<ZoneEdit playZone={playZone} index={index} editZoneMedia={editZoneMedia} removeImage={removeImage}
 										  editZone={editZone} deletePlayZone={deletePlayZone}/>
 								<Flex justify={"flex-start"} className={"buttons"}>
 									<FlexItem>

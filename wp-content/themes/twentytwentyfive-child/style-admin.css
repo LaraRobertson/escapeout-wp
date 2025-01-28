@@ -1,5 +1,5 @@
 body.post-type-eo-game.user-role-administrator .edit-post-meta-boxes-main {
-    border:1px solid red;
+   /* border:1px solid red;*/
 }
 body.post-type-eo-game.user-role-author .edit-post-meta-boxes-main {
    display:none;

@@ -113,7 +113,7 @@ export default function FlexButtons({attributes,setAttributes}) {
                 </div>
             </div>
             <div className={showMap1 ? "show" : "hide"}>
-                <div className="like-label" id={"waiver-text"}>Public Map src code:</div>
+                <div className="like-label" id={"waiver-text"}>Public Map src code (go to https://mymaps.google.com):</div>
                 <div className="text-area-container">
                     <TextControl label="Map 1:" value={attributes.map1} onChange={updateMap1}
                                  style={{fontSize: "15px"}}/>

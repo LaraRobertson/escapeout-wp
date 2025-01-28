@@ -19,7 +19,7 @@ const matcher = new RegExpMatcher({
 });
 
 /* Basic + space + base64 encode application username:password for user who created? */
-const saveScore = async () => {
+const saveScore = async (gameScoreID) => {
 	console.log("saveScore");
 	const myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
@@ -31,31 +31,34 @@ const saveScore = async () => {
 	let minutes = (endDate - state.timeStart) / 60000;
 	let totalTime = Number(minutes + state.hintTime).toFixed(2);
 	console.log("totalTime: " + totalTime);
-	state.gameScore = 'total time: ' + totalTime + " mins | hint time: " + state.hintTime + ' | first time: "' + state.firstTime + '"';
+	state.gameScore = totalTime;
 	state.showGameScore = true;
+	const context = getContext();
+	if (context.userMustBeLoggedIn) {
+		/* hintTime is a state variable */
+		const raw = JSON.stringify({
+			"timeEnd": endDate,
+			"totalTime": totalTime,
+			"hintTime": state.hintTime,
+			"completed": 'yes',
+		});
+		console.log("raw (put-saveScore)" + raw);
 
-	/* hintTime is a state variable */
-	const raw = JSON.stringify({
-		"timeEnd": endDate,
-		"totalTime": totalTime,
-		"hintTime": state.hintTime,
-		"completed": 'yes',
-	});
-
-	const requestOptions = {
-		method: "PUT",
-		headers: myHeaders,
-		body: raw,
-		redirect: "follow"
-	};
-	const url = state.siteURL + "/wp-json/escapeout/v1/game-score/" + state.gameScoreID;
-	try {
-		const response = await fetch(url, requestOptions)
-		if (!response.ok) {
-			console.error('Request failed with status ' + response.status)
+		const requestOptions = {
+			method: "PUT",
+			headers: myHeaders,
+			body: raw,
+			redirect: "follow"
+		};
+		const url = state.siteURL + "/wp-json/escapeout/v1/game-score/" + gameScoreID;
+		try {
+			const response = await fetch(url, requestOptions)
+			if (!response.ok) {
+				console.error('Request failed with status ' + response.status)
+			}
+		} catch (error) {
+			console.error('Error:', error.message)
 		}
-	} catch (error) {
-		console.error('Error:', error.message)
 	}
 
 
@@ -76,6 +79,7 @@ const getScoreByID = async ({postID, userID, realTimeStart}) => {
 
 const createScore = async ({postID, userID, gameID, gameName, userEmail, designerEmail, designerName, timeStart, teamName}) => {
 	/* note - can only update fields that you created, probably because of authorization... */
+	const context = getContext();
 	const myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Access-Control-Allow-Headers", "Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type");
@@ -89,15 +93,14 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 		headers: myHeaders,
 		credentials: "include"
 	};
-	const url = state.siteURL + "/wp-json/escapeout/v1/game-score/?userID=" + userID + "&postID=" + postID;
-
+	const url = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail=" + userEmail + "&gameID=" + gameID;
 	try {
 		const response = await fetch(url, requestOptions)
 		if (!response.ok) {
 			console.error('Request failed with status ' + response.status)
 		}
 		const data = await response.json();
-		console.log('data.length: ' + data.length);
+		console.log('get userEmail/gameID: data.length: ' + data.length);
 		state.firstTime = "yes";
 		if (data.length>1) {state.firstTime = "no";}
 		/* create score */
@@ -124,6 +127,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 			const response = await fetch(url2, requestOptions2)
 			if (!response.ok) {
 				console.error('Request failed with status ' + response.status)
+				/* stop here */
 			}
 			/* get ID */
 			const requestOptions3 = {
@@ -131,7 +135,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 				headers: myHeaders,
 				credentials: "include"
 			};
-			const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userID=" + userID + "&postID=" + postID + "&timeStart=" + timeStart;
+			const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail='" + userEmail + "'&gameID='" + gameID + "'&timeStart='" + timeStart + "'";
 			try {
 				const response = await fetch(url3, requestOptions3)
 				if (!response.ok) {
@@ -143,21 +147,22 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 				if (data2.length>0) {
 					state.gameScoreID = data2[0].id;
 					localStorage.setItem("gameScoreID",data2[0].id);
+					localStorage.setItem("gameName",gameName);
+					localStorage.setItem("timeStart", timeStart);
+					localStorage.setItem("gameID", gameID);
+					context.gameStart = true;
 				}
 			} catch (error) {
-				console.error('Error3:', error.message)
+				console.error('Error3 (get gameScoreID):', error.message)
 			}
 
 		} catch (error) {
-			console.error('Error2:', error.message)
+			console.error('Error2 (post create score):', error.message)
 		}
 
 	} catch (error) {
 		console.error('Error1:', error.message)
 	}
-
-
-
 
 
 	/* apiFetch doesn't seem to work
@@ -267,9 +272,11 @@ const { state } = store( 'create-block', {
 		togglePublicImage() {
 			state.modalPublicImageOpen = !state.modalPublicImageOpen;
 		},
+		toggleStats() {
+			state.modalStatsOpen = !state.modalStatsOpen;
+		},
 		guessAttempt: () => {
 			const context = getContext();
-			console.log( "userID: " + context.userID);
 			if (!context.solved) {
 				const input = document.getElementById(context.puzzleID).value;
 				context.guess = input;
@@ -280,10 +287,8 @@ const { state } = store( 'create-block', {
 				if (val) {
 					state.solvedCount++;
 					console.log(state);
-					console.log( "userID: " + context.userID);
 					context.solved = true;
 					context.timeEnd = Date();
-					console.log( "postID: " + context.postID);
 					setTimeout(() => {
 						context.modalOpen = false
 					}, 1600);
@@ -292,11 +297,12 @@ const { state } = store( 'create-block', {
 						state.alertVisible = true
 						state.alertText = "Winner"
 						/* send to database */
-						saveScore();
+
+						saveScore(state.gameScoreID);
+
 						setTimeout(() => {
 							removeLocalStorage();
 							context.gameStart = false;
-							context.finished = false;
 						}, 1600);
 					}
 				} else {
@@ -316,6 +322,9 @@ const { state } = store( 'create-block', {
 		quitAlertClose() {
 			state.quitVisible = false
 		},
+		quitAlertStartClose() {
+			state.alertStartVisible = false
+		},
 		quit() {
 			const context = getContext();
 			removeLocalStorage();
@@ -331,51 +340,105 @@ const { state } = store( 'create-block', {
 		},
 		gameStart() {
 			const context = getContext();
-			const input = document.getElementById("team-name").value;
-			context.teamName = input;
+			if (context.userMustBeLoggedIn) {
+				context.teamName = document.getElementById("team-name").value;
+			} else {
+				context.teamName = document.getElementById("team-name2").value;
+			}
 			console.log("context.teamName: " + context.teamName);
-			//state.showGameScore
-			// check waiver
-			if (context.waiverSigned === true) {
-				//check teamName
-				if (context.teamName !== '') {
-					console.log("context.teamName (again): " + context.teamName);
-					/* check for obscenities */
-					if (matcher.hasMatch(context.teamName)) {
-						state.errorMessage = "The Team Name contains profanities. Please choose another.";
-						context.teamName="";
-					} else {
-						state.errorMessage="";
-						/* need teamName in localstorage? */
-						localStorage.setItem("teamName", context.teamName);
-						/* this is timeStart */
-						const date = new Date().getTime();
-						/* ... */
-						state.timeStart = date;
-						localStorage.setItem("timeStart", date);
-						state.formattedTimeStart =  format(date, "MM/dd/yy h:mma");
-						context.gameStart = true;
-						state.gameScore = '';
-						state.showGameScore = false;
-						state.hintTime=0;
-						state.showWaiver=false;
-
-						createScore({postID:context.postID, userID:context.userID, gameID:context.gameID, gameName:context.gameName, userEmail:context.userEmail, designerEmail: context.designerEmail, designerName: context.designerName, timeStart:date, teamName: context.teamName});
-						/* get gameScoreID */
-					}
+			console.log("context.gameName: " + context.gameName);
+			console.log("context.gameID: " + context.gameID);
+			const gameIDLocal = localStorage.getItem("gameID");
+			const gameNameLocal = localStorage.getItem("gameName");
+			console.log ("localStorage.getItem-gameID: " + gameIDLocal )
+			// check if playing another game
+			if ( localStorage.getItem("timeStart") && (gameIDLocal !== context.gameID) ) {
+				/* let them know they are currently playing a different game */
+				state.alertStartVisible = true;
+				state.anotherGame = gameNameLocal;
+				if (context.gameStart === true) {
+					console.log("gameStart: true");
+					state.alertText = "You are playing: " + gameNameLocal + ". gameStart is true";
 				} else {
-					//set errorMessage
-					state.errorMessage = "Please choose a Team Name"
+					console.log("gameStart: false");
+					state.alertText = "You are playing: " + gameNameLocal + ". gameStart is true";
 				}
 			} else {
-				state.errorMessage="You Need to Sign Waiver";
+				// check waiver
+				if (context.waiverSigned === true) {
+					//check teamName
+					if (context.teamName !== '') {
+						console.log("context.teamName (again): " + context.teamName);
+						/* check for obscenities */
+						if (matcher.hasMatch(context.teamName)) {
+							state.errorMessage = "The Team Name contains profanities. Please choose another.";
+							context.teamName = "";
+						} else {
+							state.errorMessage = "";
+							/* need teamName in localstorage? */
+							//localStorage.setItem("teamName", context.teamName);
+							/* this is timeStart */
+							const date = new Date().getTime();
+							/* ... */
+							/* check for other games? */
+							state.timeStart = date;
+							state.formattedTimeStart = format(date, "MM/dd/yy h:mma");
+							/* do this after score is created */
+							/*localStorage.setItem("timeStart", date);*/
+							/* context.gameStart = true;*/
+							state.gameScore = '';
+							state.showGameScore = false;
+							state.hintTime = 0;
+							state.showWaiver = false;
+							if (context.userMustBeLoggedIn) {
+								createScore({
+									postID: context.postID,
+									userID: context.userID,
+									gameID: context.gameID,
+									gameName: context.gameName,
+									userEmail: context.userEmail,
+									designerEmail: context.designerEmail,
+									designerName: context.designerName,
+									timeStart: date,
+									teamName: context.teamName
+								});
+							} else {
+								localStorage.setItem("gameName",context.gameName);
+								localStorage.setItem("timeStart", date);
+								localStorage.setItem("gameID", context.gameID);
+								context.gameStart = true;
+							}
+							/* get gameScoreID */
+						}
+					} else {
+						//set errorMessage
+						state.errorMessage = "Please choose a Team Name"
+					}
+				} else {
+					state.errorMessage = "You Need to Sign Waiver";
+				}
 			}
 		},
 		toggleTheme() {
 			state.isDark = ! state.isDark;
 		},
+		closeGameScore() {
+			state.showGameScore = false;
+			window.location.reload();
+			window.scrollTo(0, 0);
+		},
 	},
 	callbacks: {
+		checkPublicMap: () => {
+			const context = getContext();
+			if (context.map1 !== '') {
+				console.log("don't hide map button");
+				return false
+			} else {
+				console.log("hide map button");
+				return true
+			}
+		},
 		hideItemByZone: () => {
 			const context = getContext();
 			console.log("context.zoneID: " + context.zoneID);
@@ -425,19 +488,25 @@ const { state } = store( 'create-block', {
 		},
 		checkGameStart: () => {
 			const context = getContext();
+			const gameIDLocal = localStorage.getItem('gameID');
+			console.log("gameNameLocal: " + gameIDLocal);
+			console.log("context.gameID: " + context.gameID);
 			if (localStorage.getItem("timeStart")) {
-				//alert('resuming game');
-				state.alertVisible = true
-				state.alertText = "resuming game"
-				setTimeout(() => {
-					state.alertVisible = false
-				}, 3000);
-				if (context.gameStart === true) {
-					console.log("gameStart: true");
-				} else {
-					console.log("gameStart: false");
+				/* check game-name */
+				if ( gameIDLocal === context.gameID) {
+					//alert('resuming game');
+					state.alertVisible = true
+					state.alertText = "resuming game"
+					setTimeout(() => {
+						state.alertVisible = false
+					}, 3000);
+					if (context.gameStart === true) {
+						console.log("gameStart: true");
+					} else {
+						console.log("gameStart: false");
+					}
+					context.gameStart = true;
 				}
-				context.gameStart = true;
 			}
 		},
 		logIsOpen: () => {

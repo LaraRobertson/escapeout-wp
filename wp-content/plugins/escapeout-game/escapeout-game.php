@@ -50,6 +50,7 @@ function escapeout_table() {
       gameID varchar (200) NOT NULL,
       userEmail varchar (200) NOT NULL,
       gameName varchar (200) NOT NULL,
+      gameLink varchar (200) NOT NULL,
       designerEmail varchar (200) NOT NULL,
       designerName varchar (200),
       gameComments text,
@@ -142,6 +143,7 @@ function escapeout_get_game_score($request) {
     $userID = $request->get_param('userID');
 	$gameID = $request->get_param('gameID');
 	$gameName = $request->get_param('gameName');
+	$gameLink = $request->get_param('gameLink');
 	$designerEmail = $request->get_param('designerEmail');
 	$designerName = $request->get_param('designerName');
 	$gameComments = $request->get_param('gameComments');

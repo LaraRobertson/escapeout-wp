@@ -27,6 +27,10 @@
 .small {
 	font-size:.7em;
 }
+.italics {
+	font-style: italic;
+}
+
 .game-block-frontend {
 	background-color: #EBEBEB;
 	overflow: hidden;
@@ -184,7 +188,7 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
-		padding:10px;
+		padding:0 10px;
 		margin: 0 auto;
 		box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
 		&.dark-theme {
@@ -276,8 +280,14 @@
 		background-color: inherit !important;
 		text-decoration: none;
 		padding: .2em .5em;
+		margin: .2em;
 		font-size: .8em;
 		line-height: 1em;
+	}
+	.alert-inner .button, .help-inner .button {
+		font-weight:bold;
+		padding: .3em .5em;
+		background-color: white !important;
 	}
 
 	.puzzle-solved {
@@ -312,10 +322,10 @@
 	}
 	.alert-container {
 		position: absolute;
-		top:20%;
-		right: 20%;
-		left:20%;
-		width: 60%;
+		top:40px;
+		right: 15%;
+		left:15%;
+		width: 70%;
 		z-index: 115;
 		text-align: center;
 	}
@@ -547,9 +557,9 @@
 		color: rgba(54, 67, 72, 0.8);
 	}
 }
-
 .modalContainer2 {
 	top:0;
+	min-height: 100vh;
 	left:0;
 	right:0;
 	opacity: 0;
@@ -557,7 +567,6 @@
 	transition: all .2s ease;
 	visibility: hidden;
 	width: 100%;
-	min-height: 100%;
 	z-index:1;
 	background-color: rgba(0, 0, 0, .9);
 

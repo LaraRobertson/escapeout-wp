@@ -1,6 +1,6 @@
      <?php
      function fse_child_styles() {
-	     wp_enqueue_style( 'fse-child-style', get_stylesheet_uri() );
+	     wp_enqueue_style( 'fse-child-style', get_stylesheet_uri(), array(), '1.1', 'all' );
      }
      add_action( 'wp_enqueue_scripts', 'fse_child_styles' );
      function tg_include_custom_post_types_in_archive_pages( $query ) {

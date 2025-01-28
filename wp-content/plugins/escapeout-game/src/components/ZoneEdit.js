@@ -4,14 +4,14 @@ import {__} from "@wordpress/i18n";
 import AttachmentImage from "./AttachmentImage";
 
 
-export default function ZoneEdit({playZone,index,editZoneMedia, editZone,deletePlayZone}) {
+export default function ZoneEdit({playZone,index,editZoneMedia, removeImage, editZone, deletePlayZone}) {
     const ALLOWED_MEDIA_TYPES = [ 'image' ];
     return (
         <>
             <div className={playZone.disabled == "Yes" ? "disabled" : ""}></div>
             <div className="item-title-edit">Zones {index + 1}:</div>
             <Flex>
-                <FlexBlock>
+                <div className={"flexBlock200"}>
                     <TextControl
                         label="Zone Name"
                         autoFocus={playZone.name == undefined}
@@ -30,6 +30,7 @@ export default function ZoneEdit({playZone,index,editZoneMedia, editZone,deleteP
                     />
                     <TextControl
                         label="Latitude"
+                        className={"hide"}
                         autoFocus={playZone.lat == undefined}
                         value={playZone.lat}
                         onChange={newValue => {
@@ -38,14 +39,16 @@ export default function ZoneEdit({playZone,index,editZoneMedia, editZone,deleteP
                     />
                     <TextControl
                         label="Longitude"
+                        className={"hide"}
                         autoFocus={playZone.long == undefined}
                         value={playZone.long}
                         onChange={newValue => {
                             editZone("long", newValue, index)
                         }}
                     />
-                </FlexBlock>
-                <FlexBlock className={"image-holder"}>
+                </div>
+                <FlexItem>
+                    <div className={"mediaColumn"}>
                     <MediaUploadCheck>
                         <MediaUpload
                             onSelect={ media => {
@@ -77,39 +80,35 @@ export default function ZoneEdit({playZone,index,editZoneMedia, editZone,deleteP
                             ) }
                         />
                     </MediaUploadCheck>
-                </FlexBlock>
-                <Flex direction={"column"}>
-                    <FlexItem>
-                        <RadioControl
-                            selected={playZone.disabled}
-                            options={[
-                                {label: 'Live', value: 'No'},
-                                {label: 'Disabled', value: 'Yes'},
-                            ]}
-                            onChange={newValue => {
-                                editZone("disabled", newValue, index)
-                            }}
-                        />
-                    </FlexItem>
-                    <FlexItem>
-                        <TextControl
-                            label="Order"
-                            style={{width: "50px"}}
-                            type={"number"}
-                            autoFocus={playZone.order == undefined}
-                            value={playZone.order}
-                            onChange={newValue => {
-                                editZone("order", newValue, index)
-                            }}
-                        />
-                    </FlexItem>
-                    <FlexItem>
-                        <Button isLink className="attention-delete"
-                                onClick={() => deletePlayZone(index)}>
-                            Delete
-                        </Button>
-                    </FlexItem>
-                </Flex>
+                    <Button className={(playZone.imageID === "") ? "hide" : "button show"} onClick={() => removeImage(index)}>Remove Image</Button>
+                    </div>
+                </FlexItem>
+                <FlexItem>
+                    <RadioControl
+                        selected={playZone.disabled}
+                        options={[
+                            {label: 'Live', value: 'No'},
+                            {label: 'Disabled', value: 'Yes'},
+                        ]}
+                        onChange={newValue => {
+                            editZone("disabled", newValue, index)
+                        }}
+                    />
+                    <TextControl
+                        label="Order"
+                        style={{width: "50px"}}
+                        type={"number"}
+                        autoFocus={playZone.order == undefined}
+                        value={playZone.order}
+                        onChange={newValue => {
+                            editZone("order", newValue, index)
+                        }}
+                    />
+                    <Button isLink className="attention-delete"
+                            onClick={() => deletePlayZone(index)}>
+                        Delete
+                    </Button>
+                </FlexItem>
             </Flex>
         </>
     )
