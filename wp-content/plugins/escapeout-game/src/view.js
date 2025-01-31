@@ -77,7 +77,7 @@ const saveScore = async (gameScoreID) => {
 const getScoreByID = async ({postID, userID, realTimeStart}) => {
 }
 
-const createScore = async ({postID, userID, gameID, gameName, userEmail, designerEmail, designerName, timeStart, teamName}) => {
+const createScore = async ({postID, userID, gameID, gameName, userEmail, designerEmail, designerName, timeStart, formattedDate, teamName}) => {
 	/* note - can only update fields that you created, probably because of authorization... */
 	const context = getContext();
 	const myHeaders = new Headers();
@@ -97,12 +97,12 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 	try {
 		const response = await fetch(url, requestOptions)
 		if (!response.ok) {
-			console.error('Request failed with status ' + response.status)
+			console.error('url Request failed with status ' + response.status)
 		}
 		const data = await response.json();
 		console.log('get userEmail/gameID: data.length: ' + data.length);
 		state.firstTime = "yes";
-		if (data.length>1) {state.firstTime = "no";}
+		if (data.length>0) {state.firstTime = "no";}
 		/* create score */
 		const raw = JSON.stringify({
 			"postID": postID,
@@ -113,6 +113,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 			"designerEmail": designerEmail,
 			"designerName": designerName,
 			"timeStart": timeStart,
+			"formattedDate": formattedDate,
 			"teamName": teamName,
 			"firstTime": state.firstTime
 		});
@@ -126,7 +127,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 		try {
 			const response = await fetch(url2, requestOptions2)
 			if (!response.ok) {
-				console.error('Request failed with status ' + response.status)
+				console.error('url2 Request failed with status ' + response.status)
 				/* stop here */
 			}
 			/* get ID */
@@ -135,11 +136,11 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 				headers: myHeaders,
 				credentials: "include"
 			};
-			const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail='" + userEmail + "'&gameID='" + gameID + "'&timeStart='" + timeStart + "'";
+			const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail=" + userEmail + "&gameID=" + gameID + "&timeStart=" + timeStart;
 			try {
 				const response = await fetch(url3, requestOptions3)
 				if (!response.ok) {
-					console.error('Request failed with status ' + response.status)
+					console.error('url3 Request failed with status ' + response.status)
 				}
 				const data2 = await response.json();
 				/*data is an array */
@@ -275,6 +276,10 @@ const { state } = store( 'create-block', {
 		toggleStats() {
 			state.modalStatsOpen = !state.modalStatsOpen;
 		},
+		toggleLeaderBoard() {
+
+			state.modalLeaderBoardOpen = !state.modalLeaderBoardOpen;
+		},
 		guessAttempt: () => {
 			const context = getContext();
 			if (!context.solved) {
@@ -400,6 +405,7 @@ const { state } = store( 'create-block', {
 									designerEmail: context.designerEmail,
 									designerName: context.designerName,
 									timeStart: date,
+									formattedDate: format(date, "MM/dd/yy h:mma"),
 									teamName: context.teamName
 								});
 							} else {

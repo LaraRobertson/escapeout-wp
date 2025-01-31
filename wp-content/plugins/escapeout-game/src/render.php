@@ -153,6 +153,7 @@ wp_interactivity_state(
         'modalPublicMapOpen'=> false,
         'modalPublicImageOpen'=> false,
         'modalStatsOpen'=> false,
+        'modalLeaderBoardOpen'=> false,
         'modalGameMapOpen'=> false,
         'solvedCount' => 0,
         'puzzleTotal' => count($puzzleArray),
@@ -197,6 +198,11 @@ $assetDir = "/wp-content/plugins/escapeout-game/assets/";
 $firstZoneID = $playZones[0]['id'];
 $ourContext = array('userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
 //print_r($ourContext);
+$gameID = $attributes['gameID'];
+global $wpdb;
+$table_name = $wpdb->prefix . 'game_score';
+$resultLeaderBoard = $wpdb->get_results ( "SELECT * FROM `$table_name` WHERE `firstTime` = 'yes'  AND `gameID` = '$gameID' ORDER BY `totalTime` LIMIT 20" );
+$resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail` = $user_email AND `gameID` = '$gameID' ");
 ?>
 <div
     class="game-block-frontend"
@@ -211,13 +217,21 @@ $ourContext = array('userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' =
 		id="<?php echo esc_attr( $unique_id ); ?>"
 		data-wp-bind--hidden="context.gameStart"
 	>
-        <div data-wp-bind--hidden="!context.userIsLoggedIn">Welcome  <span data-wp-text="context.userEmail"></span>!<br />
+        <div data-wp-bind--hidden="!context.userIsLoggedIn">
+            Welcome  <span data-wp-text="context.userEmail"></span>!<br />
             <button class="button"
                     data-wp-on-async--click="actions.toggleStats"
                     aria-controls="<?php echo esc_attr( $unique_id ); ?>"
             >
 				<?php esc_html_e( 'Show Stats', 'game-block' ); ?>
-            </button></div>
+            </button>
+        </div>
+        <button class="button"
+                data-wp-on-async--click="actions.toggleLeaderBoard"
+                aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+        >
+			<?php esc_html_e( 'Leader Board', 'game-block' ); ?>
+        </button>
         <hr/>
             <!--<a href="<?php echo $siteUrl ?>">home</a>-->
         <h2><?php echo $attributes['gameName'] ?></h2>
@@ -313,7 +327,7 @@ $ourContext = array('userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' =
         <!-- end user does NOT have to be logged in -->
 
         <div data-wp-bind--hidden="!context.userMustBeLoggedIn">
-            <div class="game-text"> To Play this game the user needs to create an account and log in.</div>
+            <div  data-wp-bind--hidden="context.userIsLoggedIn" class="game-text"> To Play this game the user needs to create an account and log in.</div>
             <div data-wp-bind--hidden="!context.userIsLoggedIn">
                 <div class="game-text">Before Starting the Game you must Sign the Waiver and Pick a Team Name
                     <img data-wp-on--click="actions.setTeamHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
@@ -367,19 +381,20 @@ $ourContext = array('userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' =
                         </div>
                     </li>
                 </ul>
+                <div class="red-alert" data-wp-text="state.errorMessage"></div>
+                <div>
+                    <button class="button"
+                            data-wp-bind--aria-expanded="context.isOpen"
+                            data-wp-on-async--click="actions.gameStart"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+                        <?php esc_html_e( 'Start Game - Time Starts', 'game-block' ); ?>
+                    </button>
+                </div>
             </div>
         </div>
         <!-- end user should be logged in -->
-        <div class="red-alert" data-wp-text="state.errorMessage"></div>
-        <div>
-            <button class="button"
-                    data-wp-bind--aria-expanded="context.isOpen"
-                    data-wp-on-async--click="actions.gameStart"
-                    aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-            >
-                <?php esc_html_e( 'Start Game - Time Starts', 'game-block' ); ?>
-            </button>
-        </div>
+
 
 
         <div class="help-container-start" data-wp-bind--hidden="!state.helpVisible">
@@ -461,6 +476,34 @@ $ourContext = array('userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' =
                     </header>
                     <main class="modal_content">
                         stats
+                    </main>
+                    <footer class="modal_footer">
+                        <button class="modal-close">Close</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="modalContainerMap" data-wp-class--showmodal="state.modalLeaderBoardOpen" data-wp-on--click="actions.toggleLeaderBoard">
+                <div class="modal from-right">
+                    <header class="modal_header">
+                        <div><strong>Leader Board</strong></div>
+                    </header>
+                    <main class="modal_content">
+                        <div class="flex-table header">
+                            <div class="flex-row fourths first">team name</div>
+                            <div class="flex-row fourths">score</div>
+                            <div class="flex-row fourths">hint time</div>
+                            <div class="flex-row fourths">date</div>
+                        </div>
+                          <?php foreach($resultLeaderBoard as $score) { ?>
+                                <div class="flex-table row">
+                                    <div class="flex-row fourths"><?php echo $score->teamName ?></div>
+                                    <div class="flex-row fourths"><?php echo $score->totalTime ?></div>
+                                    <div class="flex-row fourths"><?php echo $score->hintTime ?></div>
+                                    <div class="flex-row fourths"><?php echo $score->formattedDate ?></div>
+                                </div>
+                           <?php } ?>
                     </main>
                     <footer class="modal_footer">
                         <button class="modal-close">Close</button>

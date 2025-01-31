@@ -30,7 +30,9 @@
 .italics {
 	font-style: italic;
 }
-
+.leaderBoard-row {
+	text-align:left;
+}
 .game-block-frontend {
 	background-color: #EBEBEB;
 	overflow: hidden;
@@ -446,6 +448,32 @@
 		transform: scale(1.2);
 	}
 }
+.flex-table {
+	display: flex;
+	flex-flow: row no-wrap;
+	border-left: solid 1px #d9d9d9;
+	transition: .5s;
+}
+.flex-table:first-of-type {
+	border-top: solid 1px var(--blue-color);
+	border-left: solid 1px var(--blue-color);
+}
+.flex-table.header {
+	font-weight:bold;
+}
+.flex-row {
+	width: 20%;
+	text-align: center;
+	padding: .5em;
+	border-right: solid 1px #d9d9d9;
+	border-bottom: solid 1px #d9d9d9;
+	background-color: #f4f2f1;
+	color: #000;
+	font-size: .8em;
+}
+.fourths {
+	width: 25%;
+}
 .modalContainerPuzzle {
 	height: 300px !important;
 	background-color: transparent;
@@ -519,6 +547,7 @@
 		padding: 1rem 0;
 	}
 
+
 	@media all and (max-width: 400px) {
 		.modalContainer .modal_content {
 			font-size: .9rem;
@@ -557,6 +586,7 @@
 		color: rgba(54, 67, 72, 0.8);
 	}
 }
+
 .modalContainer2 {
 	top:0;
 	min-height: 100vh;

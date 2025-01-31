@@ -55,6 +55,7 @@ function escapeout_table() {
       designerName varchar (200),
       gameComments text,
       timeStart varchar (100),
+      formattedDate varchar (100),
       timeEnd varchar (100),
       totalTime varchar (100),
       hintTime varchar (100),
@@ -155,14 +156,15 @@ function escapeout_get_game_score($request) {
     global $wpdb;
     $table_name = $wpdb->prefix . 'game_score';
 
-    if ($userEmail && $gameID && $timeStart) {
-
-        $results = $wpdb->get_results("SELECT * FROM $table_name WHERE gameID = $gameID AND userEmail = $userEmail AND timeStart = $timeStart");
-
+    if ($userEmail && $gameID) {
+		if ($timeStart) {
+			$results = $wpdb->get_results("SELECT * FROM `$table_name` WHERE `gameID` = '$gameID' AND `userEmail` = '$userEmail' AND `timeStart` = '$timeStart'");
+		} else {
+			$results = $wpdb->get_results( "SELECT * FROM `$table_name` WHERE `gameID` = '$gameID' AND `userEmail` = '$userEmail'" );
+		}
     } else {
-
+		/* is this what I really want? */
         $results = $wpdb->get_results("SELECT * FROM $table_name");
-
     }
     return $results;
 
@@ -191,6 +193,7 @@ function escapeout_create_game_score( $request ){
             'designerEmail' => $request['designerEmail'],
             'designerName' => $request['designerName'],
             'timeStart' => $request['timeStart'],
+            'formattedDate' => $request['formattedDate'],
             'timeEnd' => $request['timeEnd'],
             'totalTime' => $request['totalTime'],
             'hintTime' => $request['hintTime'],

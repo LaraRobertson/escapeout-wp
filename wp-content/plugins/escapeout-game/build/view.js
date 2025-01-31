@@ -6377,6 +6377,7 @@ const createScore = async ({
   designerEmail,
   designerName,
   timeStart,
+  formattedDate,
   teamName
 }) => {
   /* note - can only update fields that you created, probably because of authorization... */
@@ -6398,12 +6399,12 @@ const createScore = async ({
   try {
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
-      console.error('Request failed with status ' + response.status);
+      console.error('url Request failed with status ' + response.status);
     }
     const data = await response.json();
     console.log('get userEmail/gameID: data.length: ' + data.length);
     state.firstTime = "yes";
-    if (data.length > 1) {
+    if (data.length > 0) {
       state.firstTime = "no";
     }
     /* create score */
@@ -6416,6 +6417,7 @@ const createScore = async ({
       "designerEmail": designerEmail,
       "designerName": designerName,
       "timeStart": timeStart,
+      "formattedDate": formattedDate,
       "teamName": teamName,
       "firstTime": state.firstTime
     });
@@ -6429,7 +6431,7 @@ const createScore = async ({
     try {
       const response = await fetch(url2, requestOptions2);
       if (!response.ok) {
-        console.error('Request failed with status ' + response.status);
+        console.error('url2 Request failed with status ' + response.status);
         /* stop here */
       }
       /* get ID */
@@ -6438,11 +6440,11 @@ const createScore = async ({
         headers: myHeaders,
         credentials: "include"
       };
-      const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail='" + userEmail + "'&gameID='" + gameID + "'&timeStart='" + timeStart + "'";
+      const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail=" + userEmail + "&gameID=" + gameID + "&timeStart=" + timeStart;
       try {
         const response = await fetch(url3, requestOptions3);
         if (!response.ok) {
-          console.error('Request failed with status ' + response.status);
+          console.error('url3 Request failed with status ' + response.status);
         }
         const data2 = await response.json();
         /*data is an array */
@@ -6575,6 +6577,9 @@ const {
     toggleStats() {
       state.modalStatsOpen = !state.modalStatsOpen;
     },
+    toggleLeaderBoard() {
+      state.modalLeaderBoardOpen = !state.modalLeaderBoardOpen;
+    },
     guessAttempt: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
       if (!context.solved) {
@@ -6700,6 +6705,7 @@ const {
                   designerEmail: context.designerEmail,
                   designerName: context.designerName,
                   timeStart: date,
+                  formattedDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_4__.format)(date, "MM/dd/yy h:mma"),
                   teamName: context.teamName
                 });
               } else {
