@@ -131,16 +131,17 @@ for ($i = 0; $i < count($attributes['playZones']); $i++) {
 }
 $siteUrl = get_site_url();
 wp_interactivity_state(
-    'create-block',
+    'escapeout-game',
     array(
         'isDark'    => false,
-        'darkText'  => esc_html__( 'Switch to Light', 'game-block' ),
-        'lightText' => esc_html__( 'Switch to Dark', 'game-block' ),
-        'themeText'	=> esc_html__( 'Switch to Dark', 'game-block' ),
+        'darkText'  => esc_html__( 'Switch to Light', 'escapeout-game' ),
+        'lightText' => esc_html__( 'Switch to Dark', 'escapeout-game' ),
+        'themeText'	=> esc_html__( 'Switch to Dark', 'escapeout-game' ),
         'userID' => get_current_user_id(),
         'user' => get_current_user(),
         'zoneID' => '',
         'zoneDescription' => $playZones[0]['description'],
+        'zoneName' => $playZones[0]['name'],
         'puzzleModalVisible' => false,
         'puzzleAnswer' => '',
         'alertVisible' => false,
@@ -165,7 +166,7 @@ wp_interactivity_state(
         'hintTime' => 0,
         'gameScore' => '',
         'showGameScore' => false,
-        'firstTime' => '',
+        'rating' => '',
         'anotherGame' => '',
         'siteURL' => $siteUrl,
         'nonce' => $nonce
@@ -196,19 +197,23 @@ if ($user_email) {
 }
 $assetDir = "/wp-content/plugins/escapeout-game/assets/";
 $firstZoneID = $playZones[0]['id'];
-$ourContext = array('userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
-//print_r($ourContext);
 $gameID = $attributes['gameID'];
 global $wpdb;
 $table_name = $wpdb->prefix . 'game_score';
 $resultLeaderBoard = $wpdb->get_results ( "SELECT * FROM `$table_name` WHERE `firstTime` = 'yes'  AND `gameID` = '$gameID' ORDER BY `totalTime` LIMIT 20" );
-$resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail` = $user_email AND `gameID` = '$gameID' ");
+$resultStats = $wpdb->get_results ( "SELECT * FROM `$table_name` WHERE `userEmail` = '$user_email' AND `gameID` = '$gameID' ORDER BY `timeStart`" );
+$firstTime="yes";
+if (count($resultStats) > 0) {
+    $firstTime='no';
+}
+$ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
+//print_r($ourContext);
 ?>
 <div
     class="game-block-frontend"
     style="background-color:<?php echo $attributes['bgColor']?>"
 	<?php echo get_block_wrapper_attributes(); ?>
-	data-wp-interactive="create-block"
+	data-wp-interactive="escapeout-game"
 	<?php echo wp_interactivity_data_wp_context( $ourContext); ?>
 	data-wp-watch="callbacks.checkGameStart"
 	data-wp-class--dark-theme="state.isDark"
@@ -218,19 +223,25 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
 		data-wp-bind--hidden="context.gameStart"
 	>
         <div data-wp-bind--hidden="!context.userIsLoggedIn">
-            Welcome  <span data-wp-text="context.userEmail"></span>!<br />
-            <button class="button"
-                    data-wp-on-async--click="actions.toggleStats"
-                    aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-            >
-				<?php esc_html_e( 'Show Stats', 'game-block' ); ?>
-            </button>
+            Welcome  <span data-wp-text="context.userEmail"></span>
+
+            <?php if ($firstTime==="no") {
+                echo "<span class='small italics'>(you have played this game before)</span>";
+            } ?>
+
         </div>
+        <button class="button"
+                data-wp-bind--hidden="!context.userIsLoggedIn"
+                data-wp-on-async--click="actions.toggleStats"
+                aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+        >
+			<?php esc_html_e( 'Show My Stats', 'escapeout-game' ); ?>
+        </button>
         <button class="button"
                 data-wp-on-async--click="actions.toggleLeaderBoard"
                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
         >
-			<?php esc_html_e( 'Leader Board', 'game-block' ); ?>
+			<?php esc_html_e( 'Leader Board', 'escapeout-game' ); ?>
         </button>
         <hr/>
             <!--<a href="<?php echo $siteUrl ?>">home</a>-->
@@ -248,13 +259,13 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                             data-wp-on-async--click="actions.togglePublicMap"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                     >
-                        <?php esc_html_e( 'View Public Map', 'game-block' ); ?>
+                        <?php esc_html_e( 'View Public Map', 'escapeout-game' ); ?>
                     </button>
                     <button class="button"
                             data-wp-on-async--click="actions.togglePublicImage"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                     >
-		                <?php esc_html_e( 'View Zone 1 Image', 'game-block' ); ?>
+		                <?php esc_html_e( 'View Zone 1 Image', 'escapeout-game' ); ?>
                     </button>
                 </li>
                 <li>
@@ -294,14 +305,14 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                             data-wp-on-async--click="actions.showWaiverToggle"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                     >
-                        <?php esc_html_e( 'Show Waiver', 'game-block' ); ?>
+                        <?php esc_html_e( 'Show Waiver', 'escapeout-game' ); ?>
                     </button>
                     <button class="button"
                             data-wp-bind--hidden="state.showWaiver"
                             data-wp-on-async--click="actions.signWaiver"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                     >
-                        <?php esc_html_e( 'Sign Waiver', 'game-block' ); ?>
+                        <?php esc_html_e( 'Sign Waiver', 'escapeout-game' ); ?>
                     </button>
                     <div class="waiver-container" data-wp-bind--hidden="!state.showWaiver">
                         <div class="waiver-top"><?php echo $attributes["waiverTop"] ?></div>
@@ -311,14 +322,14 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                 data-wp-on-async--click="actions.signWaiver"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                         >
-                            <?php esc_html_e( 'Sign Waiver', 'game-block' ); ?>
+                            <?php esc_html_e( 'Sign Waiver', 'escapeout-game' ); ?>
                         </button>
                         <button class="button"
                                 data-wp-bind--hidden="!context.waiverSigned"
                                 data-wp-on-async--click="actions.showWaiverToggle"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                         >
-                            <?php esc_html_e( 'Close Waiver', 'game-block' ); ?>
+                            <?php esc_html_e( 'Close Waiver', 'escapeout-game' ); ?>
                         </button>
                     </div>
                 </li>
@@ -327,7 +338,8 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
         <!-- end user does NOT have to be logged in -->
 
         <div data-wp-bind--hidden="!context.userMustBeLoggedIn">
-            <div  data-wp-bind--hidden="context.userIsLoggedIn" class="game-text"> To Play this game the user needs to create an account and log in.</div>
+            <div data-wp-bind--hidden="context.userIsLoggedIn" class="game-text">
+                To Play this game the user needs to create an account and log in.</div>
             <div data-wp-bind--hidden="!context.userIsLoggedIn">
                 <div class="game-text">Before Starting the Game you must Sign the Waiver and Pick a Team Name
                     <img data-wp-on--click="actions.setTeamHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
@@ -352,14 +364,14 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                 data-wp-on-async--click="actions.showWaiverToggle"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                         >
-                            <?php esc_html_e( 'Show Waiver', 'game-block' ); ?>
+                            <?php esc_html_e( 'Show Waiver', 'escapeout-game' ); ?>
                         </button>
                         <button class="button"
                                 data-wp-bind--hidden="state.showWaiver"
                                 data-wp-on-async--click="actions.signWaiver"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                         >
-                            <?php esc_html_e( 'Sign Waiver', 'game-block' ); ?>
+                            <?php esc_html_e( 'Sign Waiver', 'escapeout-game' ); ?>
                         </button>
                         <div class="waiver-container" data-wp-bind--hidden="!state.showWaiver">
                             <div class="waiver-top"><?php echo $attributes["waiverTop"] ?></div>
@@ -369,14 +381,14 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                     data-wp-on-async--click="actions.signWaiver"
                                     aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                             >
-                                <?php esc_html_e( 'Sign Waiver', 'game-block' ); ?>
+                                <?php esc_html_e( 'Sign Waiver', 'escapeout-game' ); ?>
                             </button>
                             <button class="button"
                                     data-wp-bind--hidden="!context.waiverSigned"
                                     data-wp-on-async--click="actions.showWaiverToggle"
                                     aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                             >
-                                <?php esc_html_e( 'Close Waiver', 'game-block' ); ?>
+                                <?php esc_html_e( 'Close Waiver', 'escapeout-game' ); ?>
                             </button>
                         </div>
                     </li>
@@ -388,14 +400,12 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                             data-wp-on-async--click="actions.gameStart"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                     >
-                        <?php esc_html_e( 'Start Game - Time Starts', 'game-block' ); ?>
+                        <?php esc_html_e( 'Start Game - Time Starts', 'escapeout-game' ); ?>
                     </button>
                 </div>
             </div>
         </div>
         <!-- end user should be logged in -->
-
-
 
         <div class="help-container-start" data-wp-bind--hidden="!state.helpVisible">
             <div class='help-inner'>
@@ -409,7 +419,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                         data-wp-on--click="actions.closeHelp"
                         aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                 >
-					<?php esc_html_e( 'Close', 'game-block' ); ?>
+					<?php esc_html_e( 'Close', 'escapeout-game' ); ?>
                 </button>
             </div>
         </div>
@@ -444,7 +454,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
             </div>
         </div>
         <div>
-            <div class="modalContainerMap" data-wp-class--showmodal="state.showGameScore" data-wp-on--click="actions.closeGameScore">
+            <div class="modalContainerMap" data-wp-class--showmodal="state.showGameScore" >
                 <div class="modal from-right">
                     <header class="modal_header">
                         <div><strong>Game Score</strong></div>
@@ -452,18 +462,46 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                     <main class="modal_content">
                         <div class="show-score" >
                             game score: <span class="game-score" data-wp-text="state.gameScore"></span> mins<br />
-                            hint time: <span class="game-score" data-wp-text="state.hintTime"></span> mins<br />
-                            <div data-wp-bind--hidden="!context.userMustBeLoggedIn">
-                                first time: <span class="game-score" data-wp-text="state.firstTime"></span><br />
-                                <div class="small italics">You can play this game again but only scores where <br />
-                                    first time = "yes" <br />are counted for the leader board.
-                                </div>
-                            </div>
+                            hint time: <span class="game-score" data-wp-text="state.hintTime"></span> mins<br /><br />
+
+                             Please Rate:<br />
+                            <button data-wp-on--click="actions.setRating1" class="modal-close">1</button>
+                            <button data-wp-on--click="actions.setRating2" class="modal-close">2</button>
+                            <button data-wp-on--click="actions.setRating3" class="modal-close">3</button>
+                            <button data-wp-on--click="actions.setRating4" class="modal-close">4</button>
+                            <button data-wp-on--click="actions.setRating5" class="modal-close">5</button><br /><br />
+                            Public Comment:<br />
+                            <textarea
+                                    class="escapeout-game__textarea"
+                                    id="gameCommentPrivate"
+                                    name="feedback"
+                                    placeholder="<?php esc_html_e( 'Your Public Comment...', 'escapeout-game' ); ?>"
+                                    required
+                                    rows="4"
+                                    spellcheck="false"
+                            ></textarea><br /><br />
+                            Private Comment:<br />
+                            <textarea
+                                    class="escapeout-game__textarea"
+                                    id="gameCommentPublic"
+                                    name="feedback"
+                                    placeholder="<?php esc_html_e( 'Your Private Comment', 'escapeout-game' ); ?>"
+                                    required
+                                    rows="4"
+                                    spellcheck="false"
+                            ></textarea><br />
+                            <button data-wp-on--click="actions.saveGameComments" class="modal-close">submit comments</button>
                             <hr />
+                        </div>
+                        <div data-wp-bind--hidden="!context.userMustBeLoggedIn">
+                            first time: <span class="game-score" data-wp-text="context.firstTime"></span><br />
+                            <div class="small italics">You can play this game again but only scores where <br />
+                                first time = "yes" <br />are counted for the leader board.
+                            </div>
                         </div>
                     </main>
                     <footer class="modal_footer">
-                        <button class="modal-close">Close and/or Play Again</button>
+                        <button data-wp-on--click="actions.closeGameScore" class="modal-close">Close and/or Play Again</button>
                     </footer>
                 </div>
             </div>
@@ -475,7 +513,33 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                         <div><strong>Stats</strong></div>
                     </header>
                     <main class="modal_content">
-                        stats
+                        <div class="flex-table header">
+                            <div class="flex-row fifths first">team name</div>
+                            <div class="flex-row fifths">score (mins)</div>
+                            <div class="flex-row fifths">hint time</div>
+                            <div class="flex-row fifths">date</div>
+                            <div class="flex-row fifths">rating</div>
+                        </div>
+		                <?php
+		                foreach($resultStats as $score) { ?>
+                            <div class="flex-table row">
+                                <div class="flex-row fifths"><?php echo $score->teamName ?></div>
+                                <div class="flex-row fifths"><?php echo $score->totalTime ?></div>
+                                <div class="flex-row fifths"><?php echo $score->hintTime ?></div>
+                                <div class="flex-row fifths"><?php echo $score->formattedDate ?></div>
+                                <div class="flex-row fifths"><?php echo $score->gameRating ?></div>
+                            </div>
+                            <div class="comment-row">
+                                <?php if ($score->gameCommentPrivate) {
+                                        echo "<strong>private comment</strong>: " . $score->gameCommentPrivate;
+                                } ?>
+                            </div>
+                            <div class="comment-row">
+				                <?php if ($score->gameCommentPublic) {
+					                echo "<strong>public comment</strong>: " . $score->gameCommentPublic;
+				                } ?>
+                            </div>
+			                <?php } ?>
                     </main>
                     <footer class="modal_footer">
                         <button class="modal-close">Close</button>
@@ -491,19 +555,23 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                     </header>
                     <main class="modal_content">
                         <div class="flex-table header">
+                            <div class="flex-row fourths first">rank</div>
                             <div class="flex-row fourths first">team name</div>
-                            <div class="flex-row fourths">score</div>
+                            <div class="flex-row fourths">score (mins)</div>
                             <div class="flex-row fourths">hint time</div>
                             <div class="flex-row fourths">date</div>
                         </div>
-                          <?php foreach($resultLeaderBoard as $score) { ?>
+                          <?php
+                          $index = 1;
+                          foreach($resultLeaderBoard as $score) { ?>
                                 <div class="flex-table row">
+                                    <div class="flex-row fourths"><?php echo $index ?></div>
                                     <div class="flex-row fourths"><?php echo $score->teamName ?></div>
                                     <div class="flex-row fourths"><?php echo $score->totalTime ?></div>
                                     <div class="flex-row fourths"><?php echo $score->hintTime ?></div>
                                     <div class="flex-row fourths"><?php echo $score->formattedDate ?></div>
                                 </div>
-                           <?php } ?>
+                           <?php $index++; } ?>
                     </main>
                     <footer class="modal_footer">
                         <button class="modal-close">Close</button>
@@ -519,7 +587,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                         data-wp-on--click="actions.quitAlertStartClose"
                         aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                 >
-		            <?php esc_html_e( 'Play Other Game', 'game-block' ); ?>
+		            <?php esc_html_e( 'Play Other Game', 'escapeout-game' ); ?>
                 </button>
                 <br />note: you can search for the other game by game name in search bar above<br /><br />
 
@@ -528,7 +596,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                         data-wp-on--click="actions.quit"
                         aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                 >
-		            <?php esc_html_e( 'Play this Game', 'game-block' ); ?>
+		            <?php esc_html_e( 'Play this Game', 'escapeout-game' ); ?>
                 </button>
             </div>
         </div>
@@ -558,30 +626,31 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                             data-wp-on--click="actions.quitAlertOpen"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                     >
-                        <?php esc_html_e( 'Quit', 'game-block' ); ?>
+                        <?php esc_html_e( 'Quit', 'escapeout-game' ); ?>
                     </button>
                 </div>
                 <div aria-label="Time" class="time">
                     <div class="small">time started: <span data-wp-text="state.formattedTimeStart"></span> | hint time: <span data-wp-text="state.hintTime"></span> </div>
                 </div>
                 <div class="item-header" >Zone
-                    <img  data-wp-on--click="actions.setZoneHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
+                    <img data-wp-on--click="actions.setZoneHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
                     <img data-wp-on--click="actions.setZoneHelpVisible" class="question"  src="<?php echo $siteUrl . $assetDir . "question.svg" ?>" alt="question about zones" data-wp-bind--hidden="state.isDark" />
                 </div>
+                <div class="zone-name" data-wp-text="state.zoneName"></div>
                 <div class="zone-holder">
-                    <?php foreach($ourContext['playZones'] as $playZone) { ?>
+                    <?php $indexZone=1;
+                    foreach($ourContext['playZones'] as $playZone) { ?>
                         <div data-wp-on--click="actions.setZoneVisible" <?php echo wp_interactivity_data_wp_context($playZone) ?> data-wp-class--zone-border="callbacks.zoneBorder" class="zone-icon-container">
                             <img src="<?php echo $siteUrl . $assetDir . "zone-FFFFFF.svg" ?>" alt="<?php echo $playZone['name'] ?>" data-wp-bind--hidden="!state.isDark" />
                             <img src="<?php echo $siteUrl . $assetDir . "zone.svg" ?>" alt="<?php echo $playZone['name'] ?>" data-wp-bind--hidden="state.isDark" />
-                            <div class="zone-text"><?php echo $playZone['name'] ?></div>
+                            <div class="zone-text">Zone: <?php echo $indexZone; ?></div>
                         </div>
 
-                    <?php } ?>
+                    <?php $indexZone++; } ?>
                 </div>
-               <!--<div class="zone-description" data-wp-bind--hidden="callbacks.zoneDescription"><?php echo $playZone['description'] ?>7</div>-->
                 <div class="zone-description" data-wp-text="state.zoneDescription" data-wp-bind--hidden="!callbacks.zoneDescription"></div>
                 <?php foreach($ourContext['playZones'] as $playZone) { ?>
-                    <div class="zone-description" <?php echo wp_interactivity_data_wp_context($playZone) ?>>
+                    <div class="zone-image" <?php echo wp_interactivity_data_wp_context($playZone) ?>>
                         <div data-wp-bind--hidden="callbacks.hideItemByZone">
                             <?php echo wp_get_attachment_image( $playZone["imageID"], "thumbnail", "", array( "class" => "img-responsive" ) );  ?>
                         </div>
@@ -633,8 +702,6 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                 <div class="modal from-right">
                                     <header class="modal_header">
                                         <div class="modal_header-clueDetails"><?php echo $puzzle["name"] ?></div>
-                                        <button class="close" data-wp-on--click="actions.setPuzzleModalHidden">
-                                            close</button>
                                     </header>
                                     <main class="modal_content">
 
@@ -682,7 +749,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                     <div data-wp-on--click="actions.setClueDisplayToggle" data-wp-bind--hidden="state.isDark">
                                       <img src="<?php echo $siteUrl . $clue["iconPath"] . ".svg" ?>" alt="<?php echo $clue["name"] ?>" />
                                     </div>
-                                    <div class="clue-item" data-wp-bind--hidden="!context.clueDisplayOn">
+                                    <div class="clue-item-text" data-wp-bind--hidden="!context.clueDisplayOn">
                                         <div><?php echo $clue["text"] ?></div>
                                         <div data-wp-bind--hidden="!context.clueHasImage" data-wp-on--click="actions.setClueBigImageToggle">
                                             <?php echo wp_get_attachment_image( $clue["imageID"], "thumbnail", "", array( "class" => "img-responsive" ) );  ?>
@@ -691,7 +758,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                                 data-wp-on--click="actions.setClueDisplayToggle"
                                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                                         >
-                                            <?php esc_html_e( 'Close Help', 'game-block' ); ?>
+                                            <?php esc_html_e( 'Close Clue', 'escapeout-game' ); ?>
                                         </button>
                                     </div>
                                 </div>
@@ -715,7 +782,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                             data-wp-on--click="actions.setHintDisplayToggle"
                                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                                     >
-                                        <?php esc_html_e( 'Close', 'game-block' ); ?>
+                                        <?php esc_html_e( 'Close', 'escapeout-game' ); ?>
                                     </button>
                                 </div>
                             </div>
@@ -725,13 +792,13 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                             data-wp-on--click="actions.openHint"
                                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                                     >
-                                        <?php esc_html_e( 'Yes', 'game-block' ); ?>
+                                        <?php esc_html_e( 'Yes', 'escapeout-game' ); ?>
                                     </button>
                                     <button class="button"
                                             data-wp-on--click="actions.quitWarningClose"
                                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                                     >
-                                        <?php esc_html_e( 'No', 'game-block' ); ?>
+                                        <?php esc_html_e( 'No', 'escapeout-game' ); ?>
                                     </button>
                                 </div>
                             </div>
@@ -747,7 +814,7 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                 data-wp-on--click="actions.closeHelp"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                         >
-                            <?php esc_html_e( 'Close', 'game-block' ); ?>
+                            <?php esc_html_e( 'Close', 'escapeout-game' ); ?>
                         </button>
                     </div>
                 </div>
@@ -760,13 +827,13 @@ $resultStats = $wpdb->get_results ( "SELECT * FROM $table_name WHERE `userEmail`
                                 data-wp-on--click="actions.quit"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                         >
-                            <?php esc_html_e( 'Yes', 'game-block' ); ?>
+                            <?php esc_html_e( 'Yes', 'escapeout-game' ); ?>
                         </button>
                         <button class="button"
                                 data-wp-on--click="actions.quitAlertClose"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                         >
-                            <?php esc_html_e( 'No', 'game-block' ); ?>
+                            <?php esc_html_e( 'No', 'escapeout-game' ); ?>
                         </button>
                     </div>
                 </div>

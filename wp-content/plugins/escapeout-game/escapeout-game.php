@@ -53,7 +53,9 @@ function escapeout_table() {
       gameLink varchar (200) NOT NULL,
       designerEmail varchar (200) NOT NULL,
       designerName varchar (200),
-      gameComments text,
+      gameRating varchar (100),
+      gameCommentPrivate varchar (200),
+      gameCommentPublic varchar (200),
       timeStart varchar (100),
       formattedDate varchar (100),
       timeEnd varchar (100),
@@ -147,7 +149,9 @@ function escapeout_get_game_score($request) {
 	$gameLink = $request->get_param('gameLink');
 	$designerEmail = $request->get_param('designerEmail');
 	$designerName = $request->get_param('designerName');
-	$gameComments = $request->get_param('gameComments');
+	$gameCommentPublic = $request->get_param('gameCommentPublic');
+	$gameCommentPrivate = $request->get_param('gameCommentPrivate');
+	$gameRating = $request->get_param('gameRating');
 	$userEmail = $request->get_param('userEmail');
     $timeStart = $request->get_param('timeStart');
     $firstTime = $request->get_param('firstTime');
@@ -188,7 +192,9 @@ function escapeout_create_game_score( $request ){
             'userID' => $request['userID'],
             'gameID' => $request['gameID'],
             'gameName' => $request['gameName'],
-            'gameComments' => $request['gameComments'],
+            'gameCommentPublic' => $request['gameCommentPublic'],
+            'gameCommentPrivate' => $request['gameCommentPrivate'],
+            'gameRating' => $request['gameRating'],
             'userEmail' => $request['userEmail'],
             'designerEmail' => $request['designerEmail'],
             'designerName' => $request['designerName'],
@@ -227,6 +233,9 @@ function escapeout_update_game_score( $request ) {
             'totalTime' => $request['totalTime'],
             'hintTime' => $request['hintTime'],
             'completed' => $request['completed'],
+            'gameCommentPrivate' => $request['gameCommentPrivate'],
+            'gameCommentPublic' => $request['gameCommentPublic'],
+            'gameRating' => $request['gameRating'],
         ),
 
         array(

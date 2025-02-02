@@ -20,7 +20,7 @@ const matcher = new RegExpMatcher({
 
 /* Basic + space + base64 encode application username:password for user who created? */
 const saveScore = async (gameScoreID) => {
-	console.log("saveScore");
+	console.log("saveScore: " + gameScoreID);
 	const myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
 	myHeaders.append("Authorization", "Basic bGFyYTo0bFJYIEMydTUgaWd3YSBja0dYIGoyRHYgaldMcg==");
@@ -74,10 +74,54 @@ const saveScore = async (gameScoreID) => {
 		console.log( res );
 	} );*/
 };
+const saveGameComments = async (gameScoreID, inputPublic, inputPrivate, rating) => {
+	console.log("saveGameComments: " + gameScoreID);
+	const myHeaders = new Headers();
+	myHeaders.append("Content-Type", "application/json");
+	myHeaders.append("Authorization", "Basic bGFyYTo0bFJYIEMydTUgaWd3YSBja0dYIGoyRHYgaldMcg==");
+	const context = getContext();
+	if (context.userMustBeLoggedIn) {
+		/* hintTime is a state variable */
+		const raw = JSON.stringify({
+			"gameCommentPublic": inputPublc,
+			"gameCommentPrivate": inputPrivate,
+			"gameRating": rating,
+		});
+		console.log("raw (put-gameComments)" + raw);
+
+		const requestOptions = {
+			method: "PUT",
+			headers: myHeaders,
+			body: raw,
+			redirect: "follow"
+		};
+		const url = state.siteURL + "/wp-json/escapeout/v1/game-score/" + gameScoreID;
+		try {
+			const response = await fetch(url, requestOptions)
+			if (!response.ok) {
+				console.error('Request failed with status (gameComments)' + response.status)
+			}
+		} catch (error) {
+			console.error('Error (save game comments):', error.message)
+		}
+	}
+
+
+	/* apiFetch doesn't seem to work
+	const success = apiFetch( {
+		path: '/game-plugin-app-api/v1/game-user',
+		method: 'POST',
+		data: {
+			"name": "John Doe2",
+			"email": "jon@gmail.com2"
+		},
+	} ).then( ( res ) => {
+		console.log( res );
+	} );*/
+};
 const getScoreByID = async ({postID, userID, realTimeStart}) => {
 }
-
-const createScore = async ({postID, userID, gameID, gameName, userEmail, designerEmail, designerName, timeStart, formattedDate, teamName}) => {
+const createScore = async ({postID, userID, gameID, gameName, userEmail, designerEmail, designerName, timeStart, formattedDate, teamName, firstTime}) => {
 	/* note - can only update fields that you created, probably because of authorization... */
 	const context = getContext();
 	const myHeaders = new Headers();
@@ -88,21 +132,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 	myHeaders.append( "Vary", "Origin" );
 	//myHeaders.append('X-WP-Nonce', nonce);
 	/* check if first time */
-	const requestOptions = {
-		method: "GET",
-		headers: myHeaders,
-		credentials: "include"
-	};
-	const url = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail=" + userEmail + "&gameID=" + gameID;
-	try {
-		const response = await fetch(url, requestOptions)
-		if (!response.ok) {
-			console.error('url Request failed with status ' + response.status)
-		}
-		const data = await response.json();
-		console.log('get userEmail/gameID: data.length: ' + data.length);
-		state.firstTime = "yes";
-		if (data.length>0) {state.firstTime = "no";}
+	/* don't need to check first time because am doing in stats */
 		/* create score */
 		const raw = JSON.stringify({
 			"postID": postID,
@@ -115,7 +145,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 			"timeStart": timeStart,
 			"formattedDate": formattedDate,
 			"teamName": teamName,
-			"firstTime": state.firstTime
+			"firstTime": firstTime
 		});
 		const requestOptions2 = {
 			method: "POST",
@@ -161,10 +191,6 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 			console.error('Error2 (post create score):', error.message)
 		}
 
-	} catch (error) {
-		console.error('Error1:', error.message)
-	}
-
 
 	/* apiFetch doesn't seem to work
 	const success = apiFetch( {
@@ -178,8 +204,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 		console.log( res );
 	} );*/
 };
-
-const { state } = store( 'create-block', {
+const { state } = store( 'escapeout-game', {
 	state: {
 		get themeText() {
 			return state.isDark ? state.darkText : state.lightText;
@@ -240,7 +265,12 @@ const { state } = store( 'create-block', {
 			if (context.description == "") {
 				state.zoneDescription = " ";
 			} else {
-				state.zoneDescription = context.description;
+				state.zoneDescription = "description: " + context.description;
+			}
+			if (context.name == "") {
+				state.zoneName = " ";
+			} else {
+				state.zoneName = context.name;
 			}
 		},
 		setPuzzleModalVisible: () => {
@@ -274,11 +304,17 @@ const { state } = store( 'create-block', {
 			state.modalPublicImageOpen = !state.modalPublicImageOpen;
 		},
 		toggleStats() {
+			console.log("stats");
 			state.modalStatsOpen = !state.modalStatsOpen;
 		},
 		toggleLeaderBoard() {
 
 			state.modalLeaderBoardOpen = !state.modalLeaderBoardOpen;
+		},
+		saveGameComments: () => {
+			const inputPublic = document.getElementById("gameCommentPublic").value;
+			const inputPrivate = document.getElementById("gameCommentPrivate").value;
+			saveGameComments(state.gameScoreID, inputPublic, inputPrivate, state.rating);
 		},
 		guessAttempt: () => {
 			const context = getContext();
@@ -406,7 +442,8 @@ const { state } = store( 'create-block', {
 									designerName: context.designerName,
 									timeStart: date,
 									formattedDate: format(date, "MM/dd/yy h:mma"),
-									teamName: context.teamName
+									teamName: context.teamName,
+									firstTime: context.firstTime
 								});
 							} else {
 								localStorage.setItem("gameName",context.gameName);
@@ -430,8 +467,24 @@ const { state } = store( 'create-block', {
 		},
 		closeGameScore() {
 			state.showGameScore = false;
+			/* reset all states */
 			window.location.reload();
 			window.scrollTo(0, 0);
+		},
+		setRating1() {
+			state.rating = 1;
+		},
+		setRating2() {
+			state.rating = 2;
+		},
+		setRating3() {
+			state.rating = 3;
+		},
+		setRating4() {
+			state.rating = 4;
+		},
+		setRating5() {
+			state.rating = 5;
 		},
 	},
 	callbacks: {
@@ -500,6 +553,10 @@ const { state } = store( 'create-block', {
 			if (localStorage.getItem("timeStart")) {
 				/* check game-name */
 				if ( gameIDLocal === context.gameID) {
+					/* reset states */
+					state.gameScoreID = localStorage.getItem('gameScoreID')
+					state.timeStart = localStorage.getItem('timeStart')
+					state.hintTime = localStorage.getItem('hintTime')
 					//alert('resuming game');
 					state.alertVisible = true
 					state.alertText = "resuming game"

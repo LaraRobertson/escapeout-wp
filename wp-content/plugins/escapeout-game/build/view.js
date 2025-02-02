@@ -6311,7 +6311,7 @@ const matcher = new obscenity__WEBPACK_IMPORTED_MODULE_1__.RegExpMatcher({
 
 /* Basic + space + base64 encode application username:password for user who created? */
 const saveScore = async gameScoreID => {
-  console.log("saveScore");
+  console.log("saveScore: " + gameScoreID);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Authorization", "Basic bGFyYTo0bFJYIEMydTUgaWd3YSBja0dYIGoyRHYgaldMcg==");
@@ -6363,6 +6363,49 @@ const saveScore = async gameScoreID => {
   	console.log( res );
   } );*/
 };
+const saveGameComments = async (gameScoreID, inputPublic, inputPrivate, rating) => {
+  console.log("saveGameComments: " + gameScoreID);
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Basic bGFyYTo0bFJYIEMydTUgaWd3YSBja0dYIGoyRHYgaldMcg==");
+  const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+  if (context.userMustBeLoggedIn) {
+    /* hintTime is a state variable */
+    const raw = JSON.stringify({
+      "gameCommentPublic": inputPublc,
+      "gameCommentPrivate": inputPrivate,
+      "gameRating": rating
+    });
+    console.log("raw (put-gameComments)" + raw);
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+    const url = state.siteURL + "/wp-json/escapeout/v1/game-score/" + gameScoreID;
+    try {
+      const response = await fetch(url, requestOptions);
+      if (!response.ok) {
+        console.error('Request failed with status (gameComments)' + response.status);
+      }
+    } catch (error) {
+      console.error('Error (save game comments):', error.message);
+    }
+  }
+
+  /* apiFetch doesn't seem to work
+  const success = apiFetch( {
+  	path: '/game-plugin-app-api/v1/game-user',
+  	method: 'POST',
+  	data: {
+  		"name": "John Doe2",
+  		"email": "jon@gmail.com2"
+  	},
+  } ).then( ( res ) => {
+  	console.log( res );
+  } );*/
+};
 const getScoreByID = async ({
   postID,
   userID,
@@ -6378,7 +6421,8 @@ const createScore = async ({
   designerName,
   timeStart,
   formattedDate,
-  teamName
+  teamName,
+  firstTime
 }) => {
   /* note - can only update fields that you created, probably because of authorization... */
   const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
@@ -6390,81 +6434,62 @@ const createScore = async ({
   myHeaders.append("Vary", "Origin");
   //myHeaders.append('X-WP-Nonce', nonce);
   /* check if first time */
-  const requestOptions = {
-    method: "GET",
+  /* don't need to check first time because am doing in stats */
+  /* create score */
+  const raw = JSON.stringify({
+    "postID": postID,
+    "userID": userID,
+    "gameID": gameID,
+    "gameName": gameName,
+    "userEmail": userEmail,
+    "designerEmail": designerEmail,
+    "designerName": designerName,
+    "timeStart": timeStart,
+    "formattedDate": formattedDate,
+    "teamName": teamName,
+    "firstTime": firstTime
+  });
+  const requestOptions2 = {
+    method: "POST",
     headers: myHeaders,
+    body: raw,
     credentials: "include"
   };
-  const url = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail=" + userEmail + "&gameID=" + gameID;
+  const url2 = state.siteURL + "/wp-json/escapeout/v1/game-score/";
   try {
-    const response = await fetch(url, requestOptions);
+    const response = await fetch(url2, requestOptions2);
     if (!response.ok) {
-      console.error('url Request failed with status ' + response.status);
+      console.error('url2 Request failed with status ' + response.status);
+      /* stop here */
     }
-    const data = await response.json();
-    console.log('get userEmail/gameID: data.length: ' + data.length);
-    state.firstTime = "yes";
-    if (data.length > 0) {
-      state.firstTime = "no";
-    }
-    /* create score */
-    const raw = JSON.stringify({
-      "postID": postID,
-      "userID": userID,
-      "gameID": gameID,
-      "gameName": gameName,
-      "userEmail": userEmail,
-      "designerEmail": designerEmail,
-      "designerName": designerName,
-      "timeStart": timeStart,
-      "formattedDate": formattedDate,
-      "teamName": teamName,
-      "firstTime": state.firstTime
-    });
-    const requestOptions2 = {
-      method: "POST",
+    /* get ID */
+    const requestOptions3 = {
+      method: "GET",
       headers: myHeaders,
-      body: raw,
       credentials: "include"
     };
-    const url2 = state.siteURL + "/wp-json/escapeout/v1/game-score/";
+    const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail=" + userEmail + "&gameID=" + gameID + "&timeStart=" + timeStart;
     try {
-      const response = await fetch(url2, requestOptions2);
+      const response = await fetch(url3, requestOptions3);
       if (!response.ok) {
-        console.error('url2 Request failed with status ' + response.status);
-        /* stop here */
+        console.error('url3 Request failed with status ' + response.status);
       }
-      /* get ID */
-      const requestOptions3 = {
-        method: "GET",
-        headers: myHeaders,
-        credentials: "include"
-      };
-      const url3 = state.siteURL + "/wp-json/escapeout/v1/game-score/?userEmail=" + userEmail + "&gameID=" + gameID + "&timeStart=" + timeStart;
-      try {
-        const response = await fetch(url3, requestOptions3);
-        if (!response.ok) {
-          console.error('url3 Request failed with status ' + response.status);
-        }
-        const data2 = await response.json();
-        /*data is an array */
-        console.log("data2: " + JSON.stringify(data2));
-        if (data2.length > 0) {
-          state.gameScoreID = data2[0].id;
-          localStorage.setItem("gameScoreID", data2[0].id);
-          localStorage.setItem("gameName", gameName);
-          localStorage.setItem("timeStart", timeStart);
-          localStorage.setItem("gameID", gameID);
-          context.gameStart = true;
-        }
-      } catch (error) {
-        console.error('Error3 (get gameScoreID):', error.message);
+      const data2 = await response.json();
+      /*data is an array */
+      console.log("data2: " + JSON.stringify(data2));
+      if (data2.length > 0) {
+        state.gameScoreID = data2[0].id;
+        localStorage.setItem("gameScoreID", data2[0].id);
+        localStorage.setItem("gameName", gameName);
+        localStorage.setItem("timeStart", timeStart);
+        localStorage.setItem("gameID", gameID);
+        context.gameStart = true;
       }
     } catch (error) {
-      console.error('Error2 (post create score):', error.message);
+      console.error('Error3 (get gameScoreID):', error.message);
     }
   } catch (error) {
-    console.error('Error1:', error.message);
+    console.error('Error2 (post create score):', error.message);
   }
 
   /* apiFetch doesn't seem to work
@@ -6481,7 +6506,7 @@ const createScore = async ({
 };
 const {
   state
-} = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.store)('create-block', {
+} = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.store)('escapeout-game', {
   state: {
     get themeText() {
       return state.isDark ? state.darkText : state.lightText;
@@ -6541,7 +6566,12 @@ const {
       if (context.description == "") {
         state.zoneDescription = " ";
       } else {
-        state.zoneDescription = context.description;
+        state.zoneDescription = "description: " + context.description;
+      }
+      if (context.name == "") {
+        state.zoneName = " ";
+      } else {
+        state.zoneName = context.name;
       }
     },
     setPuzzleModalVisible: () => {
@@ -6575,10 +6605,16 @@ const {
       state.modalPublicImageOpen = !state.modalPublicImageOpen;
     },
     toggleStats() {
+      console.log("stats");
       state.modalStatsOpen = !state.modalStatsOpen;
     },
     toggleLeaderBoard() {
       state.modalLeaderBoardOpen = !state.modalLeaderBoardOpen;
+    },
+    saveGameComments: () => {
+      const inputPublic = document.getElementById("gameCommentPublic").value;
+      const inputPrivate = document.getElementById("gameCommentPrivate").value;
+      saveGameComments(state.gameScoreID, inputPublic, inputPrivate, state.rating);
     },
     guessAttempt: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
@@ -6706,7 +6742,8 @@ const {
                   designerName: context.designerName,
                   timeStart: date,
                   formattedDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_4__.format)(date, "MM/dd/yy h:mma"),
-                  teamName: context.teamName
+                  teamName: context.teamName,
+                  firstTime: context.firstTime
                 });
               } else {
                 localStorage.setItem("gameName", context.gameName);
@@ -6730,8 +6767,24 @@ const {
     },
     closeGameScore() {
       state.showGameScore = false;
+      /* reset all states */
       window.location.reload();
       window.scrollTo(0, 0);
+    },
+    setRating1() {
+      state.rating = 1;
+    },
+    setRating2() {
+      state.rating = 2;
+    },
+    setRating3() {
+      state.rating = 3;
+    },
+    setRating4() {
+      state.rating = 4;
+    },
+    setRating5() {
+      state.rating = 5;
     }
   },
   callbacks: {
@@ -6799,6 +6852,10 @@ const {
       if (localStorage.getItem("timeStart")) {
         /* check game-name */
         if (gameIDLocal === context.gameID) {
+          /* reset states */
+          state.gameScoreID = localStorage.getItem('gameScoreID');
+          state.timeStart = localStorage.getItem('timeStart');
+          state.hintTime = localStorage.getItem('hintTime');
           //alert('resuming game');
           state.alertVisible = true;
           state.alertText = "resuming game";

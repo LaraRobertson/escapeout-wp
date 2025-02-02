@@ -26,6 +26,8 @@
   --red-border: #8B0000FF;
   --zone-border: #8B0000FF;
   --amplify-components-button-hover-background-color: transparent;
+  --escaepout-game-textarea-background-color: #ccc;
+  --escaepout-game-textarea-border-color: #ddd;
 }
 
 .small {
@@ -160,9 +162,8 @@
   padding: 20px;
 }
 .game-block-frontend .show-score {
-  font-size: 1.5em;
   padding: 20px;
-  margin: 20px;
+  margin: 0 20px;
 }
 .game-block-frontend .game-score {
   font-weight: bold;
@@ -232,21 +233,25 @@
   width: 100%;
   justify-content: center;
 }
-.game-block-frontend .clue-item, .game-block-frontend .hint-item {
-  width: 150px;
+.game-block-frontend .clue-item, .game-block-frontend .puzzle-item {
+  max-width: 150px;
+  padding: 10px;
   text-align: center;
+  font-size: 0.9em;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 5px #cccccc;
 }
 .game-block-frontend .hint-item {
-  width: 150px;
   text-align: center;
   padding-bottom: 10px;
+  font-size: 0.9em;
 }
 .game-block-frontend .zone-border {
   border: 1px solid #0D5189;
   box-shadow: 0 0 5px #0D5189;
 }
 .game-block-frontend .zone-icon-container {
-  height: 60px;
+  height: 50px;
   width: 50px;
   position: relative;
   text-align: center;
@@ -264,6 +269,18 @@
 }
 .game-block-frontend .zone-description {
   text-align: center;
+  font-size: 12px;
+  min-height: 17px;
+}
+.game-block-frontend .zone-name {
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+.game-block-frontend .zone-image {
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
 }
 .game-block-frontend .time {
   text-align: center;
@@ -283,6 +300,7 @@
   margin: 0.2em;
   font-size: 0.8em;
   line-height: 1em;
+  box-shadow: 0 0 5px #cccccc;
 }
 .game-block-frontend .alert-inner .button, .game-block-frontend .help-inner .button {
   font-weight: bold;
@@ -340,7 +358,7 @@
 }
 .game-block-frontend .help-container {
   position: absolute;
-  top: 20%;
+  top: 50px;
   left: 20%;
   right: 20%;
   width: 60%;
@@ -449,14 +467,14 @@
 }
 .flex-table {
   display: flex;
-  flex-flow: row no-wrap;
+  flex-flow: row nowrap;
   border-right: solid 1px #d9d9d9;
   transition: 0.5s;
 }
 
 .flex-table:first-of-type {
-  border-top: solid 1px var(--blue-color);
-  border-right: solid 1px var(--blue-color);
+  border-top: solid 1px #d9d9d9;
+  border-right: solid 1px #d9d9d9;
 }
 
 .flex-table.header {
@@ -478,6 +496,17 @@
   width: 25%;
 }
 
+.fifths {
+  width: 20%;
+}
+
+.comment-row {
+  border-left: solid 1px #d9d9d9;
+  border-right: solid 1px #d9d9d9;
+  background-color: #f4f2f1;
+  font-size: 0.8em;
+}
+
 .modalContainerPuzzle {
   height: 300px !important;
   background-color: transparent;
@@ -489,6 +518,16 @@
   bottom: 0;
 }
 
+.modalContainerMap .modal {
+  overflow-y: scroll;
+  width: 90vw;
+}
+
+.modalContainerPuzzle .modal {
+  overflow: hidden;
+  width: 90%;
+}
+
 .modalContainerPuzzle, .modalContainerMap {
   align-items: center;
   display: flex;
@@ -498,7 +537,7 @@
   right: 0;
   opacity: 0;
   position: fixed;
-  top: 30px;
+  top: 50px;
   transition: all 0.2s ease;
   visibility: hidden;
   width: 100%;
@@ -507,15 +546,13 @@
 .modalContainerPuzzle .modal, .modalContainerMap .modal {
   background-color: rgb(255, 255, 255);
   color: #000;
-  width: 90vw;
   margin: 20px auto;
   border-radius: 20px;
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
   height: auto;
   max-height: 95vh;
-  /*overflow-y: scroll;*/
   padding: 10px;
-  max-width: 450px;
+  /*max-width: 450px;*/
 }
 .modalContainerPuzzle .modal_header, .modalContainerMap .modal_header {
   border-bottom: 1px solid #ddd;
@@ -681,4 +718,24 @@
 
 #gameMap {
   opacity: 0;
+}
+
+/** Textarea **/
+:where(.escaepout-game__textarea) {
+  background-color: var(--escaepout-game-textarea-background-color);
+  border-radius: 0.33rem;
+  border: 1px solid var(--feedback-block-textarea-border-color);
+  box-sizing: border-box;
+  display: block;
+  height: 100px;
+  padding: calc(0.667em + 2px);
+  opacity: 0.6;
+  outline-offset: -2px;
+  resize: none;
+  transition: opacity 0.2s;
+  width: 100%;
+}
+
+:where(.escaepout-game__textarea):focus {
+  opacity: 0.95;
 }
