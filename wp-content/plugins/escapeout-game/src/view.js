@@ -83,7 +83,7 @@ const saveGameComments = async (gameScoreID, inputPublic, inputPrivate, rating) 
 	if (context.userMustBeLoggedIn) {
 		/* hintTime is a state variable */
 		const raw = JSON.stringify({
-			"gameCommentPublic": inputPublc,
+			"gameCommentPublic": inputPublic,
 			"gameCommentPrivate": inputPrivate,
 			"gameRating": rating,
 		});
@@ -101,6 +101,10 @@ const saveGameComments = async (gameScoreID, inputPublic, inputPrivate, rating) 
 			if (!response.ok) {
 				console.error('Request failed with status (gameComments)' + response.status)
 			}
+			state.showGameScore = false;
+			/* reset all states */
+			window.location.reload();
+			window.scrollTo(0, 0);
 		} catch (error) {
 			console.error('Error (save game comments):', error.message)
 		}
@@ -180,6 +184,7 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 					localStorage.setItem("gameScoreID",data2[0].id);
 					localStorage.setItem("gameName",gameName);
 					localStorage.setItem("timeStart", timeStart);
+					localStorage.setItem("formattedDate", formattedDate);
 					localStorage.setItem("gameID", gameID);
 					context.gameStart = true;
 				}
@@ -423,7 +428,7 @@ const { state } = store( 'escapeout-game', {
 							/* ... */
 							/* check for other games? */
 							state.timeStart = date;
-							state.formattedTimeStart = format(date, "MM/dd/yy h:mma");
+							state.formattedDate = format(date, "MM/dd/yy h:mma");
 							/* do this after score is created */
 							/*localStorage.setItem("timeStart", date);*/
 							/* context.gameStart = true;*/
@@ -556,6 +561,7 @@ const { state } = store( 'escapeout-game', {
 					/* reset states */
 					state.gameScoreID = localStorage.getItem('gameScoreID')
 					state.timeStart = localStorage.getItem('timeStart')
+					state.formattedDate = localStorage.getItem('formattedDate')
 					state.hintTime = localStorage.getItem('hintTime')
 					//alert('resuming game');
 					state.alertVisible = true

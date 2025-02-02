@@ -162,7 +162,7 @@ wp_interactivity_state(
         'errorMessage' => '',
         'gameScoreID' => '',
         'timeStart' => '',
-        'formattedTimeStart' => '',
+        'formattedDate' => '',
         'hintTime' => 0,
         'gameScore' => '',
         'showGameScore' => false,
@@ -607,11 +607,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
             <div class="game-container"
                  style="background-color:<?php echo $attributes['bgColor']?>"
                  data-wp-class--dark-theme="state.isDark">
-                <div class="puzzle-solved" data-wp-context='{ "counter": 0 }' data-wp-watch="callbacks.logCounter">
-                    <p>Puzzles Solved? <span data-wp-text="state.solvedCount"></span>/<span data-wp-text="state.puzzleTotal"></span></p>
-                    <!--<button data-wp-on--click="actions.increaseCounter">+</button>
-                    <button data-wp-on--click="actions.decreaseCounter">-</button>-->
-                </div>
+
                 <div class="button-bar">
                     <!-- check if gameMap (context true/false -> added a game map block and created an anchor) -->
                     <!-- <a href="#gameMap" class="button">Zone Map</a>-->
@@ -629,8 +625,13 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                         <?php esc_html_e( 'Quit', 'escapeout-game' ); ?>
                     </button>
                 </div>
+                <div class="puzzle-solved" data-wp-context='{ "counter": 0 }' data-wp-watch="callbacks.logCounter">
+                    Puzzles Solved? <span data-wp-text="state.solvedCount"></span>/<span data-wp-text="state.puzzleTotal"></span>
+                    <!--<button data-wp-on--click="actions.increaseCounter">+</button>
+                    <button data-wp-on--click="actions.decreaseCounter">-</button>-->
+                </div>
                 <div aria-label="Time" class="time">
-                    <div class="small">time started: <span data-wp-text="state.formattedTimeStart"></span> | hint time: <span data-wp-text="state.hintTime"></span> </div>
+                    <div class="small">time started: <span data-wp-text="state.formattedDate"></span> | hint time: <span data-wp-text="state.hintTime"></span> </div>
                 </div>
                 <div class="item-header" >Zone
                     <img data-wp-on--click="actions.setZoneHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />

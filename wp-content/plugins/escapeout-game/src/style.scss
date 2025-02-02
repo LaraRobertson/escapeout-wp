@@ -69,7 +69,6 @@
 
 	p {
 		font-size: 1rem;
-		margin: 0 0 15px 0 !important;
 	}
 
 	ul {
@@ -185,13 +184,13 @@
 		overflow: auto ; /* The panel becomes SCROLLABLE due to content overflow. */
 		position: absolute ;
 		right: 0px ;
-		top: 0px ;
+		top: 0 ;
 		overflow-y: scroll;
 		overscroll-behavior: contain ; /* Prevent SCROLL-CHAINING to parent elements. */
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
-		padding:0 10px;
+		padding:20px 10px;
 		margin: 0 auto;
 		box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
 		&.dark-theme {
