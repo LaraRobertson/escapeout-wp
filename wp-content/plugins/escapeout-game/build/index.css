@@ -19,6 +19,7 @@
 }
 .game-block-edit-block .components-flex {
   flex-wrap: wrap;
+  align-items: flex-start;
 }
 .game-block-edit-block .mediaColumn {
   display: flex;

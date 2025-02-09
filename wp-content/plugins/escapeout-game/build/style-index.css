@@ -42,6 +42,14 @@
   text-align: left;
 }
 
+.admin-bar .game-block-frontend .game-container {
+  padding: 40px 10px 20px 10px;
+}
+
+.game-block-frontend .game-container {
+  padding: 20px 10px;
+}
+
 .game-block-frontend {
   background-color: #EBEBEB;
   overflow: hidden;
@@ -187,7 +195,6 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 20px 10px;
   margin: 0 auto;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
 }
@@ -483,7 +490,7 @@
 .flex-row {
   width: 20%;
   text-align: center;
-  padding: 0.5em;
+  padding: 2px;
   border-right: solid 1px #d9d9d9;
   border-bottom: solid 1px #d9d9d9;
   background-color: #f4f2f1;

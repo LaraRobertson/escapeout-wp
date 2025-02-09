@@ -37,6 +37,36 @@ const shallowEqual = (object1, object2) => {
 
 /***/ }),
 
+/***/ "./src/components/caesarCipher.js":
+/*!****************************************!*\
+  !*** ./src/components/caesarCipher.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   caesarCipher: () => (/* binding */ caesarCipher)
+/* harmony export */ });
+function caesarCipher(str, shift) {
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    let charCode = str.charCodeAt(i);
+
+    // Handle lowercase letters
+    if (charCode >= 97 && charCode <= 122) {
+      charCode = (charCode - 97 + shift) % 26 + 97;
+    }
+    // Handle uppercase letters
+    else if (charCode >= 65 && charCode <= 90) {
+      charCode = (charCode - 65 + shift) % 26 + 65;
+    }
+    result += String.fromCharCode(charCode);
+  }
+  return result;
+}
+
+/***/ }),
+
 /***/ "./src/components/helper.js":
 /*!**********************************!*\
   !*** ./src/components/helper.js ***!
@@ -49,25 +79,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function removeLocalStorage() {
   console.log("remove local storage");
-  localStorage.removeItem("agreeToWaiver");
-  localStorage.removeItem("userAttributes");
-  localStorage.removeItem("gameStatsID");
   localStorage.removeItem("gameScoreID");
   localStorage.removeItem("gameID");
   localStorage.removeItem("gameName");
   localStorage.removeItem("teamName");
-  localStorage.removeItem("gameTime");
-  localStorage.removeItem("gameHintVisible");
   localStorage.removeItem("timeStart");
-  localStorage.removeItem("realTimeEnd");
-  localStorage.removeItem("gameNotes");
-  localStorage.removeItem("gameTimeHint");
-  localStorage.removeItem("clues");
-  localStorage.removeItem("cluesArray");
-  localStorage.removeItem("gamePuzzleSolved");
-  localStorage.removeItem("gamePuzzleGuess");
-  localStorage.removeItem("gamePuzzleAnswer");
-  localStorage.removeItem("gamePuzzleAnswerCorrect");
+  localStorage.removeItem("formattedDate");
+  localStorage.removeItem("clueTextArray");
+  localStorage.removeItem("solvedArray");
+  localStorage.removeItem("hintTextArray");
+  localStorage.removeItem("quesArray");
+  localStorage.removeItem("hintUsedArray");
 }
 
 /***/ }),
@@ -6293,12 +6315,14 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/interactivity */ "@wordpress/interactivity");
 /* harmony import */ var obscenity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! obscenity */ "./node_modules/obscenity/dist/index.mjs");
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.js");
 /* harmony import */ var _components_ShallowEqual__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/ShallowEqual */ "./src/components/ShallowEqual.js");
 /* harmony import */ var _components_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/helper */ "./src/components/helper.js");
+/* harmony import */ var _components_caesarCipher__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/caesarCipher */ "./src/components/caesarCipher.js");
 /**
  * WordPress dependencies
  */
+
 
 
 
@@ -6309,6 +6333,22 @@ const matcher = new obscenity__WEBPACK_IMPORTED_MODULE_1__.RegExpMatcher({
   ...obscenity__WEBPACK_IMPORTED_MODULE_1__.englishRecommendedTransformers
 });
 
+/* only show console messages on localhost */
+if (window.location.hostname !== 'escapeout-wp') {
+  console.log = function () {
+    var console_log = console.log;
+    var timeStart = new Date().getTime();
+    return function () {
+      var delta = new Date().getTime() - timeStart;
+      var args = [];
+      args.push((delta / 1000).toFixed(2) + ':');
+      for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+      }
+      //console_log.apply(console, args);
+    };
+  }();
+}
 /* Basic + space + base64 encode application username:password for user who created? */
 const saveScore = async gameScoreID => {
   console.log("saveScore: " + gameScoreID);
@@ -6320,7 +6360,7 @@ const saveScore = async gameScoreID => {
   // Do your operations to calculate time
   let endDate = new Date().getTime();
   let minutes = (endDate - state.timeStart) / 60000;
-  let totalTime = Number(minutes + state.hintTime).toFixed(2);
+  let totalTime = Number(minutes + state.hintUsedArray.length * 5).toFixed(2);
   console.log("totalTime: " + totalTime);
   state.gameScore = totalTime;
   state.showGameScore = true;
@@ -6330,7 +6370,7 @@ const saveScore = async gameScoreID => {
     const raw = JSON.stringify({
       "timeEnd": endDate,
       "totalTime": totalTime,
-      "hintTime": state.hintTime,
+      "hintTime": state.hintUsedArray.length * 5,
       "completed": 'yes'
     });
     console.log("raw (put-saveScore)" + raw);
@@ -6437,8 +6477,95 @@ const createScore = async ({
   myHeaders.append("Authorization", "Bearer " + btoa('lara:4lRX C2u5 igwa ckGX j2Dv jWLr'));
   myHeaders.append("Vary", "Origin");
   //myHeaders.append('X-WP-Nonce', nonce);
+  /* get game data */
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    credentials: "include"
+  };
+  const url = state.siteURL + "/wp-json/escapeout/v1/eo-game/" + postID;
+  try {
+    const response = await fetch(url, requestOptions);
+    if (!response.ok) {
+      console.error('url Request failed with status ' + response.status);
+    }
+    const data = await response.json();
+    /* data is an array */
+    //console.log("data: " + data.post_content);
+    //console.log("data.length: " + data.length);
+    if (data.hasOwnProperty("post_content")) {
+      console.log("data: " + data.post_content);
+      const firstIndex = data.post_content.indexOf("{");
+      const lastIndex = data.post_content.indexOf("-->");
+      let postAttributes = data.post_content.slice(firstIndex, lastIndex).trim();
+      let postAttributesObj = JSON.parse(postAttributes);
+      let quesArray = [];
+      let clueTextArray = [];
+      let hintTextArray = [];
+      let paIndex = 0;
+      let caIndex = 0;
+      let haIndex = 0;
+      console.log("firstIndex: " + firstIndex);
+      console.log("lastIndex: " + lastIndex);
+      console.log("postAttributes: " + postAttributes);
+      console.log("postAttributes (question): " + postAttributesObj.playZones[0].puzzleArray[0].question);
+      /* get attributes from post_content */
+      for (let i = 0; i < postAttributesObj.playZones.length; i++) {
+        if (postAttributesObj.playZones[i].disabled === "No") {
+          if (postAttributesObj.playZones[i].hasOwnProperty("puzzleArray")) {
+            for (let j = 0; j < postAttributesObj.playZones[i].puzzleArray.length; j++) {
+              if (postAttributesObj.playZones[i].puzzleArray[j].disabled === "No") {
+                let key = 'input' + paIndex;
+                let value = postAttributesObj.playZones[i].puzzleArray[j].question;
+                let newObject = {};
+                newObject[key] = value;
+                quesArray.push(newObject);
+                paIndex++;
+              }
+            }
+          }
+          if (postAttributesObj.playZones[i].hasOwnProperty("clueArray")) {
+            for (let j = 0; j < postAttributesObj.playZones[i].clueArray.length; j++) {
+              if (postAttributesObj.playZones[i].clueArray[j].disabled === "No") {
+                let key = 'clue' + caIndex;
+                let value = postAttributesObj.playZones[i].clueArray[j].text;
+                let newObject = {};
+                newObject[key] = value;
+                clueTextArray.push(newObject);
+                caIndex++;
+              }
+            }
+          }
+          if (postAttributesObj.playZones[i].hasOwnProperty("hintArray")) {
+            for (let j = 0; j < postAttributesObj.playZones[i].hintArray.length; j++) {
+              if (postAttributesObj.playZones[i].hintArray[j].disabled === "No") {
+                let key = 'hint' + haIndex;
+                let value = postAttributesObj.playZones[i].hintArray[j].text;
+                let newObject = {};
+                newObject[key] = value;
+                hintTextArray.push(newObject);
+                haIndex++;
+              }
+            }
+          }
+        }
+      }
+      console.log("JSON.stringify(quesArray): " + JSON.stringify(quesArray));
+      state.puzzleQuestionArray = quesArray;
+      localStorage.setItem('quesArray', JSON.stringify(quesArray));
+      console.log("JSON.stringify(clueTextArray): " + JSON.stringify(clueTextArray));
+      state.clueTextArray = clueTextArray;
+      localStorage.setItem('clueTextArray', JSON.stringify(clueTextArray));
+      console.log("JSON.stringify(hintTextArray): " + JSON.stringify(hintTextArray));
+      state.hintTextArray = hintTextArray;
+      localStorage.setItem('hintTextArray', JSON.stringify(hintTextArray));
+    }
+  } catch (error) {
+    console.error('Error (get post_content):', error.message);
+  }
   /* check if first time */
   /* don't need to check first time because am doing in stats */
+  /* get game data */
   /* create score */
   const raw = JSON.stringify({
     "postID": postID,
@@ -6530,8 +6657,9 @@ const {
     },
     setHintDisplayOn: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
-      if (context.hintUsed === true) {
-        context.hintDisplayOn = true;
+      if (state.hintUsedArray.includes(context.hintID)) {
+        state.hintDisplayOn = context.hintID;
+        state.hintText = state.hintTextArray[context.hintIndex][context.hintID];
       } else {
         state.hintWarningVisible = true;
       }
@@ -6540,21 +6668,31 @@ const {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
       context.hintUsed = true;
       state.hintWarningVisible = false;
-      context.hintDisplayOn = true;
-      /* add hint time */
-      state.hintTime = state.hintTime + 5;
+      state.hintDisplayOn = context.hintID;
+      state.hintText = state.hintTextArray[context.hintIndex][context.hintID];
+      console.log("open hint: " + state.hintText);
+      /* add to used hint array */
+      state.hintUsedArray.push(context.hintID);
+      localStorage.setItem("hintUsedArray", JSON.stringify(state.hintUsedArray));
     },
     quitWarningClose: () => {
       state.hintID = '';
       state.hintWarningVisible = false;
     },
-    setHintDisplayToggle: () => {
-      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
-      context.hintDisplayOn = !context.hintDisplayOn;
+    setHintDisplayOff: () => {
+      state.hintDisplayOn = "";
+    },
+    setClueDisplayOff: () => {
+      state.clueDisplayOn = "";
     },
     setClueDisplayToggle: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
-      context.clueDisplayOn = !context.clueDisplayOn;
+      console.log("state.clueTextArray: " + JSON.stringify(state.clueTextArray));
+      console.log("state.clueTextArray[0]['clue0']: " + state.clueTextArray[context.clueIndex][context.clueID]);
+      state.clueText = state.clueTextArray[context.clueIndex][context.clueID];
+      //context.clueDisplayOn = ! context.clueDisplayOn;
+      /* just show one at a time to hide clue text */
+      state.clueDisplayOn = context.clueID;
     },
     checkClueDisplayOn: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
@@ -6582,6 +6720,7 @@ const {
     setPuzzleModalVisible: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
       context.modalOpen = true;
+      state.puzzleQuestion = state.puzzleQuestionArray[context.puzzleIndex][context.puzzleID];
       console.log("context.modalOpen: " + context.modalOpen);
     },
     setPuzzleModalHidden: () => {
@@ -6623,39 +6762,49 @@ const {
     },
     guessAttempt: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
-      if (!context.solved) {
-        const input = document.getElementById(context.puzzleID).value;
-        context.guess = input;
-        console.log("guess: " + context.guess);
-        console.log("answer: " + context.answer);
-        let val = (0,_components_ShallowEqual__WEBPACK_IMPORTED_MODULE_2__.shallowEqual)(context.guess, context.answer);
-        console.log("val: " + val);
-        if (val) {
-          state.solvedCount++;
-          console.log(state);
-          context.solved = true;
-          context.timeEnd = Date();
-          setTimeout(() => {
-            context.modalOpen = false;
-          }, 1600);
-          /* check if finished */
-          if (state.solvedCount === state.puzzleTotal) {
-            state.alertVisible = true;
-            state.alertText = "Winner";
-            /* send to database */
+      const input = document.getElementById(context.puzzleID).value;
+      context.guess = input.trimEnd();
+      /* now encrypt */
+      console.log("guess: " + context.guess);
+      console.log("shift: " + context.shift);
+      let guessENC = (0,_components_caesarCipher__WEBPACK_IMPORTED_MODULE_4__.caesarCipher)(context.guess, Number(context.shift));
+      /* loop thru answers */
+      let val = false;
+      for (let i = 0; i < context.sols.length; i++) {
+        /* encrypt guess */
+        val = (0,_components_ShallowEqual__WEBPACK_IMPORTED_MODULE_2__.shallowEqual)(guessENC, context.sols[i]);
+        if (val === true) {
+          break;
+        }
+      }
+      console.log("val: " + val);
+      if (val) {
+        state.solvedArray.push(context.puzzleID);
+        localStorage.setItem("solvedArray", JSON.stringify(state.solvedArray));
+        console.log("state: " + JSON.stringify(state));
+        context.solved = true;
+        context.timeEnd = Date();
+        setTimeout(() => {
+          context.modalOpen = false;
+        }, 1600);
+        /* check if finished */
+        if (state.solvedArray.length === state.puzzleQuestionArray.length) {
+          state.alertVisible = true;
+          state.alertText = "Winner!";
+          /* send to database */
 
-            saveScore(state.gameScoreID);
-            setTimeout(() => {
-              (0,_components_helper__WEBPACK_IMPORTED_MODULE_3__.removeLocalStorage)();
-              context.gameStart = false;
-            }, 1600);
-          }
-        } else {
-          context.showSorry = true;
+          saveScore(state.gameScoreID);
           setTimeout(() => {
-            context.showSorry = false;
+            (0,_components_helper__WEBPACK_IMPORTED_MODULE_3__.removeLocalStorage)();
+            context.gameStart = false;
+            console.log("finished game");
           }, 1600);
         }
+      } else {
+        context.showSorry = true;
+        setTimeout(() => {
+          context.showSorry = false;
+        }, 1600);
       }
     },
     toggleOpen() {
@@ -6728,13 +6877,12 @@ const {
               /* ... */
               /* check for other games? */
               state.timeStart = date;
-              state.formattedDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_4__.format)(date, "MM/dd/yy h:mma");
+              state.formattedDate = (0,date_fns__WEBPACK_IMPORTED_MODULE_5__.format)(date, "MM/dd/yy h:mma");
               /* do this after score is created */
               /*localStorage.setItem("timeStart", date);*/
               /* context.gameStart = true;*/
               state.gameScore = '';
               state.showGameScore = false;
-              state.hintTime = 0;
               state.showWaiver = false;
               if (context.userMustBeLoggedIn) {
                 createScore({
@@ -6746,7 +6894,7 @@ const {
                   designerEmail: context.designerEmail,
                   designerName: context.designerName,
                   timeStart: date,
-                  formattedDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_4__.format)(date, "MM/dd/yy h:mma"),
+                  formattedDate: (0,date_fns__WEBPACK_IMPORTED_MODULE_5__.format)(date, "MM/dd/yy h:mma"),
                   teamName: context.teamName,
                   firstTime: context.firstTime
                 });
@@ -6793,6 +6941,32 @@ const {
     }
   },
   callbacks: {
+    hintTime: () => {
+      const hintTime = state.hintUsedArray.length * 5;
+      return hintTime;
+    },
+    checkSolved: () => {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      if (state.solvedArray.includes(context.puzzleID)) {
+        return true;
+      }
+    },
+    clueDisplayOn: () => {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      if (context.clueID === state.clueDisplayOn) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    hintDisplayOn: () => {
+      const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      if (context.hintID === state.hintDisplayOn) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     checkPublicMap: () => {
       const context = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
       if (context.map1 !== '') {
@@ -6861,7 +7035,21 @@ const {
           state.gameScoreID = localStorage.getItem('gameScoreID');
           state.timeStart = localStorage.getItem('timeStart');
           state.formattedDate = localStorage.getItem('formattedDate');
-          state.hintTime = localStorage.getItem('hintTime');
+          if (localStorage.getItem("quesArray") != null) {
+            state.puzzleQuestionArray = JSON.parse(localStorage.getItem("quesArray"));
+          }
+          if (localStorage.getItem("clueTextArray") != null) {
+            state.clueTextArray = JSON.parse(localStorage.getItem("clueTextArray"));
+          }
+          if (localStorage.getItem("hintTextArray") != null) {
+            state.hintTextArray = JSON.parse(localStorage.getItem("hintTextArray"));
+          }
+          if (localStorage.getItem("solvedArray") != null) {
+            state.solvedArray = JSON.parse(localStorage.getItem("solvedArray"));
+          }
+          if (localStorage.getItem("hintUsedArray") != null) {
+            state.hintUsedArray = JSON.parse(localStorage.getItem("hintUsedArray"));
+          }
           //alert('resuming game');
           state.alertVisible = true;
           state.alertText = "resuming game";

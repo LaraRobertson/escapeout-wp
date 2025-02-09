@@ -29,7 +29,7 @@ export default function ClueEdit({clueArray,index,attributes,setAttributes,playZ
                                     autoFocus={clue.name == undefined}
                                     value={clue.name}
                                     onChange={newValue => {
-                                        editArrayItem("clue","name", newValue, index, index2, attributes, setAttributes)
+                                        editArrayItem("clue","name", newValue, index, index2, "", attributes, setAttributes)
                                     }}
                                 />
                                 <TextControl
@@ -37,7 +37,7 @@ export default function ClueEdit({clueArray,index,attributes,setAttributes,playZ
                                     autoFocus={clue.text == undefined}
                                     value={clue.text}
                                     onChange={newValue => {
-                                        editArrayItem("clue","text", newValue, index, index2, attributes, setAttributes)
+                                        editArrayItem("clue","text", newValue, index, index2, "", attributes, setAttributes)
                                     }}
                                 />
                                 <SelectControl
@@ -56,7 +56,7 @@ export default function ClueEdit({clueArray,index,attributes,setAttributes,playZ
                                         {label: 'diary', value: 'diary'},
                                     ]}
                                     onChange={newValue => {
-                                        editArrayItem("clue","iconName", newValue, index, index2, attributes, setAttributes)
+                                        editArrayItem("clue","iconName", newValue, index, index2, "", attributes, setAttributes)
                                     }}
                                     __nextHasNoMarginBottom
                                 />
@@ -106,7 +106,7 @@ export default function ClueEdit({clueArray,index,attributes,setAttributes,playZ
                                             {label: 'Disabled', value: 'Yes'},
                                         ]}
                                         onChange={newValue => {
-                                            editArrayItem("clue","disabled", newValue, index, index2, attributes, setAttributes)
+                                            editArrayItem("clue","disabled", newValue, index, index2, "", attributes, setAttributes)
                                         }}
                                     />
                                 </FlexItem>
@@ -118,7 +118,7 @@ export default function ClueEdit({clueArray,index,attributes,setAttributes,playZ
                                         autoFocus={clue.order == undefined}
                                         value={clue.order}
                                         onChange={newValue => {
-                                            editArrayItem("clue","order", newValue, index, index2, attributes, setAttributes)
+                                            editArrayItem("clue","order", newValue, index, index2, "", attributes, setAttributes)
                                         }}
                                     />
                                 </FlexItem>

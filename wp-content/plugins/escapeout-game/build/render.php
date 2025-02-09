@@ -50,11 +50,15 @@ $nonce = wp_create_nonce( 'wp-rest' );
 
 $playZones = array();
 $puzzleArray = array();
+/*$quesArray = array();
+$clueTextArray = array();
+$hintTextArray = array();*/
 $clueArray = array();
 $hintArray = array();
 // need to concatenate puzzle arrays from all zones...
 $paIndex = 0;
 $caIndex = 0;
+$haIndex = 0;
 for ($i = 0; $i < count($attributes['playZones']); $i++) {
     if ($attributes['playZones'][$i]["disabled"] === "No") {
         $playZones[$i]['index'] = $i;
@@ -77,11 +81,18 @@ for ($i = 0; $i < count($attributes['playZones']); $i++) {
                 // don't need disabled ones
                 if ($attributes['playZones'][$i]['puzzleArray'][$j]["disabled"] === "No") {
                     $puzzleArray[$paIndex]["puzzleID"] = 'input' . $paIndex;
+	                $puzzleArray[$paIndex]["puzzleIndex"] = $paIndex;
+                    /**
+                    *   need to build a separate question and answer object (associative array in php)?
+                    *   so that people can't see questions and answers in context before playing.  How about:
+                    *   question is not in context and answers are encrypted?
+                    */
+	                //$quesArray[$paIndex]['input' . $paIndex] = "test";
                     $puzzleArray[$paIndex]["zoneID"] = $attributes['playZones'][$i]["id"];
                     $puzzleArray[$paIndex]['name'] = $attributes['playZones'][$i]['puzzleArray'][$j]["name"];
                     $puzzleArray[$paIndex]['description'] = $attributes['playZones'][$i]['puzzleArray'][$j]["description"];
-                    $puzzleArray[$paIndex]['question'] = $attributes['playZones'][$i]['puzzleArray'][$j]["question"];
-                    $puzzleArray[$paIndex]['answer'] = $attributes['playZones'][$i]['puzzleArray'][$j]["answer"];
+                    //$puzzleArray[$paIndex]['question'] = $attributes['playZones'][$i]['puzzleArray'][$j]["question"];
+                    $puzzleArray[$paIndex]['sols'] = $attributes['playZones'][$i]['puzzleArray'][$j]["sols"];
                     $puzzleArray[$paIndex]['order'] = $attributes['playZones'][$i]['puzzleArray'][$j]["order"];
                     $puzzleArray[$paIndex]['modalOpen'] = false;
                     $puzzleArray[$paIndex]['guess'] = "";
@@ -95,9 +106,16 @@ for ($i = 0; $i < count($attributes['playZones']); $i++) {
                 // index would be 1,2,3 (zone 2, pa1) - so length would be 3
                 if ($attributes['playZones'][$i]['clueArray'][$j]["disabled"] === "No") {
                     $clueArray[$caIndex]["clueID"] = 'clue' . $caIndex;
+	                $clueArray[$caIndex]["clueIndex"] = $caIndex;
                     $clueArray[$caIndex]["zoneID"] = $attributes['playZones'][$i]["id"];
                     $clueArray[$caIndex]['name'] = $attributes['playZones'][$i]['clueArray'][$j]["name"];
-                    $clueArray[$caIndex]['text'] = $attributes['playZones'][$i]['clueArray'][$j]["text"];
+	                /**
+	                 *   need to build a separate clueText array?
+	                 *   so that people can't see clues in context before playing.  How about:
+	                 *   clue text in context?
+	                 */
+	                //$clueTextArray[$caIndex]['clue' . $caIndex] = "text";
+                    //$clueArray[$caIndex]['text'] = $attributes['playZones'][$i]['clueArray'][$j]["text"];
                     $clueArray[$caIndex]['iconPath'] = $attributes['playZones'][$i]['clueArray'][$j]["iconPath"];
                     $clueArray[$caIndex]['imageID'] = $attributes['playZones'][$i]['clueArray'][$j]["imageID"];
                     if ($attributes['playZones'][$i]['clueArray'][$j]["imageID"] != '') {
@@ -115,15 +133,21 @@ for ($i = 0; $i < count($attributes['playZones']); $i++) {
             for ($j = 0; $j < count($attributes['playZones'][$i]['hintArray']); $j++) {
                 // index would be 1,2,3 (zone 2, pa1) - so length would be 3
                 if ($attributes['playZones'][$i]['hintArray'][$j]["disabled"] === "No") {
-                $hintArray[$caIndex]["hintID"] = 'hint' . $caIndex;
-                $hintArray[$caIndex]["zoneID"] = $attributes['playZones'][$i]["id"];
-                $hintArray[$caIndex]['name'] = $attributes['playZones'][$i]['hintArray'][$j]["name"];
-                $hintArray[$caIndex]['text'] = $attributes['playZones'][$i]['hintArray'][$j]["text"];
-                $hintArray[$caIndex]['order'] = $attributes['playZones'][$i]['hintArray'][$j]["order"];
-                $hintArray[$caIndex]['disabled'] = $attributes['playZones'][$i]['hintArray'][$j]["disabled"];
-                $hintArray[$caIndex]['hintDisplayOn'] = false;
-                $hintArray[$caIndex]['hintUsed'] = false;
-                $caIndex++;
+                $hintArray[$haIndex]["hintID"] = 'hint' . $haIndex;
+                $hintArray[$haIndex]["hintIndex"] = $haIndex;
+                $hintArray[$haIndex]["zoneID"] = $attributes['playZones'][$i]["id"];
+                $hintArray[$haIndex]['name'] = $attributes['playZones'][$i]['hintArray'][$j]["name"];
+                /**
+                 *   need to build a separate clueText array?
+                 *   so that people can't see clues in context before playing.  How about:
+                 *   clue text in context?
+                 */
+                //$hintTextArray[$haIndex]['hint' . $haIndex] = $attributes['playZones'][$i]['hintArray'][$j]["text"];
+                //$hintArray[$haIndex]['text'] = $attributes['playZones'][$i]['hintArray'][$j]["text"];
+                $hintArray[$haIndex]['order'] = $attributes['playZones'][$i]['hintArray'][$j]["order"];
+                $hintArray[$haIndex]['hintDisplayOn'] = false;
+                $hintArray[$haIndex]['hintUsed'] = false;
+                $haIndex++;
                 }
             }
         }
@@ -143,9 +167,16 @@ wp_interactivity_state(
         'zoneDescription' => $playZones[0]['description'],
         'zoneName' => $playZones[0]['name'],
         'puzzleModalVisible' => false,
-        'puzzleAnswer' => '',
         'alertVisible' => false,
         'alertText' => '',
+        'clueText' => '',
+        'clueDisplayOn' => "",
+        'clueTextArray' => [],
+        'hintText' => '',
+        'hintDisplayOn' => "",
+        'hintTextArray' => [],
+        'puzzleQuestion' => '',
+        'puzzleQuestionArray' => [],
         'quitVisible' => false,
         'hintWarningVisible'=> false,
         'helpVisible' => false,
@@ -156,14 +187,13 @@ wp_interactivity_state(
         'modalStatsOpen'=> false,
         'modalLeaderBoardOpen'=> false,
         'modalGameMapOpen'=> false,
-        'solvedCount' => 0,
-        'puzzleTotal' => count($puzzleArray),
+        'hintUsedArray' => [],
+        'solvedArray' => [],
         'showWaiver' => false,
         'errorMessage' => '',
         'gameScoreID' => '',
         'timeStart' => '',
         'formattedDate' => '',
-        'hintTime' => 0,
         'gameScore' => '',
         'showGameScore' => false,
         'rating' => '',
@@ -206,15 +236,16 @@ $firstTime="yes";
 if (count($resultStats) > 0) {
     $firstTime='no';
 }
-$ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
-//print_r($ourContext);
+$frontendContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
+$gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
+//print_r($quesArray);
 ?>
 <div
     class="game-block-frontend"
     style="background-color:<?php echo $attributes['bgColor']?>"
 	<?php echo get_block_wrapper_attributes(); ?>
 	data-wp-interactive="escapeout-game"
-	<?php echo wp_interactivity_data_wp_context( $ourContext); ?>
+	<?php echo wp_interactivity_data_wp_context( $frontendContext); ?>
 	data-wp-watch="callbacks.checkGameStart"
 	data-wp-class--dark-theme="state.isDark"
 >
@@ -293,7 +324,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                             id="team-name2"
                             aria-invalid="false"
                             type="text"
-                            value="<?php echo $ourContext['teamName'] ?>"
+                            value="<?php echo $frontendContext['teamName'] ?>"
                     />
                 </li>
                 <li>
@@ -334,6 +365,16 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                     </div>
                 </li>
             </ul>
+            <div class="red-alert" data-wp-text="state.errorMessage"></div>
+            <div>
+                <button class="button"
+                        data-wp-bind--aria-expanded="context.isOpen"
+                        data-wp-on-async--click="actions.gameStart"
+                        aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                >
+			        <?php esc_html_e( 'Start Game - Time Starts', 'escapeout-game' ); ?>
+                </button>
+            </div>
         </div>
         <!-- end user does NOT have to be logged in -->
 
@@ -352,7 +393,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                                 id="team-name"
                                 aria-invalid="false"
                                 type="text"
-                                value="<?php echo $ourContext['teamName'] ?>"
+                                value="<?php echo $frontendContext['teamName'] ?>"
                         />
                     </li>
                     <li>
@@ -462,7 +503,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                     <main class="modal_content">
                         <div class="show-score" >
                             game score: <span class="game-score" data-wp-text="state.gameScore"></span> mins<br />
-                            hint time: <span class="game-score" data-wp-text="state.hintTime"></span> mins<br /><br />
+                            hint time: <span class="game-score" data-wp-text="callbacks.hintTime"></span> mins<br /><br />
 
                              Please Rate:<br />
                             <button data-wp-on--click="actions.setRating1" class="modal-close">1</button>
@@ -606,7 +647,8 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
         <div class="modal from-top">
             <div class="game-container"
                  style="background-color:<?php echo $attributes['bgColor']?>"
-                 data-wp-class--dark-theme="state.isDark">
+                 data-wp-class--dark-theme="state.isDark"
+	            <?php //echo wp_interactivity_data_wp_context( $gameContext); ?>>
 
                 <div class="button-bar">
                     <!-- check if gameMap (context true/false -> added a game map block and created an anchor) -->
@@ -626,12 +668,12 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                     </button>
                 </div>
                 <div class="puzzle-solved" data-wp-context='{ "counter": 0 }' data-wp-watch="callbacks.logCounter">
-                    Puzzles Solved? <span data-wp-text="state.solvedCount"></span>/<span data-wp-text="state.puzzleTotal"></span>
+                    Puzzles Solved? <span data-wp-text="state.solvedArray.length"></span>/<span data-wp-text="state.puzzleQuestionArray.length"></span>
                     <!--<button data-wp-on--click="actions.increaseCounter">+</button>
                     <button data-wp-on--click="actions.decreaseCounter">-</button>-->
                 </div>
                 <div aria-label="Time" class="time">
-                    <div class="small">time started: <span data-wp-text="state.formattedDate"></span> | hint time: <span data-wp-text="state.hintTime"></span> </div>
+                    <div class="small">time started: <span data-wp-text="state.formattedDate"></span> | hint time: <span data-wp-text="callbacks.hintTime"></span> </div>
                 </div>
                 <div class="item-header" >Zone
                     <img data-wp-on--click="actions.setZoneHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
@@ -640,7 +682,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                 <div class="zone-name" data-wp-text="state.zoneName"></div>
                 <div class="zone-holder">
                     <?php $indexZone=1;
-                    foreach($ourContext['playZones'] as $playZone) { ?>
+                    foreach($gameContext['playZones'] as $playZone) { ?>
                         <div data-wp-on--click="actions.setZoneVisible" <?php echo wp_interactivity_data_wp_context($playZone) ?> data-wp-class--zone-border="callbacks.zoneBorder" class="zone-icon-container">
                             <img src="<?php echo $siteUrl . $assetDir . "zone-FFFFFF.svg" ?>" alt="<?php echo $playZone['name'] ?>" data-wp-bind--hidden="!state.isDark" />
                             <img src="<?php echo $siteUrl . $assetDir . "zone.svg" ?>" alt="<?php echo $playZone['name'] ?>" data-wp-bind--hidden="state.isDark" />
@@ -650,7 +692,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                     <?php $indexZone++; } ?>
                 </div>
                 <div class="zone-description" data-wp-text="state.zoneDescription" data-wp-bind--hidden="!callbacks.zoneDescription"></div>
-                <?php foreach($ourContext['playZones'] as $playZone) { ?>
+                <?php foreach($gameContext['playZones'] as $playZone) { ?>
                     <div class="zone-image" <?php echo wp_interactivity_data_wp_context($playZone) ?>>
                         <div data-wp-bind--hidden="callbacks.hideItemByZone">
                             <?php echo wp_get_attachment_image( $playZone["imageID"], "thumbnail", "", array( "class" => "img-responsive" ) );  ?>
@@ -660,11 +702,11 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
 
                 <div class="item-header">Puzzles</div>
                 <div class="puzzle-holder">
-                    <?php foreach($ourContext['puzzleArray'] as $puzzle) { ?>
+                    <?php $puzIndex = 0;foreach($gameContext['puzzleArray'] as $puzzle) { ?>
                     <div  <?php echo wp_interactivity_data_wp_context($puzzle) ?>>
                         <div data-wp-bind--hidden="callbacks.hideItemByZone">
                             <div>
-                                <div class="puzzle-item" data-wp-on--click="actions.setPuzzleModalVisible"  data-wp-bind--hidden="context.solved">
+                                <div class="puzzle-item" data-wp-on--click="actions.setPuzzleModalVisible"  data-wp-bind--hidden="callbacks.checkSolved">
                                     <svg width="80" height="80" version="1.1" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
                                         <g>
                                             <rect width="1200" height="1200" fill="transparent"/>
@@ -672,7 +714,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                                         </g>
                                     </svg>
                                 </div>
-                                <div class="puzzle-item" data-wp-bind--hidden="!context.solved">
+                                <div class="puzzle-item" data-wp-bind--hidden="!callbacks.checkSolved">
 
                                     <svg width="80" height="80" version="1.1" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
                                         <defs>
@@ -705,15 +747,15 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                                         <div class="modal_header-clueDetails"><?php echo $puzzle["name"] ?></div>
                                     </header>
                                     <main class="modal_content">
-
-                                        <label><?php echo $puzzle["question"] ?></label><br />
+                                        <div data-wp-text="state.puzzleQuestion"></div>
+                                        <label><?php //echo $quesArray[$puzIndex][$puzzle["puzzleID"]] ?></label><br />
                                         <input
                                                 id="<?php echo $puzzle["puzzleID"] ?>"
                                                 aria-invalid="false"
                                                 type="text"
                                                 value="<?php echo $puzzle["guess"] ?>"
                                         /><br />
-                                        <button data-wp-on--click="actions.guessAttempt" class="modal-close">check answer</button>
+                                        <button data-wp-on--click="actions.guessAttempt" class="button">check answer</button>
                                         <div class="correct-message" data-wp-class--correct-message--visible="context.solved">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="bi bi-emoji-smile" viewBox="0 0 16 16">
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -730,33 +772,34 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                                         </div>
                                     </main>
                                     <footer class="modal_footer">
-                                        <button data-wp-on--click="actions.setPuzzleModalHidden" class="modal-close">Close</button>
+                                        <button data-wp-on--click="actions.setPuzzleModalHidden" class="modal-close">close puzzle</button>
                                     </footer>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    <?php } ?>
+                    <?php $puzIndex++; } ?>
                 </div>
                 <div class="item-header">Clues</div>
                 <div class="clue-holder">
-                    <?php foreach($ourContext['clueArray'] as $clue) { ?>
+                    <?php foreach($gameContext['clueArray'] as $clue) { ?>
                         <div class="clue-item"  <?php echo wp_interactivity_data_wp_context($clue) ?> data-wp-bind--hidden="callbacks.hideItemByZone">
-                                <div>
+                                <div >
                                     <div data-wp-on--click="actions.setClueDisplayToggle" data-wp-bind--hidden="!state.isDark">
                                         white icon
                                     </div>
                                     <div data-wp-on--click="actions.setClueDisplayToggle" data-wp-bind--hidden="state.isDark">
                                       <img src="<?php echo $siteUrl . $clue["iconPath"] . ".svg" ?>" alt="<?php echo $clue["name"] ?>" />
                                     </div>
-                                    <div class="clue-item-text" data-wp-bind--hidden="!context.clueDisplayOn">
-                                        <div><?php echo $clue["text"] ?></div>
+                                    <div class="clue-item-text" data-wp-bind--hidden="!callbacks.clueDisplayOn">
+                                        <div><?php //echo $clueTextArray[$clueIndex][$clue["clueID"]] ?></div>
+                                        <div data-wp-text="state.clueText"></div>
                                         <div data-wp-bind--hidden="!context.clueHasImage" data-wp-on--click="actions.setClueBigImageToggle">
                                             <?php echo wp_get_attachment_image( $clue["imageID"], "thumbnail", "", array( "class" => "img-responsive" ) );  ?>
                                         </div>
                                         <button class="button"
-                                                data-wp-on--click="actions.setClueDisplayToggle"
+                                                data-wp-on--click="actions.setClueDisplayOff"
                                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                                         >
                                             <?php esc_html_e( 'Close Clue', 'escapeout-game' ); ?>
@@ -768,7 +811,7 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                 </div>
                 <div class="item-header">Hints</div>
                 <div class="hint-holder">
-                    <?php foreach($ourContext['hintArray'] as $hint) { ?>
+                    <?php foreach($gameContext['hintArray'] as $hint) { ?>
                         <div class="hint-item"  <?php echo wp_interactivity_data_wp_context($hint) ?> data-wp-bind--hidden="callbacks.hideItemByZone">
                             <div>
                                 <button class="button"
@@ -777,13 +820,14 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                                 >
                                     <?php echo $hint["name"] ?>
                                 </button>
-                                <div class="hint-item" data-wp-bind--hidden="!context.hintDisplayOn">
-                                    <div><?php echo $hint["text"] ?></div>
+                                <div class="hint-item" data-wp-bind--hidden="!callbacks.hintDisplayOn">
+                                    <div data-wp-text="state.hintText"></div>
+                                    <div><?php //echo $hintTextArray[$hintIndex][$hint["hintID"]] ?></div>
                                     <button class="button"
-                                            data-wp-on--click="actions.setHintDisplayToggle"
+                                            data-wp-on--click="actions.setHintDisplayOff"
                                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
                                     >
-                                        <?php esc_html_e( 'Close', 'escapeout-game' ); ?>
+                                        <?php esc_html_e( 'Close Hint', 'escapeout-game' ); ?>
                                     </button>
                                 </div>
                             </div>
@@ -804,10 +848,9 @@ $ourContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLogged
                                 </div>
                             </div>
                         </div>
-                    <?php } ?>
+                    <?php  } ?>
                 </div>
-
-            </div>
+            </div><!-- end game-container -->
                 <div class="help-container" data-wp-bind--hidden="!state.helpVisible">
                     <div class='help-inner'>
                         <div data-wp-bind--hidden="!state.zoneHelpVisible"><?php echo $attributes["zoneText"] ?></div>

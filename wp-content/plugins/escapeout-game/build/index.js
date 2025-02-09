@@ -126,14 +126,14 @@ function ClueEdit({
                 autoFocus: clue.name == undefined,
                 value: clue.name,
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "name", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "name", newValue, index, index2, "", attributes, setAttributes);
                 }
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
                 label: "Clue Text",
                 autoFocus: clue.text == undefined,
                 value: clue.text,
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "text", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "text", newValue, index, index2, "", attributes, setAttributes);
                 }
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
                 label: "Icon",
@@ -161,7 +161,7 @@ function ClueEdit({
                   value: 'diary'
                 }],
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "iconName", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "iconName", newValue, index, index2, "", attributes, setAttributes);
                 },
                 __nextHasNoMarginBottom: true
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
@@ -211,7 +211,7 @@ function ClueEdit({
                     value: 'Yes'
                   }],
                   onChange: newValue => {
-                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "disabled", newValue, index, index2, attributes, setAttributes);
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "disabled", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
@@ -224,7 +224,7 @@ function ClueEdit({
                   autoFocus: clue.order == undefined,
                   value: clue.order,
                   onChange: newValue => {
-                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "order", newValue, index, index2, attributes, setAttributes);
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_4__.editArrayItem)("clue", "order", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FlexItem, {
@@ -541,14 +541,14 @@ function HintEdit({
                 autoFocus: hint.name == undefined,
                 value: hint.name,
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "name", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "name", newValue, index, index2, "", attributes, setAttributes);
                 }
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                 label: "Hint Text",
                 autoFocus: hint.text == undefined,
                 value: hint.text,
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "text", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "text", newValue, index, index2, "", attributes, setAttributes);
                 }
               })]
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
@@ -564,7 +564,7 @@ function HintEdit({
                     value: 'Yes'
                   }],
                   onChange: newValue => {
-                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "disabled", newValue, index, index2, attributes, setAttributes);
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "disabled", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
@@ -577,7 +577,7 @@ function HintEdit({
                   autoFocus: hint.order == undefined,
                   value: hint.order,
                   onChange: newValue => {
-                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "order", newValue, index, index2, attributes, setAttributes);
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("hint", "order", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
@@ -651,8 +651,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _manageArrayItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./manageArrayItem */ "./src/components/manageArrayItem.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './ceaserCipher'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -664,52 +666,66 @@ function PuzzleEdit({
   playZoneName
 }) {
   if (typeof puzzleArray != "undefined") {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
       children: puzzleArray?.map(function (puzzle, index2) {
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
           className: "puzzleDiv",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
             className: puzzle.disabled == "Yes" ? "disabled" : ""
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
             className: "item-title-edit",
             children: ["Puzzles ", index2 + 1, " (zone name: ", playZoneName, "):"]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+            className: "puzzle-flex",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                 label: "Puzzle Name",
                 autoFocus: puzzle.name == undefined,
                 value: puzzle.name,
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "name", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "name", newValue, index, index2, "", attributes, setAttributes);
                 }
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                 label: "Puzzle Description",
                 autoFocus: puzzle.description == undefined,
                 value: puzzle.description,
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "description", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "description", newValue, index, index2, "", attributes, setAttributes);
                 }
-              })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                 label: "Puzzle Question",
                 autoFocus: puzzle.question == undefined,
                 value: puzzle.question,
                 onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "question", newValue, index, index2, attributes, setAttributes);
-                }
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
-                label: "Puzzle Answer",
-                autoFocus: puzzle.answer == undefined,
-                value: puzzle.answer,
-                onChange: newValue => {
-                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "answer", newValue, index, index2, attributes, setAttributes);
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "question", newValue, index, index2, "", attributes, setAttributes);
                 }
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
+              children: [puzzle.answer.map(function (answerItem, index3) {
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                  label: "answer " + (index3 + 1),
+                  autoFocus: answerItem == undefined,
+                  value: answerItem,
+                  onChange: newValue => {
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "answer", newValue, index, index2, index3, attributes, setAttributes);
+                  }
+                });
+              }), puzzle.sols.map(function (answerItem2, index4) {
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                  className: "small",
+                  children: ["encrypted answer ", index4, ": ", answerItem2]
+                });
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+                isPrimary: true,
+                onClick: () => {
+                  (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "addAnswer", "", index, index2, "", attributes, setAttributes);
+                },
+                children: "Add Another Answer"
+              })]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
               direction: "column",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.RadioControl, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.RadioControl, {
                   selected: puzzle.disabled,
                   options: [{
                     label: 'Live',
@@ -719,11 +735,11 @@ function PuzzleEdit({
                     value: 'Yes'
                   }],
                   onChange: newValue => {
-                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "disabled", newValue, index, index2, attributes, setAttributes);
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "disabled", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                   label: "Order",
                   style: {
                     width: "50px"
@@ -732,11 +748,11 @@ function PuzzleEdit({
                   autoFocus: puzzle.order == undefined,
                   value: puzzle.order,
                   onChange: newValue => {
-                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "order", newValue, index, index2, attributes, setAttributes);
+                    (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "order", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
                   isLink: true,
                   className: "attention-delete",
                   onClick: () => (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.deleteArrayItem)("puzzle", puzzleArray, index, index2, attributes, setAttributes),
@@ -749,7 +765,7 @@ function PuzzleEdit({
       })
     });
   } else {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
       children: "no puzzles"
     });
   }
@@ -897,6 +913,36 @@ function ZoneEdit({
 
 /***/ }),
 
+/***/ "./src/components/caesarCipher.js":
+/*!****************************************!*\
+  !*** ./src/components/caesarCipher.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   caesarCipher: () => (/* binding */ caesarCipher)
+/* harmony export */ });
+function caesarCipher(str, shift) {
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    let charCode = str.charCodeAt(i);
+
+    // Handle lowercase letters
+    if (charCode >= 97 && charCode <= 122) {
+      charCode = (charCode - 97 + shift) % 26 + 97;
+    }
+    // Handle uppercase letters
+    else if (charCode >= 65 && charCode <= 90) {
+      charCode = (charCode - 65 + shift) % 26 + 65;
+    }
+    result += String.fromCharCode(charCode);
+  }
+  return result;
+}
+
+/***/ }),
+
 /***/ "./src/components/manageArrayItem.js":
 /*!*******************************************!*\
   !*** ./src/components/manageArrayItem.js ***!
@@ -908,11 +954,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   deleteArrayItem: () => (/* binding */ deleteArrayItem),
 /* harmony export */   editArrayItem: () => (/* binding */ editArrayItem)
 /* harmony export */ });
-function editArrayItem(itemType, field, newValue, index, index2, attributes, setAttributes) {
+/* harmony import */ var _caesarCipher__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./caesarCipher */ "./src/components/caesarCipher.js");
+/* harmony import */ var _randID__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./randID */ "./src/components/randID.js");
+
+
+function editArrayItem(itemType, field, newValue, index, index2, index3, attributes, setAttributes) {
   const newArray = attributes.playZones.concat([]);
   switch (itemType) {
     case "puzzle":
-      newArray[index]["puzzleArray"][index2][field] = newValue;
+      console.log("shift: " + attributes.shift);
+      let newShift = attributes.shift;
+      if (newShift === 0) {
+        newShift = (0,_randID__WEBPACK_IMPORTED_MODULE_1__.generateRandomNumber)(1, 100);
+        console.log("set shift: " + newShift);
+        //setAttributes["shift"] = randID(2);
+        setAttributes({
+          shift: newShift
+        });
+      }
+      if (field === "answer") {
+        /* answer is an array */
+        const newArraySols = newArray[index]["puzzleArray"][index2]["sols"];
+        const newArrayAnswer = newArray[index]["puzzleArray"][index2]["answer"];
+        const encryptedText = (0,_caesarCipher__WEBPACK_IMPORTED_MODULE_0__.caesarCipher)(newValue, Number(newShift));
+        newArrayAnswer[index3] = newValue;
+        newArraySols[index3] = (0,_caesarCipher__WEBPACK_IMPORTED_MODULE_0__.caesarCipher)(newValue, Number(newShift));
+        //const decryptedText = caesarCipher(encryptedText, -3);
+        //console.log(decryptedText); // "Hello World"
+      } else if (field === "addAnswer") {
+        /* add another answer */
+        newArray[index]["puzzleArray"][index2].sols.push("");
+        newArray[index]["puzzleArray"][index2].answer.push("");
+      } else {
+        newArray[index]["puzzleArray"][index2][field] = newValue;
+      }
       break;
     case "clue":
       newArray[index]["clueArray"][index2][field] = newValue;
@@ -981,6 +1056,7 @@ function deleteArrayItem(itemType, itemArray, zoneIndex, indexToDelete, attribut
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   generateRandomNumber: () => (/* binding */ generateRandomNumber),
 /* harmony export */   randID: () => (/* binding */ randID)
 /* harmony export */ });
 const randID = size => {
@@ -995,6 +1071,9 @@ const randID = size => {
   return Array.from({
     length: size
   }, () => chars[rand(chars.length)]).join("");
+};
+const generateRandomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 /***/ }),
@@ -1095,7 +1174,8 @@ function Edit({
     "name": "",
     "description": "",
     "question": "",
-    "answer": "",
+    "sols": [""],
+    "answer": [""],
     "order": "",
     "disabled": "No"
   };
@@ -1342,14 +1422,14 @@ function Edit({
           }],
           onChange: value => updateUserMustBeLoggedIn(value)
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
-          label: "Walking Distance (estimated total walking distance for player, usually based on zones and how far apart):",
+          label: "Walking Distance Explanation (estimated total walking distance for player, usually based on zones and how far apart):",
           value: attributes.walkingDistance,
           onChange: updateWalkingDistance,
           style: {
             fontSize: "20px"
           }
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
-          label: "Public Map (description of what is on public map):",
+          label: "Public Map Explanation (description of what is on public map):",
           value: attributes.publicMapText,
           onChange: updatePublicMapText,
           style: {
@@ -1652,7 +1732,7 @@ module.exports = window["wp"]["richText"];
   \************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/escapeout-game","version":"1.2","title":"EscapeOut Game","category":"widgets","attributes":{"gameID":{"type":"string","default":"zoneID_gameName"},"gameName":{"type":"string","default":"update game name"},"map1":{"type":"string","default":""},"walkingDistance":{"type":"string","default":"example: ...this game has 2 zones and the distance between is 100 yards."},"publicMapText":{"type":"string","default":"example: ... the public map only shows the first zone but there are 2 zones"},"zoneText":{"type":"string","default":"Zones are the play area. Clues are usually within 100 feet of Zone Center."},"playZones":{"type":"array","default":[{"id":"1"}]},"bgColor":{"type":"string","default":"#EBEBEB"},"waiverBody":{"type":"string","default":"I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\\n\\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."},"waiverTop":{"type":"string","default":"I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."},"waiverSigned":{"type":"boolean","default":false},"userMustBeLoggedIn":{"type":"string","default":"yes"}},"icon":"media-interactive","description":"Allows user to create a game","example":{},"supports":{"interactivity":true},"textdomain":"escapeout-game","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/escapeout-game","version":"1.2","title":"EscapeOut Game","category":"widgets","attributes":{"shift":{"type":"number","default":0},"gameID":{"type":"string","default":"zoneID_gameName"},"gameName":{"type":"string","default":"update game name"},"map1":{"type":"string","default":""},"walkingDistance":{"type":"string","default":"example: ...this game has 2 zones and the distance between is 100 yards."},"publicMapText":{"type":"string","default":"example: ... the public map only shows the first zone but there are 2 zones"},"zoneText":{"type":"string","default":"Zones are the play area. Clues are usually within 100 feet of Zone Center."},"playZones":{"type":"array","default":[{"id":"1"}]},"bgColor":{"type":"string","default":"#EBEBEB"},"waiverBody":{"type":"string","default":"I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\\n\\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."},"waiverTop":{"type":"string","default":"I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."},"waiverSigned":{"type":"boolean","default":false},"userMustBeLoggedIn":{"type":"string","default":"yes"}},"icon":"media-interactive","description":"Allows user to create a game","example":{},"supports":{"interactivity":true},"textdomain":"escapeout-game","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
 
 /***/ })
 

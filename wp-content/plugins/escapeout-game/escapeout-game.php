@@ -131,6 +131,19 @@ function escapeout_register_routes() {
             'permission_callback' => '__return_true'
         )
     );
+
+	/**
+	 * GET single for sensitive eo-game info
+	 */
+	register_rest_route(
+		'escapeout/v1',
+		'/eo-game/(?P<id>\d+)',
+		array(
+			'methods'  => 'GET',
+			'callback' => 'escapeout_get_eo_game_attributes',
+			'permission_callback' => '__return_true'
+		)
+	);
 }
 function escapeout_admin_require_permissions() {
     return current_user_can( 'edit_posts' );
@@ -244,6 +257,16 @@ function escapeout_update_game_score( $request ) {
     );
 
     return $rows;
+}
+function escapeout_get_eo_game_attributes($request) {
+	$id = $request['id'];
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'posts';
+
+	$results = $wpdb->get_results( "SELECT * FROM $table_name WHERE id = $id" );
+
+	return $results[0];
+
 }
 /**
  * Registers the block using the metadata loaded from the `block.json` file.

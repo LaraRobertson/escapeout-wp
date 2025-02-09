@@ -11,13 +11,30 @@ import {
 import { format } from 'date-fns'
 import {shallowEqual} from "./components/ShallowEqual";
 import {removeLocalStorage} from "./components/helper";
-
+import {caesarCipher} from "./components/caesarCipher";
 
 const matcher = new RegExpMatcher({
 	...englishDataset.build(),
 	...englishRecommendedTransformers,
 });
 
+/* only show console messages on localhost */
+if (window.location.hostname !== 'escapeout-wp') {
+	console.log = (function () {
+		var console_log = console.log;
+		var timeStart = new Date().getTime();
+
+		return function () {
+			var delta = new Date().getTime() - timeStart;
+			var args = [];
+			args.push((delta / 1000).toFixed(2) + ':');
+			for (var i = 0; i < arguments.length; i++) {
+				args.push(arguments[i]);
+			}
+			//console_log.apply(console, args);
+		};
+	})();
+}
 /* Basic + space + base64 encode application username:password for user who created? */
 const saveScore = async (gameScoreID) => {
 	console.log("saveScore: " + gameScoreID);
@@ -29,7 +46,7 @@ const saveScore = async (gameScoreID) => {
 	// Do your operations to calculate time
 	let endDate   = new Date().getTime();
 	let minutes = (endDate - state.timeStart) / 60000;
-	let totalTime = Number(minutes + state.hintTime).toFixed(2);
+	let totalTime = Number(minutes + (state.hintUsedArray.length * 5)).toFixed(2);
 	console.log("totalTime: " + totalTime);
 	state.gameScore = totalTime;
 	state.showGameScore = true;
@@ -39,7 +56,7 @@ const saveScore = async (gameScoreID) => {
 		const raw = JSON.stringify({
 			"timeEnd": endDate,
 			"totalTime": totalTime,
-			"hintTime": state.hintTime,
+			"hintTime": state.hintUsedArray.length * 5,
 			"completed": 'yes',
 		});
 		console.log("raw (put-saveScore)" + raw);
@@ -135,8 +152,95 @@ const createScore = async ({postID, userID, gameID, gameName, userEmail, designe
 	myHeaders.append( "Authorization", "Bearer " + btoa( 'lara:4lRX C2u5 igwa ckGX j2Dv jWLr' ));
 	myHeaders.append( "Vary", "Origin" );
 	//myHeaders.append('X-WP-Nonce', nonce);
+	/* get game data */
+	const requestOptions = {
+		method: "GET",
+		headers: myHeaders,
+		credentials: "include"
+	};
+	const url = state.siteURL + "/wp-json/escapeout/v1/eo-game/" + postID;
+	try {
+		const response = await fetch(url, requestOptions)
+		if (!response.ok) {
+			console.error('url Request failed with status ' + response.status)
+		}
+		const data = await response.json();
+		/* data is an array */
+		//console.log("data: " + data.post_content);
+		//console.log("data.length: " + data.length);
+		if (data.hasOwnProperty("post_content")) {
+			console.log("data: " + data.post_content);
+			const firstIndex = data.post_content.indexOf("{");
+			const lastIndex = data.post_content.indexOf("-->");
+			let postAttributes = data.post_content.slice(firstIndex,lastIndex).trim();
+			let postAttributesObj = JSON.parse(postAttributes);
+			let quesArray = [];
+			let clueTextArray = [];
+			let hintTextArray = [];
+			let paIndex = 0;
+			let caIndex = 0;
+			let haIndex = 0;
+			console.log("firstIndex: " + firstIndex);
+			console.log("lastIndex: " + lastIndex);
+			console.log("postAttributes: " + postAttributes);
+			console.log("postAttributes (question): " + postAttributesObj.playZones[0].puzzleArray[0].question);
+			/* get attributes from post_content */
+			for (let i=0; i<postAttributesObj.playZones.length;i++){
+				if (postAttributesObj.playZones[i].disabled === "No") {
+					if (postAttributesObj.playZones[i].hasOwnProperty("puzzleArray")) {
+						for (let j=0; j<postAttributesObj.playZones[i].puzzleArray.length;j++){
+							if (postAttributesObj.playZones[i].puzzleArray[j].disabled === "No") {
+								let key = 'input'+paIndex;
+								let value = postAttributesObj.playZones[i].puzzleArray[j].question;
+								let newObject = {};
+								newObject[key]=value;
+								quesArray.push(newObject);
+								paIndex++;
+							}
+						}
+					}
+					if (postAttributesObj.playZones[i].hasOwnProperty("clueArray")) {
+						for (let j=0; j<postAttributesObj.playZones[i].clueArray.length;j++){
+							if (postAttributesObj.playZones[i].clueArray[j].disabled === "No") {
+								let key = 'clue'+caIndex;
+								let value = postAttributesObj.playZones[i].clueArray[j].text;
+								let newObject = {};
+								newObject[key]=value;
+								clueTextArray.push(newObject);
+								caIndex++;
+							}
+						}
+					}
+					if (postAttributesObj.playZones[i].hasOwnProperty("hintArray")) {
+						for (let j=0; j<postAttributesObj.playZones[i].hintArray.length;j++){
+							if (postAttributesObj.playZones[i].hintArray[j].disabled === "No") {
+								let key = 'hint'+haIndex;
+								let value = postAttributesObj.playZones[i].hintArray[j].text;
+								let newObject = {};
+								newObject[key]=value;
+								hintTextArray.push(newObject);
+								haIndex++;
+							}
+						}
+					}
+				}
+			}
+			console.log("JSON.stringify(quesArray): " + JSON.stringify(quesArray));
+			state.puzzleQuestionArray = quesArray;
+			localStorage.setItem('quesArray',JSON.stringify(quesArray));
+			console.log("JSON.stringify(clueTextArray): " + JSON.stringify(clueTextArray));
+			state.clueTextArray = clueTextArray;
+			localStorage.setItem('clueTextArray',JSON.stringify(clueTextArray));
+			console.log("JSON.stringify(hintTextArray): " + JSON.stringify(hintTextArray));
+			state.hintTextArray = hintTextArray;
+			localStorage.setItem('hintTextArray',JSON.stringify(hintTextArray));
+		}
+	} catch (error) {
+		console.error('Error (get post_content):', error.message)
+	}
 	/* check if first time */
 	/* don't need to check first time because am doing in stats */
+	/* get game data */
 		/* create score */
 		const raw = JSON.stringify({
 			"postID": postID,
@@ -228,8 +332,9 @@ const { state } = store( 'escapeout-game', {
 		},
 		setHintDisplayOn: () => {
 			const context = getContext();
-			if (context.hintUsed === true) {
-				context.hintDisplayOn = true;
+			if (state.hintUsedArray.includes(context.hintID)) {
+				state.hintDisplayOn = context.hintID;
+				state.hintText = state.hintTextArray[context.hintIndex][context.hintID];
 			} else {
 				state.hintWarningVisible = true;
 			}
@@ -239,21 +344,31 @@ const { state } = store( 'escapeout-game', {
 			const context = getContext();
 			context.hintUsed = true;
 			state.hintWarningVisible = false;
-			context.hintDisplayOn = true;
-			/* add hint time */
-			state.hintTime = state.hintTime + 5;
+			state.hintDisplayOn = context.hintID;
+			state.hintText = state.hintTextArray[context.hintIndex][context.hintID];
+			console.log("open hint: " + state.hintText);
+			/* add to used hint array */
+			state.hintUsedArray.push(context.hintID);
+			localStorage.setItem("hintUsedArray", JSON.stringify(state.hintUsedArray));
 		},
 		quitWarningClose: () => {
 			state.hintID = '';
 			state.hintWarningVisible = false;
 		},
-		setHintDisplayToggle: () => {
-			const context = getContext();
-			context.hintDisplayOn = ! context.hintDisplayOn;
+		setHintDisplayOff: () => {
+			state.hintDisplayOn = "";
+		},
+		setClueDisplayOff: () => {
+			state.clueDisplayOn = "";
 		},
 		setClueDisplayToggle: () => {
 			const context = getContext();
-			context.clueDisplayOn = ! context.clueDisplayOn;
+			console.log("state.clueTextArray: " + JSON.stringify(state.clueTextArray));
+			console.log("state.clueTextArray[0]['clue0']: " + state.clueTextArray[context.clueIndex][context.clueID]);
+			state.clueText = state.clueTextArray[context.clueIndex][context.clueID];
+			//context.clueDisplayOn = ! context.clueDisplayOn;
+			/* just show one at a time to hide clue text */
+			state.clueDisplayOn = context.clueID;
 		},
 		checkClueDisplayOn: () => {
 			const context = getContext();
@@ -281,6 +396,7 @@ const { state } = store( 'escapeout-game', {
 		setPuzzleModalVisible: () => {
 			const context = getContext();
 			context.modalOpen = true;
+			state.puzzleQuestion = state.puzzleQuestionArray[context.puzzleIndex][context.puzzleID];
 			console.log("context.modalOpen: " + context.modalOpen);
 		},
 		setPuzzleModalHidden: () => {
@@ -313,7 +429,6 @@ const { state } = store( 'escapeout-game', {
 			state.modalStatsOpen = !state.modalStatsOpen;
 		},
 		toggleLeaderBoard() {
-
 			state.modalLeaderBoardOpen = !state.modalLeaderBoardOpen;
 		},
 		saveGameComments: () => {
@@ -323,41 +438,50 @@ const { state } = store( 'escapeout-game', {
 		},
 		guessAttempt: () => {
 			const context = getContext();
-			if (!context.solved) {
-				const input = document.getElementById(context.puzzleID).value;
-				context.guess = input;
-				console.log("guess: " + context.guess);
-				console.log("answer: " + context.answer);
-				let val = shallowEqual(context.guess, context.answer);
-				console.log("val: " + val);
-				if (val) {
-					state.solvedCount++;
-					console.log(state);
-					context.solved = true;
-					context.timeEnd = Date();
-					setTimeout(() => {
-						context.modalOpen = false
-					}, 1600);
-					/* check if finished */
-					if (state.solvedCount === state.puzzleTotal) {
-						state.alertVisible = true
-						state.alertText = "Winner"
-						/* send to database */
+			const input = document.getElementById(context.puzzleID).value;
+			context.guess = input.trimEnd();
+			/* now encrypt */
+			console.log("guess: " + context.guess);
+			console.log("shift: " + context.shift);
+			let guessENC = caesarCipher(context.guess, Number(context.shift));
+			/* loop thru answers */
+			let val = false;
+			for (let i = 0; i<context.sols.length;i++) {
+				/* encrypt guess */
+				val = shallowEqual(guessENC, context.sols[i]);
+				if (val === true) {break;}
+			}
+			console.log("val: " + val);
+			if (val) {
+				state.solvedArray.push(context.puzzleID);
+				localStorage.setItem("solvedArray", JSON.stringify(state.solvedArray));
+				console.log("state: " + JSON.stringify(state));
+				context.solved = true;
+				context.timeEnd = Date();
+				setTimeout(() => {
+					context.modalOpen = false
+				}, 1600);
+				/* check if finished */
+				if (state.solvedArray.length === state.puzzleQuestionArray.length) {
+					state.alertVisible = true
+					state.alertText = "Winner!"
+					/* send to database */
 
-						saveScore(state.gameScoreID);
+					saveScore(state.gameScoreID);
 
-						setTimeout(() => {
-							removeLocalStorage();
-							context.gameStart = false;
-						}, 1600);
-					}
-				} else {
-					context.showSorry = true;
 					setTimeout(() => {
-						context.showSorry = false
+						removeLocalStorage();
+						context.gameStart = false;
+						console.log("finished game");
 					}, 1600);
 				}
-			}},
+			} else {
+				context.showSorry = true;
+				setTimeout(() => {
+					context.showSorry = false
+				}, 1600);
+			}
+			},
 		toggleOpen() {
 			const context = getContext();
 			context.isOpen = ! context.isOpen;
@@ -434,7 +558,6 @@ const { state } = store( 'escapeout-game', {
 							/* context.gameStart = true;*/
 							state.gameScore = '';
 							state.showGameScore = false;
-							state.hintTime = 0;
 							state.showWaiver = false;
 							if (context.userMustBeLoggedIn) {
 								createScore({
@@ -493,6 +616,32 @@ const { state } = store( 'escapeout-game', {
 		},
 	},
 	callbacks: {
+		hintTime: () => {
+			const hintTime = state.hintUsedArray.length * 5;
+			return hintTime;
+		},
+		checkSolved: () => {
+			const context = getContext();
+			if (state.solvedArray.includes(context.puzzleID)) {
+				return true;
+			}
+		},
+		clueDisplayOn: () => {
+			const context = getContext();
+			if (context.clueID === state.clueDisplayOn) {
+				return true;
+			} else {
+				return false
+			}
+		},
+		hintDisplayOn: () => {
+			const context = getContext();
+			if (context.hintID === state.hintDisplayOn) {
+				return true;
+			} else {
+				return false
+			}
+		},
 		checkPublicMap: () => {
 			const context = getContext();
 			if (context.map1 !== '') {
@@ -562,7 +711,21 @@ const { state } = store( 'escapeout-game', {
 					state.gameScoreID = localStorage.getItem('gameScoreID')
 					state.timeStart = localStorage.getItem('timeStart')
 					state.formattedDate = localStorage.getItem('formattedDate')
-					state.hintTime = localStorage.getItem('hintTime')
+					if (localStorage.getItem("quesArray")!=null) {
+						state.puzzleQuestionArray = JSON.parse(localStorage.getItem("quesArray"));
+					}
+					if (localStorage.getItem("clueTextArray")!=null) {
+						state.clueTextArray = JSON.parse(localStorage.getItem("clueTextArray"));
+					}
+					if (localStorage.getItem("hintTextArray")!=null) {
+						state.hintTextArray = JSON.parse(localStorage.getItem("hintTextArray"));
+					}
+					if (localStorage.getItem("solvedArray")!=null) {
+						state.solvedArray = JSON.parse(localStorage.getItem("solvedArray"));
+					}
+					if (localStorage.getItem("hintUsedArray")!=null) {
+						state.hintUsedArray = JSON.parse(localStorage.getItem("hintUsedArray"));
+					}
 					//alert('resuming game');
 					state.alertVisible = true
 					state.alertText = "resuming game"

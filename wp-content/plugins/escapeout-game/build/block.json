@@ -6,6 +6,10 @@
   "title": "EscapeOut Game",
   "category": "widgets",
   "attributes": {
+    "shift": {
+      "type": "number",
+      "default": 0
+    },
     "gameID": {
       "type": "string",
       "default": "zoneID_gameName"

@@ -17,7 +17,7 @@ export default function HintEdit({hintArray,index,attributes,setAttributes,playZ
                                     autoFocus={hint.name == undefined}
                                     value={hint.name}
                                     onChange={newValue => {
-                                        editArrayItem("hint","name", newValue, index, index2, attributes, setAttributes)
+                                        editArrayItem("hint","name", newValue, index, index2, "", attributes, setAttributes)
                                     }}
                                 />
                                 <TextControl
@@ -25,7 +25,7 @@ export default function HintEdit({hintArray,index,attributes,setAttributes,playZ
                                     autoFocus={hint.text == undefined}
                                     value={hint.text}
                                     onChange={newValue => {
-                                        editArrayItem("hint","text", newValue, index, index2, attributes, setAttributes)
+                                        editArrayItem("hint","text", newValue, index, index2, "", attributes, setAttributes)
                                     }}
                                 />
                             </FlexBlock>
@@ -39,7 +39,7 @@ export default function HintEdit({hintArray,index,attributes,setAttributes,playZ
                                             {label: 'Disabled', value: 'Yes'},
                                         ]}
                                         onChange={newValue => {
-                                            editArrayItem("hint","disabled", newValue, index, index2, attributes, setAttributes)
+                                            editArrayItem("hint","disabled", newValue, index, index2, "", attributes, setAttributes)
                                         }}
                                     />
                                 </FlexItem>
@@ -51,7 +51,7 @@ export default function HintEdit({hintArray,index,attributes,setAttributes,playZ
                                         autoFocus={hint.order == undefined}
                                         value={hint.order}
                                         onChange={newValue => {
-                                            editArrayItem("hint","order", newValue, index, index2, attributes, setAttributes)
+                                            editArrayItem("hint","order", newValue, index, index2, "", attributes, setAttributes)
                                         }}
                                     />
                                 </FlexItem>

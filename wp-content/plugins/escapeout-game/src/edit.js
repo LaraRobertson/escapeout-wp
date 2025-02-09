@@ -65,7 +65,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		"name": "",
 		"description": "",
 		"question": "",
-		"answer": "",
+		"sols":[""],
+		"answer":[""],
 		"order": "",
 		"disabled": "No",
 	}
@@ -263,11 +264,11 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ ( value ) => updateUserMustBeLoggedIn( value ) }
 				/>
 				<TextControl
-					label="Walking Distance (estimated total walking distance for player, usually based on zones and how far apart):"
+					label="Walking Distance Explanation (estimated total walking distance for player, usually based on zones and how far apart):"
 					value={attributes.walkingDistance} onChange={updateWalkingDistance}
 					style={{fontSize: "20px"}}/>
 				<TextControl
-					label="Public Map (description of what is on public map):"
+					label="Public Map Explanation (description of what is on public map):"
 					value={attributes.publicMapText} onChange={updatePublicMapText}
 					style={{fontSize: "20px"}}/>
 
