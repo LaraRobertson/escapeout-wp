@@ -44,8 +44,7 @@ $clue_icon = array(
                     </svg>',
     ),
 );
-
-$nonce = wp_create_nonce( 'wp-rest' );
+$nonce = wp_create_nonce( 'wp_rest' );
 // Adds the global state.
 
 $playZones = array();
@@ -183,6 +182,7 @@ wp_interactivity_state(
         'zoneHelpVisible'=> false,
         'teamHelpVisible'=> false,
         'modalPublicMapOpen'=> false,
+        'modalPrivateMapOpen'=> false,
         'modalPublicImageOpen'=> false,
         'modalStatsOpen'=> false,
         'modalLeaderBoardOpen'=> false,
@@ -236,7 +236,7 @@ $firstTime="yes";
 if (count($resultStats) > 0) {
     $firstTime='no';
 }
-$frontendContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
+$frontendContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'map2' => $attributes['map2'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
 $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
 //print_r($quesArray);
 ?>
@@ -470,8 +470,8 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                     <header class="modal_header">
                         <div><strong>Public Map</strong> <span class="small">(click on right arrow or icons for zone name(s))</span> </div>
                     </header>
-                    <main class="modal_content">
-                        <iframe src="<?php echo $attributes['map1'] ?>" width="100%" height="400px"></iframe>
+                    <main id="publicMapContainer" class="modal_content">
+
                     </main>
                     <footer class="modal_footer">
                         <button class="modal-close">Close</button>
@@ -653,8 +653,12 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                 <div class="button-bar">
                     <!-- check if gameMap (context true/false -> added a game map block and created an anchor) -->
                     <!-- <a href="#gameMap" class="button">Zone Map</a>-->
-                    <button class="button" data-wp-on--click="">
-                        Zone Map
+                    <button class="button"
+                            data-wp-bind--hidden="callbacks.checkPrivateMap"
+                            data-wp-on-async--click="actions.togglePrivateMap"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+		                <?php esc_html_e( 'Zone Map', 'escapeout-game' ); ?>
                     </button>
                     <button class="button"
                             data-wp-on--click="actions.toggleTheme"
@@ -850,37 +854,55 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                         </div>
                     <?php  } ?>
                 </div>
+
             </div><!-- end game-container -->
-                <div class="help-container" data-wp-bind--hidden="!state.helpVisible">
-                    <div class='help-inner'>
-                        <div data-wp-bind--hidden="!state.zoneHelpVisible"><?php echo $attributes["zoneText"] ?></div>
-                        <button class="button"
-                                data-wp-on--click="actions.closeHelp"
-                                aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-                        >
-                            <?php esc_html_e( 'Close', 'escapeout-game' ); ?>
-                        </button>
-                    </div>
+            <div class="help-container" data-wp-bind--hidden="!state.helpVisible">
+                <div class='help-inner'>
+                    <div data-wp-bind--hidden="!state.zoneHelpVisible"><?php echo $attributes["zoneText"] ?></div>
+                    <button class="button"
+                            data-wp-on--click="actions.closeHelp"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+                        <?php esc_html_e( 'Close', 'escapeout-game' ); ?>
+                    </button>
                 </div>
-                <div class="alert-container" data-wp-bind--hidden="!state.alertVisible">
-                    <div class='alert-inner' data-wp-text="state.alertText"></div>
+            </div>
+            <div class="alert-container" data-wp-bind--hidden="!state.alertVisible">
+                <div class='alert-inner' data-wp-text="state.alertText"></div>
+            </div>
+            <div class="alert-container" data-wp-bind--hidden="!state.quitVisible">
+                <div class='alert-inner'>Do You Really Want To Quit?<br/>
+                    <button class="button"
+                            data-wp-on--click="actions.quit"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+                        <?php esc_html_e( 'Yes', 'escapeout-game' ); ?>
+                    </button>
+                    <button class="button"
+                            data-wp-on--click="actions.quitAlertClose"
+                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                    >
+                        <?php esc_html_e( 'No', 'escapeout-game' ); ?>
+                    </button>
                 </div>
-                <div class="alert-container" data-wp-bind--hidden="!state.quitVisible">
-                    <div class='alert-inner'>Do You Really Want To Quit?<br/>
-                        <button class="button"
-                                data-wp-on--click="actions.quit"
-                                aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-                        >
-                            <?php esc_html_e( 'Yes', 'escapeout-game' ); ?>
-                        </button>
-                        <button class="button"
-                                data-wp-on--click="actions.quitAlertClose"
-                                aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-                        >
-                            <?php esc_html_e( 'No', 'escapeout-game' ); ?>
-                        </button>
-                    </div>
-                </div>
+            </div>
+
+
+            </div>
+        </div>
+    <div>
+        <div class="modalContainerMap" data-wp-class--showmodal="state.modalPrivateMapOpen" data-wp-on--click="actions.togglePrivateMap">
+            <div class="modal from-right">
+                <header class="modal_header">
+                    <div><strong>Zone Map</strong> <span class="small">(click on right arrow or icons for zone name(s))</span> </div>
+                </header>
+                <main id="privateMapContainer" class="modal_content">
+
+                </main>
+                <footer class="modal_footer">
+                    <button class="modal-close">Close</button>
+                </footer>
             </div>
         </div>
     </div>
+</div><!-- end game-block-frontend -->

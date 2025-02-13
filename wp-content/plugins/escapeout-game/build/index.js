@@ -276,6 +276,7 @@ function FlexButtons({
   const [showHelp, setShowHelp] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [showMap1, setShowMap1] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [showMap1View, setShowMap1View] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [showMap2View, setShowMap2View] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [showHelpFields, setShowHelpFields] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [showWaiverFields, setShowWaiverFields] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   function updateZoneText(value) {
@@ -288,6 +289,18 @@ function FlexButtons({
     console.log("update map 1");
     setAttributes({
       map1: value
+    });
+  }
+  function updateMap2(value) {
+    console.log("update map 2");
+    setAttributes({
+      map2: value
+    });
+  }
+  function updatePublicMapText(value) {
+    console.log("update publicMapText");
+    setAttributes({
+      publicMapText: value
     });
   }
   function updateWaiverTop(value) {
@@ -348,10 +361,10 @@ function FlexButtons({
         },
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
           className: showMap1 ? "hide" : "show",
-          children: "Show Public Map Src Code"
+          children: "Show Public/Private Map"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
           className: showMap1 ? "show" : "hide",
-          children: "Close Public Map Src Code"
+          children: "Close Public/Private Map"
         })]
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
@@ -431,31 +444,70 @@ function FlexButtons({
         })]
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-      className: showMap1 ? "show" : "hide",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-        className: "like-label",
-        id: "waiver-text",
-        children: "Public Map src code (go to https://mymaps.google.com):"
+      className: showMap1 ? "show flex-button-area" : "hide",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("header", {
+        class: "modal_header",
+        children: "Public Map"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+        className: "small",
+        children: "Get Map src for iframe using \"create map\" at https://mymaps.google.com and look at \"Embed this map\" code, suggest base map as \"simple atlas\"."
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
         className: "text-area-container",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
-          label: "Map 1:",
+          label: "Public Map Src for iframe (if no src code, no map):",
           value: attributes.map1,
           onChange: updateMap1,
           style: {
             fontSize: "15px"
           }
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
-          isPrimary: true,
-          onClick: () => {
-            setShowMap1View(!showMap1View);
-          },
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-            className: showMap1View ? "hide" : "show",
-            children: "View Public Map"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-            className: showMap1View ? "show" : "hide",
-            children: "Close Public Map"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+          label: "Public Map Explanation (description of what is on public map):",
+          value: attributes.publicMapText,
+          onChange: updatePublicMapText,
+          style: {
+            fontSize: "20px"
+          }
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("header", {
+        class: "modal_header",
+        children: "Private/Zone Map"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        className: "text-area-container",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+          label: "Private/Zone Map Src for iframe (if no src code, no map):",
+          value: attributes.map2,
+          onChange: updateMap2,
+          style: {
+            fontSize: "15px"
+          }
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+          className: "flex-button",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+            isPrimary: true,
+            className: attributes.map2 === "" ? "hide" : "show",
+            onClick: () => {
+              setShowMap2View(!showMap2View);
+            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+              className: showMap2View ? "hide" : "show",
+              children: "View Private/Zone Map"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+              className: showMap2View ? "show" : "hide",
+              children: "Close Private/Zone Map"
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+            isPrimary: true,
+            className: attributes.map1 === "" ? "hide" : "show",
+            onClick: () => {
+              setShowMap1View(!showMap1View);
+            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+              className: showMap1View ? "hide" : "show",
+              children: "View Public Map"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+              className: showMap1View ? "show" : "hide",
+              children: "Close Public Map"
+            })]
           })]
         })]
       })]
@@ -471,7 +523,7 @@ function FlexButtons({
             }), " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
               class: "small",
               children: "(click on right arrow or icons for zone name(s))"
-            }), " "]
+            })]
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("main", {
           class: "modal_content",
@@ -489,6 +541,40 @@ function FlexButtons({
             },
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
               children: "Close Public Map"
+            })
+          })
+        })]
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: showMap2View ? "showmodal modalContainerMap" : "hide modalContainerMap",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        class: "modal from-right",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("header", {
+          class: "modal_header",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("strong", {
+              children: "Private/Zone Map"
+            }), " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+              class: "small",
+              children: "(click on right arrow or icons for zone name(s))"
+            })]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("main", {
+          class: "modal_content",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("iframe", {
+            src: attributes.map2,
+            width: "100%",
+            height: "400px"
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("footer", {
+          class: "modal_footer",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+            isPrimary: true,
+            onClick: () => {
+              setShowMap2View(!showMap2View);
+            },
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+              children: "Close Private/Zone Map"
             })
           })
         })]
@@ -651,10 +737,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _manageArrayItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./manageArrayItem */ "./src/components/manageArrayItem.js");
-Object(function webpackMissingModule() { var e = new Error("Cannot find module './ceaserCipher'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
-
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
@@ -666,33 +750,33 @@ function PuzzleEdit({
   playZoneName
 }) {
   if (typeof puzzleArray != "undefined") {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
       children: puzzleArray?.map(function (puzzle, index2) {
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
           className: "puzzleDiv",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
             className: puzzle.disabled == "Yes" ? "disabled" : ""
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
             className: "item-title-edit",
             children: ["Puzzles ", index2 + 1, " (zone name: ", playZoneName, "):"]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
             className: "puzzle-flex",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                 label: "Puzzle Name",
                 autoFocus: puzzle.name == undefined,
                 value: puzzle.name,
                 onChange: newValue => {
                   (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "name", newValue, index, index2, "", attributes, setAttributes);
                 }
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                 label: "Puzzle Description",
                 autoFocus: puzzle.description == undefined,
                 value: puzzle.description,
                 onChange: newValue => {
                   (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "description", newValue, index, index2, "", attributes, setAttributes);
                 }
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                 label: "Puzzle Question",
                 autoFocus: puzzle.question == undefined,
                 value: puzzle.question,
@@ -700,9 +784,9 @@ function PuzzleEdit({
                   (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "question", newValue, index, index2, "", attributes, setAttributes);
                 }
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexBlock, {
               children: [puzzle.answer.map(function (answerItem, index3) {
-                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                   label: "answer " + (index3 + 1),
                   autoFocus: answerItem == undefined,
                   value: answerItem,
@@ -711,21 +795,21 @@ function PuzzleEdit({
                   }
                 });
               }), puzzle.sols.map(function (answerItem2, index4) {
-                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
                   className: "small",
                   children: ["encrypted answer ", index4, ": ", answerItem2]
                 });
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
                 isPrimary: true,
                 onClick: () => {
                   (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "addAnswer", "", index, index2, "", attributes, setAttributes);
                 },
                 children: "Add Another Answer"
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Flex, {
               direction: "column",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.RadioControl, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.RadioControl, {
                   selected: puzzle.disabled,
                   options: [{
                     label: 'Live',
@@ -738,8 +822,8 @@ function PuzzleEdit({
                     (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "disabled", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.TextControl, {
                   label: "Order",
                   style: {
                     width: "50px"
@@ -751,8 +835,8 @@ function PuzzleEdit({
                     (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.editArrayItem)("puzzle", "order", newValue, index, index2, "", attributes, setAttributes);
                   }
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.FlexItem, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
                   isLink: true,
                   className: "attention-delete",
                   onClick: () => (0,_manageArrayItem__WEBPACK_IMPORTED_MODULE_1__.deleteArrayItem)("puzzle", puzzleArray, index, index2, attributes, setAttributes),
@@ -765,7 +849,7 @@ function PuzzleEdit({
       })
     });
   } else {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
       children: "no puzzles"
     });
   }
@@ -1225,12 +1309,6 @@ function Edit({
       userMustBeLoggedIn: value
     });
   }
-  function updatePublicMapText(value) {
-    console.log("update publicMapText");
-    setAttributes({
-      publicMapText: value
-    });
-  }
   function deletePlayZone(indexToDelete) {
     console.log("deletePlayZone");
     const newPlayZones = attributes.playZones.filter(function (x, index) {
@@ -1425,13 +1503,6 @@ function Edit({
           label: "Walking Distance Explanation (estimated total walking distance for player, usually based on zones and how far apart):",
           value: attributes.walkingDistance,
           onChange: updateWalkingDistance,
-          style: {
-            fontSize: "20px"
-          }
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
-          label: "Public Map Explanation (description of what is on public map):",
-          value: attributes.publicMapText,
-          onChange: updatePublicMapText,
           style: {
             fontSize: "20px"
           }
@@ -1732,7 +1803,7 @@ module.exports = window["wp"]["richText"];
   \************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/escapeout-game","version":"1.2","title":"EscapeOut Game","category":"widgets","attributes":{"shift":{"type":"number","default":0},"gameID":{"type":"string","default":"zoneID_gameName"},"gameName":{"type":"string","default":"update game name"},"map1":{"type":"string","default":""},"walkingDistance":{"type":"string","default":"example: ...this game has 2 zones and the distance between is 100 yards."},"publicMapText":{"type":"string","default":"example: ... the public map only shows the first zone but there are 2 zones"},"zoneText":{"type":"string","default":"Zones are the play area. Clues are usually within 100 feet of Zone Center."},"playZones":{"type":"array","default":[{"id":"1"}]},"bgColor":{"type":"string","default":"#EBEBEB"},"waiverBody":{"type":"string","default":"I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\\n\\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."},"waiverTop":{"type":"string","default":"I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."},"waiverSigned":{"type":"boolean","default":false},"userMustBeLoggedIn":{"type":"string","default":"yes"}},"icon":"media-interactive","description":"Allows user to create a game","example":{},"supports":{"interactivity":true},"textdomain":"escapeout-game","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/escapeout-game","version":"1.3","title":"EscapeOut Game","category":"widgets","attributes":{"shift":{"type":"number","default":0},"gameID":{"type":"string","default":"zoneID_gameName"},"gameName":{"type":"string","default":"update game name"},"map1":{"type":"string","default":""},"map2":{"type":"string","default":""},"walkingDistance":{"type":"string","default":"example: ...this game has 2 zones and the distance between is 100 yards."},"publicMapText":{"type":"string","default":"example: ... the public map only shows the first zone but there are 2 zones"},"zoneText":{"type":"string","default":"Zones are the play area. Clues are usually within 100 feet of Zone Center."},"playZones":{"type":"array","default":[{"id":"1"}]},"bgColor":{"type":"string","default":"#EBEBEB"},"waiverBody":{"type":"string","default":"I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\\n\\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."},"waiverTop":{"type":"string","default":"I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."},"waiverSigned":{"type":"boolean","default":false},"userMustBeLoggedIn":{"type":"string","default":"yes"}},"icon":"media-interactive","description":"Allows user to create a game","example":{},"supports":{"interactivity":true},"textdomain":"escapeout-game","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
 
 /***/ })
 

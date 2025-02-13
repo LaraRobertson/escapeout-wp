@@ -110,10 +110,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		console.log("update userMustBeLoggedIn");
 		setAttributes({ userMustBeLoggedIn: value })
 	}
-	function updatePublicMapText(value) {
-		console.log("update publicMapText");
-		setAttributes({ publicMapText: value })
-	}
+
 	function deletePlayZone(indexToDelete) {
 		console.log("deletePlayZone")
 		const newPlayZones = attributes.playZones.filter(function (x, index) {
@@ -267,10 +264,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					label="Walking Distance Explanation (estimated total walking distance for player, usually based on zones and how far apart):"
 					value={attributes.walkingDistance} onChange={updateWalkingDistance}
 					style={{fontSize: "20px"}}/>
-				<TextControl
-					label="Public Map Explanation (description of what is on public map):"
-					value={attributes.publicMapText} onChange={updatePublicMapText}
-					style={{fontSize: "20px"}}/>
+
 
 				<div className={"item-holder-edit"}>
 					{attributes.playZones.map(function (playZone, index) {

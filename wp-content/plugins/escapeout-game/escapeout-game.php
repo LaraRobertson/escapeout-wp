@@ -2,10 +2,10 @@
 /**
  * Plugin Name:       EscapeOut Game
  * Description:       Allows user to create a game
- * Version:           0.1.0
+ * Version:           0.1.4
  * Requires at least: 6.6
  * Requires PHP:      7.2
- * Author:            The WordPress Contributors
+ * Author:            EscapeOut.Games
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       escapeout-game
@@ -78,13 +78,23 @@ function escapeout_table() {
 add_action( 'rest_api_init', 'escapeout_register_routes' );
 function escapeout_register_routes() {
     // Register the routes
+	// protect game info
+	register_rest_route(
+		'escapeout/v1',
+		'/eo-game/(?P<id>\d+)',
+		array(
+			'methods'  => 'GET',
+			'callback' => 'escapeout_get_eo_game_by_id',
+			'permission_callback' => 'nonce_permission_callback'
+		)
+	);
     register_rest_route(
         'escapeout/v1',
         '/game-score/',
         array(
             'methods'  => 'GET',
             'callback' => 'escapeout_get_game_score',
-            'permission_callback' => '__return_true'
+            'permission_callback' => 'logged_in_permission_callback'
         )
     );
     /**
@@ -96,12 +106,12 @@ function escapeout_register_routes() {
         array(
             'methods'  => 'POST',
             'callback' => 'escapeout_create_game_score',
-            'permission_callback' => '__return_true'
+            'permission_callback' => 'logged_in_permission_callback'
         )
     );
 
     /**
-     * GET single
+     * Put
      */
     register_rest_route(
         'escapeout/v1',
@@ -109,7 +119,7 @@ function escapeout_register_routes() {
         array(
             'methods'  => 'PUT',
             'callback' => 'escapeout_update_game_score',
-            'permission_callback' => '__return_true'
+            'permission_callback' => 'logged_in_permission_callback'
         )
     );
 
@@ -141,14 +151,49 @@ function escapeout_register_routes() {
 		array(
 			'methods'  => 'GET',
 			'callback' => 'escapeout_get_eo_game_attributes',
-			'permission_callback' => '__return_true'
+			'permission_callback' => 'nonce_permission_callback'
 		)
 	);
 }
 function escapeout_admin_require_permissions() {
     return current_user_can( 'edit_posts' );
 }
+function nonce_permission_callback($request) {
+	// Check if nonce is provided and validate it
+	//$nonce = $request->get_param('_wpnonce');
+	$nonce = $request->get_header('X-WP-Nonce');
+	//$nonce = isset($_REQUEST['_wpnonce']) ? $_REQUEST['_wpnonce'] : '';
 
+	if (!wp_verify_nonce($nonce, 'wp_rest')) {
+		return new WP_Error('rest_forbidden', 'Invalid nonce', ['status' => 403]);
+	}
+
+	return true; // User is authorized
+}
+
+function logged_in_permission_callback($request) {
+	// Check if nonce is provided and validate it
+	//$nonce = $request->get_param('_wpnonce');
+	$nonce = $request->get_header('X-WP-Nonce');
+	//$nonce = isset($_REQUEST['_wpnonce']) ? $_REQUEST['_wpnonce'] : '';
+
+	if (!wp_verify_nonce($nonce, 'wp_rest')) {
+		return new WP_Error('rest_forbidden', 'Invalid nonce', ['status' => 403]);
+	}
+
+	// Check if the user is logged in
+	if (!is_user_logged_in()) {
+		return new WP_Error('rest_forbidden', 'User is not logged in', ['status' => 401]);
+	}
+
+	// Optional: Check for user capabilities if needed
+	/*$user = wp_get_current_user();
+	if (!user_can($user, 'manage_options')) {
+		return new WP_Error('rest_forbidden', 'You do not have permission', ['status' => 403]);
+	}*/
+
+	return true; // User is authorized
+}
 /**
  * GET callback for the wp-learn-form-submissions-api/v1/form-submission route
  *
@@ -232,6 +277,15 @@ function escapeout_get_game_score_by_id( $request ) {
     $results = $wpdb->get_results( "SELECT * FROM $table_name WHERE id = $id" );
 
     return $results[0];
+}
+function escapeout_get_eo_game_by_id( $request ) {
+	$id = $request['id'];
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'posts';
+
+	$results = $wpdb->get_results( "SELECT * FROM $table_name WHERE ID = $id" );
+
+	return $results[0];
 }
 
 

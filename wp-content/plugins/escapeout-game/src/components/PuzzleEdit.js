@@ -1,6 +1,5 @@
 import { TextControl, Flex, FlexBlock, FlexItem, Button, RadioControl} from "@wordpress/components";
 import {editArrayItem, deleteArrayItem} from "./manageArrayItem";
-import {caesarCipher} from "./ceaserCipher";
 export default function PuzzleEdit({puzzleArray,index,attributes,setAttributes,playZoneName}) {
     if (typeof puzzleArray != "undefined") {
         return(
