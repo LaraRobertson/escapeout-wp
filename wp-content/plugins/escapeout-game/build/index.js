@@ -1466,8 +1466,8 @@ function Edit({
             template: MY_TEMPLATE,
             templateLock: "all"
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.BlockControls, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.BlockControls, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
             title: "Background Color",
             initialOpen: true,
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelRow, {
@@ -1480,7 +1480,20 @@ function Edit({
                 defaultValue: "#000"
               })
             })
-          })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+            title: "Text Color",
+            initialOpen: true,
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelRow, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ColorPicker, {
+                color: attributes.textColor,
+                onChange: x => setAttributes({
+                  textColor: x
+                }),
+                enableAlpha: true,
+                defaultValue: "#000"
+              })
+            })
+          })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
           label: "Game Name:",
           value: attributes.gameName,
@@ -1803,7 +1816,7 @@ module.exports = window["wp"]["richText"];
   \************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/escapeout-game","version":"1.3","title":"EscapeOut Game","category":"widgets","attributes":{"shift":{"type":"number","default":0},"gameID":{"type":"string","default":"zoneID_gameName"},"gameName":{"type":"string","default":"update game name"},"map1":{"type":"string","default":""},"map2":{"type":"string","default":""},"walkingDistance":{"type":"string","default":"example: ...this game has 2 zones and the distance between is 100 yards."},"publicMapText":{"type":"string","default":"example: ... the public map only shows the first zone but there are 2 zones"},"zoneText":{"type":"string","default":"Zones are the play area. Clues are usually within 100 feet of Zone Center."},"playZones":{"type":"array","default":[{"id":"1"}]},"bgColor":{"type":"string","default":"#EBEBEB"},"waiverBody":{"type":"string","default":"I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\\n\\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."},"waiverTop":{"type":"string","default":"I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."},"waiverSigned":{"type":"boolean","default":false},"userMustBeLoggedIn":{"type":"string","default":"yes"}},"icon":"media-interactive","description":"Allows user to create a game","example":{},"supports":{"interactivity":true},"textdomain":"escapeout-game","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/escapeout-game","version":"1.3","title":"EscapeOut Game","category":"widgets","attributes":{"shift":{"type":"number","default":0},"gameID":{"type":"string","default":"zoneID_gameName"},"gameName":{"type":"string","default":"update game name"},"map1":{"type":"string","default":""},"map2":{"type":"string","default":""},"walkingDistance":{"type":"string","default":"example: ...this game has 2 zones and the distance between is 100 yards."},"publicMapText":{"type":"string","default":"example: ... the public map only shows the first zone but there are 2 zones"},"zoneText":{"type":"string","default":"Zones are the play area. Clues are usually within 100 feet of Zone Center."},"playZones":{"type":"array","default":[{"id":"1"}]},"bgColor":{"type":"string","default":"#EBEBEB"},"textColor":{"type":"string","default":"#000000"},"waiverBody":{"type":"string","default":"I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\\n\\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."},"waiverTop":{"type":"string","default":"I will respect all laws, rules, and property rights of the area. I will try not to annoy those around me."},"waiverSigned":{"type":"boolean","default":false},"userMustBeLoggedIn":{"type":"string","default":"yes"}},"icon":"media-interactive","description":"Allows user to create a game","example":{},"supports":{"interactivity":true},"textdomain":"escapeout-game","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render.php","viewScriptModule":"file:./view.js"}');
 
 /***/ })
 

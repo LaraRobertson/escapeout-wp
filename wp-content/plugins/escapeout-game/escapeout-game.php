@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       EscapeOut Game
  * Description:       Allows user to create a game
- * Version:           0.1.4
+ * Version:           0.1.5
  * Requires at least: 6.6
  * Requires PHP:      7.2
  * Author:            EscapeOut.Games
@@ -333,3 +333,344 @@ function create_block_game_block_block_init() {
 	register_block_type_from_metadata( __DIR__ . '/build' );
 }
 add_action( 'init', 'create_block_game_block_block_init' );
+function cptui_register_my_cpts() {
+
+	/**
+	 * Post Type: EO Games.
+	 */
+
+	$labels = [
+		"name" => esc_html__( "EO Games", "escapeout-game" ),
+		"singular_name" => esc_html__( "EO Game", "escapeout-game" ),
+		"menu_name" => esc_html__( "EO Games", "escapeout-game" ),
+		"all_items" => esc_html__( "All EO Games", "escapeout-game" ),
+		"add_new" => esc_html__( "Add new", "escapeout-game" ),
+		"add_new_item" => esc_html__( "Add new EO Game", "escapeout-game" ),
+		"edit_item" => esc_html__( "Edit EO Game", "escapeout-game" ),
+		"new_item" => esc_html__( "New EO Game", "escapeout-game" ),
+		"view_item" => esc_html__( "View EO Game", "escapeout-game" ),
+		"view_items" => esc_html__( "View EO Games", "escapeout-game" ),
+		"search_items" => esc_html__( "Search EO Games", "escapeout-game" ),
+		"not_found" => esc_html__( "No EO Games found", "escapeout-game" ),
+		"not_found_in_trash" => esc_html__( "No EO Games found in trash", "escapeout-game" ),
+		"parent" => esc_html__( "Parent EO Game:", "escapeout-game" ),
+		"featured_image" => esc_html__( "Featured image for this EO Game", "escapeout-game" ),
+		"set_featured_image" => esc_html__( "Set featured image for this EO Game", "escapeout-game" ),
+		"remove_featured_image" => esc_html__( "Remove featured image for this EO Game", "escapeout-game" ),
+		"use_featured_image" => esc_html__( "Use as featured image for this EO Game", "escapeout-game" ),
+		"archives" => esc_html__( "EO Game archives", "escapeout-game" ),
+		"insert_into_item" => esc_html__( "Insert into EO Game", "escapeout-game" ),
+		"uploaded_to_this_item" => esc_html__( "Upload to this EO Game", "escapeout-game" ),
+		"filter_items_list" => esc_html__( "Filter EO Games list", "escapeout-game" ),
+		"items_list_navigation" => esc_html__( "EO Games list navigation", "escapeout-game" ),
+		"items_list" => esc_html__( "EO Games list", "escapeout-game" ),
+		"attributes" => esc_html__( "EO Games attributes", "escapeout-game" ),
+		"name_admin_bar" => esc_html__( "EO Game", "escapeout-game" ),
+		"item_published" => esc_html__( "EO Game published", "escapeout-game" ),
+		"item_published_privately" => esc_html__( "EO Game published privately.", "escapeout-game" ),
+		"item_reverted_to_draft" => esc_html__( "EO Game reverted to draft.", "escapeout-game" ),
+		"item_trashed" => esc_html__( "EO Game trashed.", "escapeout-game" ),
+		"item_scheduled" => esc_html__( "EO Game scheduled", "escapeout-game" ),
+		"item_updated" => esc_html__( "EO Game updated.", "escapeout-game" ),
+		"parent_item_colon" => esc_html__( "Parent EO Game:", "escapeout-game" ),
+	];
+
+	$args = [
+		"label" => esc_html__( "EO Games", "escapeout-game" ),
+		"labels" => $labels,
+		"description" => "",
+		"public" => true,
+		"publicly_queryable" => true,
+		"show_ui" => true,
+		"show_in_rest" => true,
+		"rest_base" => "",
+		"rest_controller_class" => "WP_REST_Posts_Controller",
+		"rest_namespace" => "wp/v2",
+		"has_archive" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => true,
+		"delete_with_user" => false,
+		"exclude_from_search" => false,
+		"capability_type" => "post",
+		"map_meta_cap" => true,
+		"hierarchical" => true,
+		"can_export" => true,
+		"rewrite" => [ "slug" => "eo-game", "with_front" => true ],
+		"query_var" => true,
+		"menu_position" => 5,
+		"menu_icon" => "dashicons-awards",
+		"supports" => [ "title", "editor", "thumbnail", "excerpt", "revisions", "author", "page-attributes" ],
+		"taxonomies" => [ "category", "post_tag", "city", "level", "location" ],
+		"show_in_graphql" => false,
+	];
+
+	register_post_type( "eo-game", $args );
+}
+
+add_action( 'init', 'cptui_register_my_cpts' );
+function cptui_register_my_taxes_city() {
+
+	/**
+	 * Taxonomy: Cities.
+	 */
+
+	$labels = [
+		"name" => esc_html__( "Cities", "escapeout-game" ),
+		"singular_name" => esc_html__( "City", "escapeout-game" ),
+		"menu_name" => esc_html__( "Cities", "escapeout-game" ),
+		"all_items" => esc_html__( "All Cities", "escapeout-game" ),
+		"edit_item" => esc_html__( "Edit City", "escapeout-game" ),
+		"view_item" => esc_html__( "View City", "escapeout-game" ),
+		"update_item" => esc_html__( "Update City name", "escapeout-game" ),
+		"add_new_item" => esc_html__( "Add new City", "escapeout-game" ),
+		"new_item_name" => esc_html__( "New City name", "escapeout-game" ),
+		"parent_item" => esc_html__( "Parent City", "escapeout-game" ),
+		"parent_item_colon" => esc_html__( "Parent City:", "escapeout-game" ),
+		"search_items" => esc_html__( "Search Cities", "escapeout-game" ),
+		"popular_items" => esc_html__( "Popular Cities", "escapeout-game" ),
+		"separate_items_with_commas" => esc_html__( "Separate Cities with commas", "escapeout-game" ),
+		"add_or_remove_items" => esc_html__( "Add or remove Cities", "escapeout-game" ),
+		"choose_from_most_used" => esc_html__( "Choose from the most used Cities", "escapeout-game" ),
+		"not_found" => esc_html__( "No Cities found", "escapeout-game" ),
+		"no_terms" => esc_html__( "No Cities", "escapeout-game" ),
+		"items_list_navigation" => esc_html__( "Cities list navigation", "escapeout-game" ),
+		"items_list" => esc_html__( "Cities list", "escapeout-game" ),
+		"back_to_items" => esc_html__( "Back to Cities", "escapeout-game" ),
+		"name_field_description" => esc_html__( "The name is how it appears on your site.", "escapeout-game" ),
+		"parent_field_description" => esc_html__( "Assign a parent term to create a hierarchy. The term Jazz, for example, would be the parent of Bebop and Big Band.", "escapeout-game" ),
+		"slug_field_description" => esc_html__( "The slug is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.", "escapeout-game" ),
+		"desc_field_description" => esc_html__( "The description is not prominent by default; however, some themes may show it.", "escapeout-game" ),
+	];
+
+
+	$args = [
+		"label" => esc_html__( "Cities", "escapeout-game" ),
+		"labels" => $labels,
+		"public" => true,
+		"publicly_queryable" => true,
+		"hierarchical" => true,
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => true,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'city', 'with_front' => true, ],
+		"show_admin_column" => true,
+		"show_in_rest" => true,
+		"show_tagcloud" => true,
+		"rest_base" => "city",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"rest_namespace" => "wp/v2",
+		"show_in_quick_edit" => true,
+		"sort" => true,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "city", [ "eo-game" ], $args );
+}
+add_action( 'init', 'cptui_register_my_taxes_city' );
+function cptui_register_my_taxes_level() {
+
+	/**
+	 * Taxonomy: Levels.
+	 */
+
+	$labels = [
+		"name" => esc_html__( "Levels", "escapeout-game" ),
+		"singular_name" => esc_html__( "Level", "escapeout-game" ),
+		"menu_name" => esc_html__( "Levels", "escapeout-game" ),
+		"all_items" => esc_html__( "All Levels", "escapeout-game" ),
+		"edit_item" => esc_html__( "Edit Level", "escapeout-game" ),
+		"view_item" => esc_html__( "View Level", "escapeout-game" ),
+		"update_item" => esc_html__( "Update Level name", "escapeout-game" ),
+		"add_new_item" => esc_html__( "Add Level", "escapeout-game" ),
+		"new_item_name" => esc_html__( "New Level name", "escapeout-game" ),
+		"parent_item" => esc_html__( "Parent Level", "escapeout-game" ),
+		"parent_item_colon" => esc_html__( "Parent Level:", "escapeout-game" ),
+		"search_items" => esc_html__( "Search Tybee Island Levels", "escapeout-game" ),
+		"popular_items" => esc_html__( "Popular Tybee Island Levels", "escapeout-game" ),
+		"separate_items_with_commas" => esc_html__( "Separate Tybee Island Levels with commas", "escapeout-game" ),
+		"add_or_remove_items" => esc_html__( "Add or remove Tybee Island Levels", "escapeout-game" ),
+		"choose_from_most_used" => esc_html__( "Choose from the most used Tybee Island Levels", "escapeout-game" ),
+		"not_found" => esc_html__( "No Tybee Island Levels found", "escapeout-game" ),
+		"no_terms" => esc_html__( "No Tybee Island Levels", "escapeout-game" ),
+		"items_list_navigation" => esc_html__( "Tybee Island Levels list navigation", "escapeout-game" ),
+		"items_list" => esc_html__( "Tybee Island Levels list", "escapeout-game" ),
+		"back_to_items" => esc_html__( "Back to Tybee Island Levels", "escapeout-game" ),
+		"name_field_description" => esc_html__( "The name is how it appears on your site.", "escapeout-game" ),
+		"parent_field_description" => esc_html__( "Assign a parent term to create a hierarchy. The term Jazz, for example, would be the parent of Bebop and Big Band.", "escapeout-game" ),
+		"slug_field_description" => esc_html__( "The slug is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.", "escapeout-game" ),
+		"desc_field_description" => esc_html__( "The description is not prominent by default; however, some themes may show it.", "escapeout-game" ),
+	];
+
+
+	$args = [
+		"label" => esc_html__( "Levels", "escapeout-game" ),
+		"labels" => $labels,
+		"public" => true,
+		"publicly_queryable" => true,
+		"hierarchical" => true,
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => true,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'level', 'with_front' => true,  'hierarchical' => true, ],
+		"show_admin_column" => true,
+		"show_in_rest" => true,
+		"show_tagcloud" => true,
+		"rest_base" => "level",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"rest_namespace" => "wp/v2",
+		"show_in_quick_edit" => true,
+		"sort" => false,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "level", [ "eo-game" ], $args );
+}
+add_action( 'init', 'cptui_register_my_taxes_level' );
+function cptui_register_my_taxes_location() {
+
+	/**
+	 * Taxonomy: Locations.
+	 */
+
+	$labels = [
+		"name" => esc_html__( "Locations", "escapeout-game" ),
+		"singular_name" => esc_html__( "Location", "escapeout-game" ),
+		"menu_name" => esc_html__( "Locations", "escapeout-game" ),
+		"all_items" => esc_html__( "All Locations", "escapeout-game" ),
+		"edit_item" => esc_html__( "Edit Location", "escapeout-game" ),
+		"view_item" => esc_html__( "View Location", "escapeout-game" ),
+		"update_item" => esc_html__( "Update Location name", "escapeout-game" ),
+		"add_new_item" => esc_html__( "Add new Location", "escapeout-game" ),
+		"new_item_name" => esc_html__( "New Location name", "escapeout-game" ),
+		"parent_item" => esc_html__( "Parent Location", "escapeout-game" ),
+		"parent_item_colon" => esc_html__( "Parent Location:", "escapeout-game" ),
+		"search_items" => esc_html__( "Search Locations", "escapeout-game" ),
+		"popular_items" => esc_html__( "Popular Locations", "escapeout-game" ),
+		"separate_items_with_commas" => esc_html__( "Separate Locations with commas", "escapeout-game" ),
+		"add_or_remove_items" => esc_html__( "Add or remove Locations", "escapeout-game" ),
+		"choose_from_most_used" => esc_html__( "Choose from the most used Locations", "escapeout-game" ),
+		"not_found" => esc_html__( "No Locations found", "escapeout-game" ),
+		"no_terms" => esc_html__( "No Locations", "escapeout-game" ),
+		"items_list_navigation" => esc_html__( "Locations list navigation", "escapeout-game" ),
+		"items_list" => esc_html__( "Locations list", "escapeout-game" ),
+		"back_to_items" => esc_html__( "Back to Locations", "escapeout-game" ),
+		"name_field_description" => esc_html__( "The name is how it appears on your site.", "escapeout-game" ),
+		"parent_field_description" => esc_html__( "Assign a parent term to create a hierarchy. The term Jazz, for example, would be the parent of Bebop and Big Band.", "escapeout-game" ),
+		"slug_field_description" => esc_html__( "The slug is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.", "escapeout-game" ),
+		"desc_field_description" => esc_html__( "The description is not prominent by default; however, some themes may show it.", "escapeout-game" ),
+	];
+
+
+	$args = [
+		"label" => esc_html__( "Locations", "escapeout-game" ),
+		"labels" => $labels,
+		"public" => true,
+		"publicly_queryable" => true,
+		"hierarchical" => true,
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => true,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'location', 'with_front' => true,  'hierarchical' => true, ],
+		"show_admin_column" => true,
+		"show_in_rest" => true,
+		"show_tagcloud" => true,
+		"rest_base" => "location",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"rest_namespace" => "wp/v2",
+		"show_in_quick_edit" => true,
+		"sort" => true,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "location", [ "eo-game" ], $args );
+}
+add_action( 'init', 'cptui_register_my_taxes_location' );
+function tg_include_custom_post_types_in_archive_pages( $query ) {
+	if ( $query->is_main_query() && ! is_admin() && ( is_category() || is_tag() && empty( $query->query_vars['suppress_filters'] ) ) ) {
+		$query->set( 'post_type', array( 'eo-game', 'post' ) );
+	}
+}
+add_action( 'pre_get_posts', 'tg_include_custom_post_types_in_archive_pages' );
+
+/* causes a little error in author post screen
+function tg_include_custom_post_types_in_author_pages( $query ) {
+	if ($query->is_author) {
+
+		$query->set('post_type', array('eo-game') );
+		remove_action( 'pre_get_posts', 'tg_include_custom_post_types_in_author_pages' );
+
+	}
+}
+add_action( 'pre_get_posts', 'tg_include_custom_post_types_in_author_pages' );*/
+
+function reg_tag() {
+	register_taxonomy_for_object_type('post_tag', 'eo-game');
+}
+add_action('init', 'reg_tag');
+
+/* added meta box so only admin can change test vs live on post by authors
+ - see below for extra classes and styles to hide meta box */
+
+// https://learn.wordpress.org/lesson/custom-post-type-data/#:~:text=Then%2C%20when%20editing%20a%20custom,a%20name%20and%20a%20value.
+function wporg_add_custom_box() {
+	add_meta_box(
+		'wporg_box_id',                 // Unique ID
+		'Test or Live game',      // Box title
+		'wporg_custom_box_html',  // Content callback, must be of type callable
+		'eo-game'                          // Post type
+	);
+}
+add_action( 'add_meta_boxes', 'wporg_add_custom_box' );
+
+function wporg_custom_box_html( $post ) {
+	$value = get_post_meta( $post->ID, '_wporg_meta_key', true );
+	?>
+	<label for="wporg_field">Admin Only (change to Live when ready)</label>
+	<select name="wporg_field" id="wporg_field" class="postbox">
+		<option value="eo-test-game" <?php selected( $value, 'eo-test-game' ); ?>>Test Game</option>
+		<option value="eo-live-game" <?php selected( $value, 'eo-live-game' ); ?>>Live Game</option>
+	</select>
+	<?php
+}
+
+function wporg_save_postdata( $post_id ) {
+	if ( array_key_exists( 'wporg_field', $_POST ) ) {
+		update_post_meta(
+			$post_id,
+			'_wporg_meta_key',
+			$_POST['wporg_field']
+		);
+	}
+}
+add_action( 'save_post', 'wporg_save_postdata' );
+/* end add meta box */
+
+/* added class so can hide meta box with test vs live on post by authors */
+add_filter( 'admin_body_class', 'admin_body_class' );
+function admin_body_class( $classes ) {
+	// Wrong: No space in the beginning/end.
+	//$classes .= 'my-class1 my-class2';
+	$user = wp_get_current_user();
+	$roles = ( array ) $user->roles;
+	if( $roles[0] ){
+		$classes .= ' user-role-'.$roles[0].' ';
+	}
+	// Right: Add a leading space and a trailing space.
+	//$classes .= ' my-class1 my-class2 ';
+
+	return $classes;
+}
+function my_admin_style() {
+	wp_enqueue_style(
+		'my-admin-styles',
+		get_stylesheet_directory_uri() . '/style-admin.css'
+	);
+}
+add_action('admin_enqueue_scripts', 'my_admin_style');
+function weplugins_query_vars( $qvars ) {
+	$qvars[] = 'city';
+	$qvars[] = 'location';
+	$qvars[] = 'level';
+	return $qvars;
+}
+add_filter( 'query_vars', 'weplugins_query_vars' );

@@ -9,9 +9,8 @@
 	"description": "EO Game Query based on taxonomies.",
 	"example": {},
 	"attributes": {
-		"cityName": {
-			"type": "string"
-		}
+		"bgColor": { "type": "string", "default": "#EBEBEB" },
+		"textColor": { "type": "string", "default": "#000000" }
 	},
 	"supports": {
 		"color": {

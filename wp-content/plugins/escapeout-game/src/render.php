@@ -242,7 +242,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
 ?>
 <div
     class="game-block-frontend"
-    style="background-color:<?php echo $attributes['bgColor']?>"
+    style="background-color:<?php echo $attributes['bgColor']?>;color: <?php echo $attributes['textColor']; color:?>"
 	<?php echo get_block_wrapper_attributes(); ?>
 	data-wp-interactive="escapeout-game"
 	<?php echo wp_interactivity_data_wp_context( $frontendContext); ?>

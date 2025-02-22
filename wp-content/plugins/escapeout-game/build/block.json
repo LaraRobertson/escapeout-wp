@@ -50,6 +50,10 @@
       "type": "string",
       "default": "#EBEBEB"
     },
+    "textColor": {
+      "type": "string",
+      "default": "#000000"
+    },
     "waiverBody": {
       "type": "string",
       "default": "I WAIVE, RELEASE, AND DISCHARGE from any and all liability for EscapeOut.Games and its parent company (Coastal Initiative, LLC).\n\nI certify that I have read this document and I fully understand its content. I am aware that this is a release of liability and a contract and I sign it of my own free will."

@@ -8,6 +8,7 @@
 $cityURL = get_query_var('city');
 $locationURL = get_query_var('location');
 $authorURL = get_query_var('author');
+$bgColor = $attributes['bgColor'];
 ?>
 
 <?php
@@ -114,7 +115,7 @@ if ($cityURL || $locationURL || $authorURL) {
 	}
 	// The Query.
 	$the_query = new WP_Query( $args );?>
-		<div class="flex-games">
+		<div class="flex-games" >
 	<?php
 		if ( $the_query->have_posts() ) {?>
 		<?php
@@ -123,7 +124,8 @@ if ($cityURL || $locationURL || $authorURL) {
 			$key_1_value = get_post_meta( get_the_ID(), '_wporg_meta_key', true );
 			$termLevel = get_the_terms( get_the_ID(), 'level' );
 			?>
-			<div class="game-card show <?php echo $key_1_value; ?> <?php if ($termLevel) {echo $termLevel[0]->slug;} ?>">
+			<div class="game-card show <?php echo $key_1_value; ?> <?php if ($termLevel) {echo $termLevel[0]->slug;} ?>"
+				 style="background-color:<?php echo $attributes['bgColor']?>">
 				<div class="<?php echo $key_1_value; ?>-test">TESTING</div>
 				<div class="inner-game-card">
 				<!-- Display the Title as a link to the Post's permalink. -->
@@ -155,29 +157,29 @@ if ($cityURL || $locationURL || $authorURL) {
 					}*/
 					if (!$cityURL) {
 					$termCity = get_the_terms( get_the_ID(), 'city' );?>
-						<h4>city:
-						<?php echo '<a href="'. site_url() . '/games/?city=' . $termCity[0]->slug . '">' . $termCity[0]->name . '</a></h4>';
+						<h5 style="color:<?php echo $attributes['textColor']?>">city:
+						<?php echo '<a href="'. site_url() . '/games/?city=' . $termCity[0]->slug . '">' . $termCity[0]->name . '</a></h5>';
 
 					}?>
-						<h4>location:
+							<h5 style="color:<?php echo $attributes['textColor']?>">location:
 						<?php
 						$termLocation = get_the_terms( get_the_ID(), 'location' );
 						if ($termLocation) {
-							echo '<a href="' . site_url() . '/games/?location=' . $termLocation[0]->slug . '">' . $termLocation[0]->name . '</a></h4>';
+							echo '<a href="' . site_url() . '/games/?location=' . $termLocation[0]->slug . '">' . $termLocation[0]->name . '</a></h5>';
 
 						} else { ?>
 							no location set
 
 						<?php } ?>
 
-						<h4>level:
+								<h5 style="color:<?php echo $attributes['textColor']?>">level:
 						<?php
 						if ($termLevel) {
-							echo $termLevel[0]->name . '</h4> ';
+							echo $termLevel[0]->name . '</h45> ';
 						} else { ?>
 							no level set
 						<?php } ?>
-					<small><?php the_time( 'F jS, Y' ); ?> by <?php the_author_posts_link(); ?></small>
+					<small style="color:<?php echo $attributes['textColor']?>"><?php the_time( 'F jS, Y' ); ?> by <?php the_author_posts_link(); ?></small>
 				</div>
 			</div>
 		<?php

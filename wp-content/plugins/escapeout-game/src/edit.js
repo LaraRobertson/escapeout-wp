@@ -247,6 +247,16 @@ export default function Edit( { attributes, setAttributes } ) {
 							/>
 						</PanelRow>
 					</PanelBody>
+					<PanelBody title="Text Color" initialOpen={true}>
+						<PanelRow>
+							<ColorPicker
+								color={attributes.textColor}
+								onChange={x => setAttributes({textColor: x})}
+								enableAlpha
+								defaultValue="#000"
+							/>
+						</PanelRow>
+					</PanelBody>
 				</InspectorControls>
 
 				<TextControl label="Game Name:" value={attributes.gameName} onChange={updateGameName}
