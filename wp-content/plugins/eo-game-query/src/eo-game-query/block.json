@@ -9,6 +9,7 @@
 	"description": "EO Game Query based on taxonomies.",
 	"example": {},
 	"attributes": {
+		"cityArray": {"type": "array", "default": [{"name" : "Tybee Island", "link" : "link-to-map", "disabled" : "No"}]},
 		"bgColor": { "type": "string", "default": "#EBEBEB" },
 		"textColor": { "type": "string", "default": "#000000" }
 	},

@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, SelectControl, PanelRow, ColorPicker, TextControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, SelectControl, Flex, FlexItem, Button, PanelRow, ColorPicker, TextControl, ToggleControl } from '@wordpress/components';
 import { useState } from 'react';
 
 /**
@@ -24,22 +24,29 @@ import { useState } from 'react';
 import './editor.scss';
 
 export default function Edit({ attributes, setAttributes } ) {
-
-	/*const cities = window.my_data2['cities'];
-	const locations = window.my_data2['locations'];
-	console.log("cities: " + JSON.stringify(cities));
-	console.log("locations: " + JSON.stringify(locations));*/
-	function updateCityName(value) {
-		console.log("update city name");
-		setAttributes({ cityName: value })
+	/* ability to add map link to find a game page */
+	const cityObject = {
+		"name": "",
+		"link": "",
+		"disabled": "No",
 	}
-	const { cityName } = attributes;
-	const [ color, setColor ] = useState ( '#f00' )
-	const colors = [
-		{ name: 'red', color: '#f00' },
-		{ name: 'white', color: '#fff' },
-		{ name: 'blue', color: '#00f' },
-	];
+	function addCity() {
+		console.log("addCity!")
+		let newCityObject = {...cityObject}
+		setAttributes({cityArray: attributes.cityArray.concat([newCityObject])})
+	}
+	function editCity(field, newValue, index) {
+		const newArray = attributes.cityArray.concat([]);
+		console.log("city newArray1: " + JSON.stringify(newArray));
+		/*if (Object.hasOwn(newArray[index], field)) {
+			console.log("has field: ");
+		} else {
+			console.log("does not has field: ");
+		}*/
+		newArray[index][field] = newValue;
+		console.log("city newArray2: " + JSON.stringify(newArray));
+		setAttributes({cityArray: newArray});
+	}
 	return (
 		<>
 			<InspectorControls>
@@ -65,27 +72,74 @@ export default function Edit({ attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 			<div className={"item-holder-edit"}>
+				<Flex>
+				{attributes.cityArray.map(function (city, index) {
+					return (
+						<div key={index} className={"cityDiv"}>
+							<div className="item-title-edit">City {index + 1}:</div>
+							<FlexItem>
+								<div className={"flexBlock200"}>
+									<TextControl
+										label="City Name (slug with -)"
+										autoFocus={city.name == undefined}
+										value={city.name}
+										onChange={newValue => {
+											editCity("name", newValue, index)
+										}}
+									/>
+									<TextControl
+										label="City Map Link"
+										autoFocus={city.link == undefined}
+										value={city.link}
+										onChange={newValue => {
+											editCity("link", newValue, index)
+										}}
+									/>
+								</div>
+							</FlexItem>
+						</div>
+					)
+				})}
+				</Flex>
+				<Flex>
+					<FlexItem>
+						<Button
+							isPrimary
+							onClick={() => {
+								addCity();
+							}}
+						>
+							Add Another City
+						</Button>
+					</FlexItem>
+				</Flex>
+			</div>
+			<div className={"item-holder-edit"}>
+				<h2>Display to help pick Colors</h2>
 				<div className={"flex-games"}>
-					<div className="game-card show eo-test-game level0"  style={{backgroundColor: attributes.bgColor}}>
+					<div className="game-card show eo-test-game level-0" style={{backgroundColor: attributes.bgColor}}>
 						<div className="eo-test-game-test">TESTING</div>
 						<div className="inner-game-card">
 							<div className="game-card-full">
 								<h2><a href="#">the title of game</a>
 								</h2>
 							</div>
-							<div className="game-card-full small" style={{color: attributes.textColor}}>
+							<div className="game-card-full small">
 								excerpt of the game
 							</div>
 						</div>
 						<div className="inner-game-card1">
-							<h5 style={{color: attributes.textColor}}>city name</h5>
-							<h5 style={{color: attributes.textColor}}>location name <a href="#">location link</a></h5>
-							<h5 style={{color: attributes.textColor}}>level:</h5>
-							<small style={{color: attributes.textColor}}>February 17th, 2025 by <a href="#">link to designer page</a> </small>
+							<div style={{color: attributes.textColor}}>city: <a href="#">city link</a></div>
+							<div style={{color: attributes.textColor}}><a href="#">location link</a></div>
+							<div style={{color: attributes.textColor}}>level:</div>
+							<small style={{color: attributes.textColor}}>published on February 17th, 2025 by <a
+								href="#">link to designer page</a> </small>
 						</div>
 					</div>
 				</div>
 			</div>
+
+
 		</>
 	);
 }
