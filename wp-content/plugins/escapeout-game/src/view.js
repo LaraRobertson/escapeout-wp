@@ -53,14 +53,17 @@ const getPublicDataNOTWORKING = async ({postID,nonce}) => {
 }
 const loadPublicMap = async (src) => {
 	let mapContainer = document.getElementById("publicMapContainer");
-	let iframePublic = document.createElement("iframe");
-	iframePublic.src = src;
-	iframePublic.width = "640";
-	iframePublic.height = "480";
-	iframePublic.style.border = "0";
-	iframePublic.title = "Public Map";
+	const iframes = mapContainer.getElementsByTagName('iframe');
+	if (iframes.length === 0) {
+		let iframePublic = document.createElement("iframe");
+		iframePublic.src = src;
+		iframePublic.width = "100%";
+		iframePublic.height = "480";
+		iframePublic.style.border = "0";
+		iframePublic.title = "Public Map";
 
-	mapContainer.appendChild(iframePublic);
+		mapContainer.appendChild(iframePublic);
+	}
 }
 const loadPrivateMap = async (src) => {
 	console.log("src: " + src);
@@ -532,7 +535,7 @@ const { state } = store( 'escapeout-game', {
 			if (context.description == "") {
 				state.zoneDescription = " ";
 			} else {
-				state.zoneDescription = "description: " + context.description;
+				state.zoneDescription = context.description;
 			}
 			if (context.name == "") {
 				state.zoneName = " ";
@@ -554,11 +557,26 @@ const { state } = store( 'escapeout-game', {
 		},
 		closeHelp: () => {
 			state.zoneHelpVisible = false;
+			state.puzzleHelpVisible = false;
+			state.clueHelpVisible = false;
+			state.hintHelpVisible = false;
 			state.teamHelpVisible = false;
 			state.helpVisible = false;
 		},
 		setZoneHelpVisible: () => {
 			state.zoneHelpVisible = true;
+			state.helpVisible = true;
+		},
+		setPuzzleHelpVisible: () => {
+			state.puzzleHelpVisible = true;
+			state.helpVisible = true;
+		},
+		setClueHelpVisible: () => {
+			state.clueHelpVisible = true;
+			state.helpVisible = true;
+		},
+		setHintHelpVisible: () => {
+			state.hintHelpVisible = true;
 			state.helpVisible = true;
 		},
 		setTeamHelpVisible: () => {
@@ -685,6 +703,7 @@ const { state } = store( 'escapeout-game', {
 			// check if playing another game
 			if ( localStorage.getItem("timeStart") && (gameIDLocal !== context.gameID) ) {
 				/* let them know they are currently playing a different game */
+				console.log("setting alert start?");
 				state.alertStartVisible = true;
 				state.anotherGame = gameNameLocal;
 				if (context.gameStart === true) {
@@ -902,6 +921,7 @@ const { state } = store( 'escapeout-game', {
 						state.hintUsedArray = JSON.parse(localStorage.getItem("hintUsedArray"));
 					}
 					//alert('resuming game');
+					state.alertStartVisible = false
 					state.alertVisible = true
 					state.alertText = "resuming game"
 					setTimeout(() => {

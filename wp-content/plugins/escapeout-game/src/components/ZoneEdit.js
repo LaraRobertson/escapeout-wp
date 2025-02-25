@@ -9,8 +9,7 @@ export default function ZoneEdit({playZone,index,editZoneMedia, removeImage, edi
     return (
         <>
             <div className={playZone.disabled == "Yes" ? "disabled" : ""}></div>
-            <div className="item-title-edit">Zones {index + 1}:</div>
-            <Flex>
+            <Flex gap={"20px"}>
                 <div className={"flexBlock200"}>
                     <TextControl
                         label="Zone Name"
@@ -46,6 +45,32 @@ export default function ZoneEdit({playZone,index,editZoneMedia, removeImage, edi
                             editZone("long", newValue, index)
                         }}
                     />
+                    <Flex justify={"flex-start"} wrap={"true"} gap={"20px"}>
+                        <RadioControl
+                            selected={playZone.disabled}
+                            options={[
+                                {label: 'Live', value: 'No'},
+                                {label: 'Disabled', value: 'Yes'},
+                            ]}
+                            onChange={newValue => {
+                                editZone("disabled", newValue, index)
+                            }}
+                        />
+                        <TextControl
+                            label="Order"
+                            style={{width: "50px"}}
+                            type={"number"}
+                            autoFocus={playZone.order == undefined}
+                            value={playZone.order}
+                            onChange={newValue => {
+                                editZone("order", newValue, index)
+                            }}
+                        />
+                        <Button isLink className="attention-delete"
+                                onClick={() => deletePlayZone(index)}>
+                            Delete
+                        </Button>
+                    </Flex>
                 </div>
                 <FlexItem>
                     <div className={"mediaColumn"}>
@@ -82,32 +107,6 @@ export default function ZoneEdit({playZone,index,editZoneMedia, removeImage, edi
                     </MediaUploadCheck>
                     <Button className={(playZone.imageID === "") ? "hide" : "button show"} onClick={() => removeImage(index)}>Remove Image</Button>
                     </div>
-                </FlexItem>
-                <FlexItem>
-                    <RadioControl
-                        selected={playZone.disabled}
-                        options={[
-                            {label: 'Live', value: 'No'},
-                            {label: 'Disabled', value: 'Yes'},
-                        ]}
-                        onChange={newValue => {
-                            editZone("disabled", newValue, index)
-                        }}
-                    />
-                    <TextControl
-                        label="Order"
-                        style={{width: "50px"}}
-                        type={"number"}
-                        autoFocus={playZone.order == undefined}
-                        value={playZone.order}
-                        onChange={newValue => {
-                            editZone("order", newValue, index)
-                        }}
-                    />
-                    <Button isLink className="attention-delete"
-                            onClick={() => deletePlayZone(index)}>
-                        Delete
-                    </Button>
                 </FlexItem>
             </Flex>
         </>

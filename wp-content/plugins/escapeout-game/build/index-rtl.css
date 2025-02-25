@@ -1,1 +1,109 @@
-.game-block-edit-block{background-color:#f1f1f1;border:1px solid #d6d6d6;border-radius:2px;color:#000;padding:20px}.game-block-edit-block .components-radio-control .components-flex{flex-direction:row;justify-content:flex-start;margin-bottom:10px}.game-block-edit-block .components-flex{align-items:flex-start;flex-wrap:wrap}.game-block-edit-block .mediaColumn{display:flex;flex-direction:column}.game-block-edit-block .text-area-container{padding:10px}.game-block-edit-block .button{background-color:inherit!important;border:1px outset buttonborder;border-radius:3px;display:block;font-size:.7em;height:auto!important;line-height:.6em;margin:.2em;padding:.2em;text-align:center;text-decoration:none}.game-block-edit-block .flexBlock200{display:block;flex:1 1 200px;max-height:100%;max-width:100%;min-height:0;min-width:0}.game-block-edit-block .flex-button{align-items:stretch;display:flex;flex-direction:row;flex-wrap:wrap;gap:.2rem;justify-content:flex-start;margin:0}.game-block-edit-block .flex-button-area{border:1px solid #000;padding:20px}.game-block-edit-block .mark-as-correct{color:gold;position:relative;top:-3px;transition:transform .3s ease-out}.game-block-edit-block .mark-as-correct:hover{transform:scale(1.25) rotate(-12deg)}.game-block-edit-block .attention-delete{color:red;position:relative;top:-5px}.game-block-edit-block .attention-delete:hover{color:#c20000!important}.game-block-edit-block .item-holder-edit{border:1px solid #000;margin:2px;padding:0 10px 10px}.game-block-edit-block .item-title-edit{font-size:15px;font-weight:700;margin:10px 0 8px}.game-block-edit-block .image-holder{text-align:center}.game-block-edit-block .like-label{display:block;font-size:11px;font-weight:500;line-height:1.4;margin-bottom:8px;margin-top:8px;padding:0;text-transform:uppercase}
+/*!****************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/editor.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.block-editor-block-list__layout.is-root-container > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+  max-width: 900px !important;
+}
+
+.game-block-edit-block {
+  padding: 20px;
+  border-radius: 2px;
+  border: 1px solid #d6d6d6;
+  color: black;
+  background-color: #f1f1f1;
+}
+.game-block-edit-block .components-radio-control .components-flex {
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+.game-block-edit-block .components-flex {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.game-block-edit-block .mediaColumn {
+  display: flex;
+  flex-direction: column;
+}
+.game-block-edit-block .text-area-container {
+  padding: 10px;
+}
+.game-block-edit-block .button {
+  border: 1px outset buttonborder;
+  border-radius: 3px;
+  background-color: inherit !important;
+  text-decoration: none;
+  text-align: center;
+  padding: 0.2em;
+  margin: 0.2em;
+  font-size: 0.7em;
+  line-height: 0.6em;
+  height: auto !important;
+  display: block;
+}
+.game-block-edit-block .flexBlock200 {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  min-height: 0px;
+  min-width: 0px;
+  flex: 0 1 600px;
+}
+.game-block-edit-block .flex-button {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin: 0;
+}
+.game-block-edit-block .flex-button-area {
+  border: 1px solid black;
+  padding: 20px;
+}
+.game-block-edit-block .mark-as-correct {
+  color: #ffd700;
+  position: relative;
+  top: -3px;
+  transition: transform 0.3s ease-out;
+}
+.game-block-edit-block .mark-as-correct:hover {
+  transform: scale(1.25) rotate(-12deg);
+}
+.game-block-edit-block .attention-delete {
+  color: #ff0000;
+  position: relative;
+  top: -5px;
+}
+.game-block-edit-block .attention-delete:hover {
+  color: #c20000 !important;
+}
+.game-block-edit-block .item-holder-edit {
+  border: 1px solid black;
+  padding: 0 10px 10px 10px;
+  margin: 2px;
+}
+.game-block-edit-block .item-title-edit {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 10px 0 8px 0;
+}
+.game-block-edit-block .image-holder {
+  text-align: center;
+}
+.game-block-edit-block .like-label {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  padding: 0px;
+}

@@ -1,5 +1,5 @@
 import { MediaUpload, MediaUploadCheck} from "@wordpress/block-editor";
-import { TextControl,SelectControl, Flex, FlexBlock, FlexItem, Button, RadioControl} from "@wordpress/components";
+import { TextControl, SelectControl, Flex, FlexBlock, FlexItem, Button, RadioControl} from "@wordpress/components";
 import {IconDisplay} from "./IconDisplay";
 import {__} from "@wordpress/i18n";
 import {editArrayItem, deleteArrayItem} from "./manageArrayItem";
@@ -61,7 +61,7 @@ export default function ClueEdit({clueArray,index,attributes,setAttributes,playZ
                                     __nextHasNoMarginBottom
                                 />
                                 <div>
-                                    <IconDisplay iconPath = {clue.iconPath} />
+                                    <IconDisplay iconPath = {clue.iconPath}  type={"clue"} />
                                 </div>
                             </FlexBlock>
                             <FlexBlock>

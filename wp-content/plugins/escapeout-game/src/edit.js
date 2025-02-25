@@ -47,7 +47,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const allowedBlocks = [ 'core/heading','core/paragraph' ];
 
 	const MY_TEMPLATE = [
-		['core/heading', { level: 3, placeholder: 'Insert your heading here...' }],
+		/*['core/heading', { level: 3, placeholder: 'Insert your heading here...' }],*/
 		['core/paragraph', { placeholder: 'Write some description about game here - goals, notes about play area, etc ...' }],
 	]
 	const blockProps = useBlockProps();
@@ -63,10 +63,12 @@ export default function Edit( { attributes, setAttributes } ) {
 	}
 	const puzzleObject = {
 		"name": "",
-		"description": "",
+		"clue": "",
 		"question": "",
 		"sols":[""],
 		"answer":[""],
+		"iconName": "",
+		"iconPath": "",
 		"order": "",
 		"disabled": "No",
 	}
@@ -101,6 +103,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	function updateGameName(value) {
 		console.log("update game name");
 		setAttributes({ gameName: value })
+	}
+	function updateMission(value) {
+		console.log("update mission");
+		setAttributes({ mission: value })
 	}
 	function updateWalkingDistance(value) {
 		console.log("update walking distance");
@@ -220,6 +226,18 @@ export default function Edit( { attributes, setAttributes } ) {
 		//console.log("playZones newArray: " + JSON.stringify(newArray));
 		setAttributes({playZones: newArray});
 	}
+	function hideZoneDiv(index) {
+		const zoneDivID = "zoneDiv-" + index;
+		const zoneShowID = "zoneShow-" + index;
+		document.getElementById(zoneDivID).style.display = "none";
+		document.getElementById(zoneShowID).style.display = "block";
+	}
+	function showZoneDiv(index) {
+		const zoneDivID = "zoneDiv-" + index;
+		const zoneShowID = "zoneShow-" + index;
+		document.getElementById(zoneDivID).style.display = "block";
+		document.getElementById(zoneShowID).style.display = "none";
+	}
 
 	if (attributes.playZones.length>0) {
 	return (
@@ -227,7 +245,11 @@ export default function Edit( { attributes, setAttributes } ) {
 			<div className="game-block-edit-block" style={{backgroundColor: attributes.bgColor}}>
 
 				<FlexButtons attributes={attributes} setAttributes={setAttributes}/>
-				<div className="like-label">Game Header and Description:</div>
+				<TextControl label="Game Name:" value={attributes.gameName} onChange={updateGameName}
+							 style={{fontSize: "20px"}}/>
+				<TextControl label="Mission:" value={attributes.mission} onChange={updateMission}
+							 style={{fontSize: "20px"}}/>
+				<div className="like-label">Game Description (please provide an excerpt too):</div>
 				<div style={{backgroundColor: "white", padding: "10px", marginBottom: "10px"}}>
 					<InnerBlocks
 						allowedBlocks={allowedBlocks} template={MY_TEMPLATE}
@@ -259,10 +281,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelBody>
 				</InspectorControls>
 
-				<TextControl label="Game Name:" value={attributes.gameName} onChange={updateGameName}
-							 style={{fontSize: "20px"}}/>
+
 				<RadioControl
-					label="User Logged In?"
+					label="User Logged In? (score is saved only for logged in Users)"
 					selected={ attributes.userMustBeLoggedIn }
 					options={ [
 						{ label: 'User Must Be Logged in to Play', value: "yes"},
@@ -270,73 +291,96 @@ export default function Edit( { attributes, setAttributes } ) {
 					] }
 					onChange={ ( value ) => updateUserMustBeLoggedIn( value ) }
 				/>
-				<TextControl
-					label="Walking Distance Explanation (estimated total walking distance for player, usually based on zones and how far apart):"
-					value={attributes.walkingDistance} onChange={updateWalkingDistance}
-					style={{fontSize: "20px"}}/>
 
 
 				<div className={"item-holder-edit"}>
 					{attributes.playZones.map(function (playZone, index) {
 						return (
-							<div key={index} className={"zoneDiv"}>
-								<ZoneEdit playZone={playZone} index={index} editZoneMedia={editZoneMedia} removeImage={removeImage}
-										  editZone={editZone} deletePlayZone={deletePlayZone}/>
-								<Flex justify={"flex-start"} className={"buttons"}>
-									<FlexItem>
-										<Button
-											isPrimary
-											onClick={() => {
-												addClueObject(index)
-											}}
-										>
-											Add Clue
-										</Button>
-									</FlexItem>
-									<FlexItem>
-										<Button
-											isPrimary
-											onClick={() => {
-												addHintObject(index)
-											}}
-										>
-											Add Hint
-										</Button>
-									</FlexItem>
-									<FlexItem>
-										<Button
-											isPrimary
-											onClick={() => {
-												addPuzzleObject(index)
-											}}
-										>
-											Add Puzzle
-										</Button>
-									</FlexItem>
-								</Flex>
-								<div className={"item-holder-edit"}>
-									<PuzzleEdit puzzleArray={playZone.puzzleArray} index={index}
-												attributes={attributes} setAttributes={setAttributes}
-												playZoneName={playZone.name}/>
-								</div>
-								<div className={"item-holder-edit"}>
-									<ClueEdit clueArray={playZone.clueArray} index={index} attributes={attributes}
-											  setAttributes={setAttributes} playZoneName={playZone.name}/>
-								</div>
-								<div className={"item-holder-edit"}>
-									<HintEdit hintArray={playZone.hintArray} index={index} attributes={attributes}
-											  setAttributes={setAttributes} playZoneName={playZone.name}/>
+							<>
+							<div id={"zoneShow-" + index} style={{display: "none",marginBottom:"10px"}}>
+								<Button
+									isPrimary
+									onClick={() => {
+										showZoneDiv(index)
+									}}
+								>
+									Show {playZone.name}
+								</Button>
+
+							</div>
+							<div id={"zoneShow-" + index} style={{display: "block"}}>
+								<div key={index} id={"zoneDiv-" + index}>
+									<div className="item-title-edit">Zones {index + 1}:
+									<Button
+										isTertiary
+										onClick={() => {
+											hideZoneDiv(index)
+										}}
+									>
+										(hide zone)
+									</Button>
+									</div>
+									<ZoneEdit playZone={playZone} index={index} editZoneMedia={editZoneMedia}
+											  removeImage={removeImage}
+											  editZone={editZone} deletePlayZone={deletePlayZone}/>
+									<Flex justify={"flex-start"} className={"buttons"}>
+										<FlexItem>
+											<Button
+												isPrimary
+												onClick={() => {
+													addPuzzleObject(index)
+												}}
+											>
+												Add Puzzle&nbsp;<span className={"small"}>({playZone.name})</span>
+											</Button>
+										</FlexItem>
+										<FlexItem>
+											<Button
+												isPrimary
+												onClick={() => {
+													addClueObject(index)
+												}}
+											>
+												Add Clue&nbsp;<span className={"small"}>({playZone.name})</span>
+											</Button>
+										</FlexItem>
+										<FlexItem>
+											<Button
+												isPrimary
+												onClick={() => {
+													addHintObject(index)
+												}}
+											>
+												Add Hint&nbsp;<span className={"small"}>({playZone.name})</span>
+											</Button>
+										</FlexItem>
+
+									</Flex>
+									<div className={"item-holder-edit"}>
+										<PuzzleEdit puzzleArray={playZone.puzzleArray} index={index}
+													attributes={attributes} setAttributes={setAttributes}
+													playZoneName={playZone.name}/>
+									</div>
+									<div className={"item-holder-edit"}>
+										<ClueEdit clueArray={playZone.clueArray} index={index} attributes={attributes}
+												  setAttributes={setAttributes} playZoneName={playZone.name}/>
+									</div>
+									<div className={"item-holder-edit"}>
+										<HintEdit hintArray={playZone.hintArray} index={index} attributes={attributes}
+												  setAttributes={setAttributes} playZoneName={playZone.name}/>
+									</div>
 								</div>
 							</div>
+							</>
 						)
 					})}
 				</div>
 
 				<Flex>
-					<FlexItem>
-						<Button
-							isPrimary
-							onClick={() => {
+							<FlexItem>
+								<Button
+									isPrimary
+									onClick={() => {
 								addZone();
 							}}
 						>

@@ -13,6 +13,18 @@ export default function FlexButtons({attributes,setAttributes}) {
         console.log("update zone text");
         setAttributes({ zoneText: value })
     }
+    function updatePuzzleText(value) {
+        console.log("update puzzle text");
+        setAttributes({ puzzleText: value })
+    }
+    function updateClueText(value) {
+        console.log("update clue text");
+        setAttributes({ clueText: value })
+    }
+    function updateHintText(value) {
+        console.log("update hint text");
+        setAttributes({ hintText: value })
+    }
     function updateMap1(value) {
         console.log("update map 1");
         setAttributes({ map1: value })
@@ -69,8 +81,8 @@ export default function FlexButtons({attributes,setAttributes}) {
                         setShowMap1(!showMap1);
                     }}
                 >
-                    <div className={showMap1 ? "hide" : "show"}>Show Public/Private Map</div>
-                    <div className={showMap1 ? "show" : "hide"}>Close Public/Private Map</div>
+                    <div className={showMap1 ? "hide" : "show"}>Show Zones/Map Info</div>
+                    <div className={showMap1 ? "show" : "hide"}>Close Zones/Map Info</div>
                 </Button>
 
             </div>
@@ -100,6 +112,21 @@ export default function FlexButtons({attributes,setAttributes}) {
                     <TextareaControl label="Zone Help Text':" value={attributes.zoneText} onChange={updateZoneText}
                                      style={{fontSize: "15px"}}/>
                 </div>
+                <div className="text-area-container" id={"puzzle-help-text"}>
+                    <TextareaControl label="Puzzle Help Text':" value={attributes.puzzleText}
+                                     onChange={updatePuzzleText}
+                                     style={{fontSize: "15px"}}/>
+                </div>
+                <div className="text-area-container" id={"clue-help-text"}>
+                    <TextareaControl label="Clue Help Text':" value={attributes.clueText}
+                                     onChange={updateClueText}
+                                     style={{fontSize: "15px"}}/>
+                </div>
+                <div className="text-area-container" id={"hint-help-text"}>
+                    <TextareaControl label="Hint Help Text':" value={attributes.hintText}
+                                     onChange={updateHintText}
+                                     style={{fontSize: "15px"}}/>
+                </div>
             </div>
             <div className={showWaiverFields ? "show" : "hide"}>
                 <div className="text-area-container">
@@ -123,22 +150,22 @@ export default function FlexButtons({attributes,setAttributes}) {
                 </div>
             </div>
             <div className={showMap1 ? "show flex-button-area" : "hide"}>
-                <header class="modal_header">Public Map</header>
-                <div className="small">Get Map src for iframe using "create map" at
-                    https://mymaps.google.com and look at "Embed this map" code, suggest base map as "simple atlas".
+                <header class="modal_header"><strong>Public Map</strong></header>
+                <div className="small">SRC ONLY: Get Map src for iframe using "create map" at
+                    https://mymaps.google.com and look for an "Embed" link for iframe code, also suggest using base map as "simple atlas".
                 </div>
                 <div className="text-area-container">
                     <TextControl label="Public Map Src for iframe (if no src code, no map):" value={attributes.map1}
                                  onChange={updateMap1}
                                  style={{fontSize: "15px"}}/>
                     <TextControl
-                        label="Public Map Explanation (description of what is on public map):"
+                        label="Zone / Public Map Explanation (description of what is on public map):"
                         value={attributes.publicMapText} onChange={updatePublicMapText}
                         style={{fontSize: "20px"}}/>
 
 
                 </div>
-                <header class="modal_header">Private/Zone Map</header>
+                <header class="modal_header"><strong>Private/Zone Map</strong></header>
 
                 <div className="text-area-container">
                     <TextControl label="Private/Zone Map Src for iframe (if no src code, no map):"

@@ -7,6 +7,10 @@
 .wp-block-create-block-game-block input[type="text"] {
 
 }
+
+.block-editor-block-list__layout.is-root-container > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+	max-width: 900px !important;
+}
 .game-block-edit-block {
 	padding: 20px;
 	border-radius: 2px;
@@ -48,7 +52,7 @@
 		max-width: 100%;
 		min-height: 0px;
 		min-width: 0px;
-		flex: 1 1 200px;
+		flex: 0 1 600px;
 	}
 	.flex-button {
 		display:flex;

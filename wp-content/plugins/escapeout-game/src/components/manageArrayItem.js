@@ -25,6 +25,11 @@ export function editArrayItem(itemType, field, newValue, index, index2, index3, 
                 /* add another answer */
                 newArray[index]["puzzleArray"][index2].sols.push("");
                 newArray[index]["puzzleArray"][index2].answer.push("");
+            } else if (field === "iconName") {
+                console.log("puzzle iconName: " + newValue);
+                newArray[index]["puzzleArray"][index2][field] = newValue;
+                const imageURL = "/wp-content/plugins/escapeout-game/assets/" + newValue;
+                newArray[index]["puzzleArray"][index2]["iconPath"] = imageURL;
             } else {
                 newArray[index]["puzzleArray"][index2][field] = newValue;
             }

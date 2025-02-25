@@ -89,10 +89,11 @@ for ($i = 0; $i < count($attributes['playZones']); $i++) {
 	                //$quesArray[$paIndex]['input' . $paIndex] = "test";
                     $puzzleArray[$paIndex]["zoneID"] = $attributes['playZones'][$i]["id"];
                     $puzzleArray[$paIndex]['name'] = $attributes['playZones'][$i]['puzzleArray'][$j]["name"];
-                    $puzzleArray[$paIndex]['description'] = $attributes['playZones'][$i]['puzzleArray'][$j]["description"];
+                    $puzzleArray[$paIndex]['clue'] = $attributes['playZones'][$i]['puzzleArray'][$j]["clue"];
                     //$puzzleArray[$paIndex]['question'] = $attributes['playZones'][$i]['puzzleArray'][$j]["question"];
                     $puzzleArray[$paIndex]['sols'] = $attributes['playZones'][$i]['puzzleArray'][$j]["sols"];
                     $puzzleArray[$paIndex]['order'] = $attributes['playZones'][$i]['puzzleArray'][$j]["order"];
+                    $puzzleArray[$paIndex]['iconPath'] = $attributes['playZones'][$i]['puzzleArray'][$j]["iconPath"];
                     $puzzleArray[$paIndex]['modalOpen'] = false;
                     $puzzleArray[$paIndex]['guess'] = "";
                     $puzzleArray[$paIndex]['solved'] = false;
@@ -180,6 +181,9 @@ wp_interactivity_state(
         'hintWarningVisible'=> false,
         'helpVisible' => false,
         'zoneHelpVisible'=> false,
+        'puzzleHelpVisible'=> false,
+        'clueHelpVisible'=> false,
+        'hintHelpVisible'=> false,
         'teamHelpVisible'=> false,
         'modalPublicMapOpen'=> false,
         'modalPrivateMapOpen'=> false,
@@ -198,6 +202,7 @@ wp_interactivity_state(
         'showGameScore' => false,
         'rating' => '',
         'anotherGame' => '',
+        'alertStartVisible' => false,
         'siteURL' => $siteUrl,
         'nonce' => $nonce
     )
@@ -236,7 +241,7 @@ $firstTime="yes";
 if (count($resultStats) > 0) {
     $firstTime='no';
 }
-$frontendContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'map2' => $attributes['map2'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
+$frontendContext = array('firstTime' => $firstTime, 'userIsLoggedIn' => $userIsLoggedIn , 'userMustBeLoggedIn' => $userMustBeLoggedIn, 'map1' => $attributes['map1'], 'map2' => $attributes['map2'], 'teamName' => '', "waiverSigned" => $attributes["waiverSigned"], 'gameStart' => false, 'gameID' => $attributes['gameID'], 'gameName' => $attributes['gameName'], 'mission' => $attributes['mission'],'userEmail' => $user_email, 'designerEmail' => $designer_email, 'designerName' => $designer_name, 'userID' => $current_user_id, 'postID' => $gamePost_id, 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
 $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'firstZoneID' => $firstZoneID, 'hintArray' => $hintArray, 'clueArray' => $clueArray, 'puzzleArray' => $puzzleArray, 'playZones' => $playZones, 'solved' => false, 'showCongrats' => false, 'showSorry' => false);
 //print_r($quesArray);
 ?>
@@ -265,49 +270,61 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                 data-wp-bind--hidden="!context.userIsLoggedIn"
                 data-wp-on-async--click="actions.toggleStats"
                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
         >
-			<?php esc_html_e( 'Show My Stats', 'escapeout-game' ); ?>
+			<?php esc_html_e( 'My Stats for this Game', 'escapeout-game' ); ?>
         </button>
         <button class="button"
                 data-wp-on-async--click="actions.toggleLeaderBoard"
                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
         >
 			<?php esc_html_e( 'Leader Board', 'escapeout-game' ); ?>
         </button>
         <hr/>
-            <!--<a href="<?php echo $siteUrl ?>">home</a>-->
-        <h2><?php echo $attributes['gameName'] ?></h2>
-        <div>
-            <?php echo $content; ?>
-	    </div>
         <div class="details">
             <ul>
                 <li>
-                    <strong>zone information</strong>: <?php echo $attributes['publicMapText'] ?>
+                    <?php echo $content; ?>
+                </li>
+                <li>
+                    <strong>Zones</strong>: <?php echo $attributes['publicMapText'] ?>
                     <br />
                     <button class="button"
                             data-wp-bind--hidden="callbacks.checkPublicMap"
                             data-wp-on-async--click="actions.togglePublicMap"
-                            aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                            aria-controls="<?php echo esc_attr( $unique_id );?>"
+                            style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                     >
                         <?php esc_html_e( 'View Public Map', 'escapeout-game' ); ?>
                     </button>
                     <button class="button"
                             data-wp-on-async--click="actions.togglePublicImage"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                            style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                     >
 		                <?php esc_html_e( 'View Zone 1 Image', 'escapeout-game' ); ?>
                     </button>
                 </li>
-                <li>
-                    <strong>walking distance</strong>: <?php echo $attributes['walkingDistance'] ?>
-                </li>
             </ul>
         </div>
         <hr/>
-
-
-
+        <div class="help-container-start" data-wp-bind--hidden="!state.helpVisible">
+            <div class='help-inner' style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>">
+                <div data-wp-bind--hidden="!state.teamHelpVisible">
+                    Signing the waiver helps the player understand that they should not harm their surroundings.
+                    <br ><br />
+                    The Team Name is the public name for game results. Your team can be 1 person or many.
+                    It is simply the name associated with the playing of this game, this time.
+                </div>
+                <button class="button"
+                        data-wp-on--click="actions.closeHelp"
+                        aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                >
+                    <?php esc_html_e( 'Close', 'escapeout-game' ); ?>
+                </button>
+            </div>
+        </div>
         <div data-wp-bind--hidden="context.userMustBeLoggedIn">
             <div class="game-text"><strong>User does not have to be logged in to play this game,
                     and the only record of your score for this game will be on the screen after you WIN.
@@ -335,6 +352,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                             data-wp-bind--hidden="state.showWaiver"
                             data-wp-on-async--click="actions.showWaiverToggle"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                            style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                     >
                         <?php esc_html_e( 'Show Waiver', 'escapeout-game' ); ?>
                     </button>
@@ -342,6 +360,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                             data-wp-bind--hidden="state.showWaiver"
                             data-wp-on-async--click="actions.signWaiver"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                            style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                     >
                         <?php esc_html_e( 'Sign Waiver', 'escapeout-game' ); ?>
                     </button>
@@ -366,11 +385,13 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                 </li>
             </ul>
             <div class="red-alert" data-wp-text="state.errorMessage"></div>
+            <div class="mission" data-wp-text="context.mission"></div>
             <div>
                 <button class="button"
                         data-wp-bind--aria-expanded="context.isOpen"
                         data-wp-on-async--click="actions.gameStart"
                         aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                        style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                 >
 			        <?php esc_html_e( 'Start Game - Time Starts', 'escapeout-game' ); ?>
                 </button>
@@ -404,6 +425,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                                 data-wp-bind--hidden="state.showWaiver"
                                 data-wp-on-async--click="actions.showWaiverToggle"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                                style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                         >
                             <?php esc_html_e( 'Show Waiver', 'escapeout-game' ); ?>
                         </button>
@@ -411,6 +433,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                                 data-wp-bind--hidden="state.showWaiver"
                                 data-wp-on-async--click="actions.signWaiver"
                                 aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                                style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                         >
                             <?php esc_html_e( 'Sign Waiver', 'escapeout-game' ); ?>
                         </button>
@@ -421,6 +444,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                                     data-wp-bind--hidden="context.waiverSigned"
                                     data-wp-on-async--click="actions.signWaiver"
                                     aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                                    style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                             >
                                 <?php esc_html_e( 'Sign Waiver', 'escapeout-game' ); ?>
                             </button>
@@ -428,6 +452,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                                     data-wp-bind--hidden="!context.waiverSigned"
                                     data-wp-on-async--click="actions.showWaiverToggle"
                                     aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                                    style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                             >
                                 <?php esc_html_e( 'Close Waiver', 'escapeout-game' ); ?>
                             </button>
@@ -435,11 +460,13 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                     </li>
                 </ul>
                 <div class="red-alert" data-wp-text="state.errorMessage"></div>
-                <div>
+                <div style="text-align:center; font-weight:bold; font-size: 1.2em;">Mission: <span class="mission" data-wp-text="context.mission"></span></div>
+                <div style="text-align:center; font-weight:bold">
                     <button class="button"
                             data-wp-bind--aria-expanded="context.isOpen"
                             data-wp-on-async--click="actions.gameStart"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+                            style="background-color:<?php echo $attributes['textColor'];?>; color:<?php echo $attributes['bgColor']?>"
                     >
                         <?php esc_html_e( 'Start Game - Time Starts', 'escapeout-game' ); ?>
                     </button>
@@ -448,29 +475,14 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
         </div>
         <!-- end user should be logged in -->
 
-        <div class="help-container-start" data-wp-bind--hidden="!state.helpVisible">
-            <div class='help-inner'>
-                <div data-wp-bind--hidden="!state.teamHelpVisible">
-                    Signing the waiver helps the player understand that they should not harm their surroundings.
-                    <br ><br />
-                    The Team Name is the public name for game results. Your team can be 1 person or many.
-                    It is simply the name associated with the playing of this game, this time.
-                </div>
-                <button class="button"
-                        data-wp-on--click="actions.closeHelp"
-                        aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-                >
-					<?php esc_html_e( 'Close', 'escapeout-game' ); ?>
-                </button>
-            </div>
-        </div>
+
         <div>
             <div class="modalContainerMap" data-wp-class--showmodal="state.modalPublicMapOpen" data-wp-on--click="actions.togglePublicMap">
                 <div class="modal from-right">
                     <header class="modal_header">
-                        <div><strong>Public Map</strong> <span class="small">(click on right arrow or icons for zone name(s))</span> </div>
+                        <div><strong>Public Map</strong></div>
                     </header>
-                    <main id="publicMapContainer" class="modal_content">
+                    <main id="publicMapContainer" class="modal_contentr">
 
                     </main>
                     <footer class="modal_footer">
@@ -620,28 +632,30 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                 </div>
             </div>
         </div>
-        <div class="alert-container" data-wp-bind--hidden="!state.alertStartVisible">
-            <div class='alert-inner'>You are currently playing another game:<br/>
-                <div class="italics" data-wp-text="state.anotherGame"></div>
-                You can only play one game at a time, do you want to play that game?<br />
-                <button class="button"
-                        data-wp-on--click="actions.quitAlertStartClose"
-                        aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-                >
-		            <?php esc_html_e( 'Play Other Game', 'escapeout-game' ); ?>
-                </button>
-                <br />note: you can search for the other game by game name in search bar above<br /><br />
 
-                Or would you like to play this game?<br />
-                <button class="button"
-                        data-wp-on--click="actions.quit"
-                        aria-controls="<?php echo esc_attr( $unique_id ); ?>"
-                >
-		            <?php esc_html_e( 'Play this Game', 'escapeout-game' ); ?>
-                </button>
-            </div>
-        </div>
     </div><!-- end game start bar - hidden while playing game -->
+    <div class="alert-container2" data-wp-bind--hidden="!state.alertStartVisible">
+        <div class='alert-inner'>You are currently playing another game:<br/>
+            <div class="italics" data-wp-text="state.anotherGame"></div>
+            You can only play one game at a time, do you want to play that game?<br />
+            <button class="button"
+                    data-wp-on--click="actions.quitAlertStartClose"
+                    aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+            >
+                <?php esc_html_e( 'Play Other Game', 'escapeout-game' ); ?>
+            </button>
+            <br />note: you can search for the other game by game name in search bar above<br /><br />
+
+            Or would you like to play this game?<br />
+            <button class="button"
+                    data-wp-on--click="actions.quit"
+                    aria-controls="<?php echo esc_attr( $unique_id ); ?>"
+            >
+                <?php esc_html_e( 'Play this Game', 'escapeout-game' ); ?>
+            </button>
+        </div>
+    </div>
+
     <div class="modalContainer2 gameModal"
          data-wp-class--showmodal="context.gameStart" >
         <div class="modal from-top">
@@ -663,7 +677,7 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                     <button class="button"
                             data-wp-on--click="actions.toggleTheme"
                             data-wp-text="state.themeText"
-                    ></button>
+                                               ></button>
                     <button class="button"
                             data-wp-on--click="actions.quitAlertOpen"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
@@ -704,41 +718,21 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                     </div>
                 <?php } ?>
 
-                <div class="item-header">Puzzles</div>
+                <div class="item-header">Puzzles
+                    <img data-wp-on--click="actions.setPuzzleHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
+                    <img data-wp-on--click="actions.setPuzzleHelpVisible" class="question"  src="<?php echo $siteUrl . $assetDir . "question.svg" ?>" alt="question about zones" data-wp-bind--hidden="state.isDark" />
+                </div>
                 <div class="puzzle-holder">
                     <?php $puzIndex = 0;foreach($gameContext['puzzleArray'] as $puzzle) { ?>
                     <div  <?php echo wp_interactivity_data_wp_context($puzzle) ?>>
                         <div data-wp-bind--hidden="callbacks.hideItemByZone">
                             <div>
                                 <div class="puzzle-item" data-wp-on--click="actions.setPuzzleModalVisible"  data-wp-bind--hidden="callbacks.checkSolved">
-                                    <svg width="80" height="80" version="1.1" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
-                                        <g>
-                                            <rect width="1200" height="1200" fill="transparent"/>
-                                            <path d="m839.8 323.2h-479.61c-11.562 0-22.09 4.6719-29.715 12.191-7.6328 7.5195-12.371 17.887-12.371 29.285v411.08c0 11.395 4.7383 21.766 12.371 29.285 7.6328 7.5195 18.152 12.191 29.715 12.191h479.61c11.562 0 22.09-4.6719 29.715-12.191 7.6328-7.5195 12.371-17.887 12.371-29.285v-411.08c0-11.395-4.7383-21.766-12.371-29.285-7.6328-7.5195-18.152-12.191-29.715-12.191zm-463.49 88.375c4.3594 0 8.3359 1.7617 11.215 4.6094 2.8867 2.8398 4.6797 6.7578 4.6797 11.055v63.547c0 4.3008-1.793 8.2148-4.6797 11.055s-6.8555 4.6094-11.215 4.6094-8.3359-1.7695-11.215-4.6094c-2.8867-2.8398-4.6797-6.7578-4.6797-11.055v-63.547c0-4.3008 1.793-8.2148 4.6797-11.055 2.8867-2.8398 6.8555-4.6094 11.215-4.6094zm0 222.42c4.3594 0 8.3359 1.7695 11.215 4.6094 2.8867 2.8398 4.6797 6.7578 4.6797 11.055v63.547c0 4.3008-1.793 8.2148-4.6797 11.055-2.8867 2.8398-6.8555 4.6094-11.215 4.6094s-8.3359-1.7617-11.215-4.6094c-2.8789-2.8477-4.6797-6.7578-4.6797-11.055v-63.547c0-4.3008 1.793-8.2148 4.6797-11.055 2.8867-2.8398 6.8555-4.6094 11.215-4.6094zm-8.2891 110.15c-5.6211-1.4648-10.656-4.3906-14.652-8.3359-5.8789-5.7969-9.5312-13.801-9.5312-22.609v-63.547c0-8.8125 3.6484-16.816 9.5312-22.609 3.9961-3.9375 9.0312-6.8633 14.652-8.3359v-96.996c-5.6211-1.4648-10.656-4.3906-14.652-8.3359-5.8789-5.7969-9.5312-13.801-9.5312-22.609v-63.547c0-8.8125 3.6484-16.816 9.5312-22.609 3.9961-3.9375 9.0312-6.8633 14.652-8.3359v-26.648c0-4.5117 3.7109-8.168 8.2891-8.168h447.36c4.5781 0 8.2891 3.6562 8.2891 8.168v401.15c0 4.5117-3.7109 8.168-8.2891 8.168l-447.36-0.003906c-4.5781 0-8.2891-3.6562-8.2891-8.168v-26.648zm16.582-125.43v-96.996c5.6211-1.4648 10.656-4.3906 14.652-8.3359 5.8789-5.7969 9.5312-13.801 9.5312-22.609v-63.547c0-8.8125-3.6484-16.816-9.5312-22.609-3.9961-3.9375-9.0312-6.8633-14.652-8.3359v-18.477h430.78v384.81l-430.78-0.003906v-18.477c5.6211-1.4648 10.656-4.3906 14.652-8.3359 5.8789-5.7969 9.5312-13.801 9.5312-22.609v-63.547c0-8.8125-3.6484-16.816-9.5312-22.609-3.9961-3.9375-9.0312-6.8633-14.652-8.3359zm306.92 53.09 10.066 44.535c0.1875 0.72656 0.28125 1.4805 0.25781 2.2656-0.12891 4.4961-3.9219 8.0391-8.4883 7.9141l-43.18-1.2305c-0.55859 0.007813-1.125-0.039063-1.6914-0.13672-4.4883-0.83203-7.4453-5.0859-6.6055-9.5156l8.125-41.98c-2.9609-2.2812-5.4922-5.0547-7.4805-8.1992-3.0469-4.8359-4.8047-10.52-4.8047-16.59 0-8.6914 3.5742-16.559 9.3555-22.254 5.7812-5.6992 13.762-9.2188 22.582-9.2188 8.8203 0 16.801 3.5234 22.582 9.2188 5.7812 5.6992 9.3555 13.566 9.3555 22.254 0 5.4648-1.4297 10.625-3.9453 15.137-1.625 2.9102-3.6953 5.5391-6.1289 7.793zm-31.566 37.469 7.3242-37.824c0.11328-0.53516 0.17188-1.0898 0.17969-1.625v-0.17188-0.007812c-0.015625-1.125-0.27344-2.2148-0.72656-3.2109v-0.023437l-0.066406-0.12109-0.039063-0.082031-0.039062-0.074219-0.054688-0.10547-0.03125-0.054687-0.074218-0.13672c-0.53516-0.96094-1.2695-1.8203-2.1758-2.5078h-0.007812l-0.14453-0.11328c-0.42188-0.30859-0.88281-0.58203-1.3672-0.80859-2.5156-1.2539-4.6484-3.1875-6.1445-5.5625-1.4453-2.2969-2.2812-5.0273-2.2812-7.9648 0-4.1797 1.7148-7.9648 4.4961-10.699s6.6211-4.4297 10.859-4.4297 8.0781 1.6914 10.859 4.4297c2.7812 2.7344 4.4961 6.5234 4.4961 10.699 0 2.6602-0.67969 5.1445-1.875 7.2852-1.2461 2.2383-3.0625 4.1328-5.2539 5.5-3.2266 2.0195-4.5586 5.8711-3.4766 9.3047l8.8125 38.973-23.27-0.66406zm-128.73-232.87c25.383 0 48.367 10.141 65 26.531 16.633 16.391 26.926 39.039 26.926 64.055s-10.285 47.664-26.926 64.055c-16.633 16.391-39.613 26.531-65 26.531-25.383 0-48.359-10.141-65-26.531-16.633-16.391-26.926-39.039-26.926-64.055s10.285-47.664 26.926-64.055c16.633-16.391 39.613-26.531 65-26.531zm34.469 56.617c8.8203 8.6914 14.277 20.707 14.277 33.969 0 13.27-5.457 25.277-14.277 33.969-8.8203 8.6914-21.008 14.07-34.469 14.07-13.461 0-25.648-5.3789-34.469-14.07-8.8203-8.6914-14.277-20.707-14.277-33.969 0-13.27 5.457-25.277 14.277-33.969 8.8203-8.6914 21.008-14.07 34.469-14.07 13.461 0 25.648 5.3789 34.469 14.07zm-74.301-17.062-7.1055-7.043c10.844-8.5234 24.121-14.156 38.648-15.727v9.9297c-11.781 1.4727-22.582 6.0312-31.543 12.84zm-24.977 42.863h-10.074c1.6094-14.457 7.4297-27.668 16.219-38.414l7.1055 7.043c-7.0273 8.8867-11.742 19.633-13.254 31.371zm11.949 46.016-7.3398 6.8086c-7.9336-10.375-13.18-22.875-14.691-36.477h10.074c1.4141 10.996 5.6445 21.129 11.949 29.668zm44.566 26.027v9.9297c-15.395-1.6641-29.391-7.8906-40.566-17.281l7.3398-6.8086c9.2812 7.5352 20.699 12.598 33.23 14.16zm48.125-12.84 7.1055 7.043c-10.844 8.5234-24.121 14.156-38.648 15.727v-9.9297c11.781-1.4727 22.582-6.0312 31.543-12.84zm24.977-42.863h10.074c-1.6094 14.457-7.4297 27.668-16.219 38.414l-7.1055-7.043c7.0273-8.8867 11.742-19.633 13.246-31.371zm-11.949-46.016 7.3398-6.8086c7.9336 10.375 13.18 22.875 14.691 36.477h-10.074c-1.4141-10.996-5.6445-21.129-11.949-29.668zm-44.566-26.027v-9.9297c15.395 1.6641 29.391 7.8906 40.566 17.281l-7.3398 6.8086c-9.2812-7.5352-20.699-12.598-33.23-14.16zm223.96-12.113c2.3516 0 4.4961 0.95312 6.0547 2.4922 1.5586 1.5352 2.5312 3.6484 2.5312 5.9688v133.55c0 2.3203-0.96875 4.4297-2.5312 5.9688-1.5625 1.543-3.7031 2.4922-6.0625 2.4922s-4.4961-0.95312-6.0547-2.4922c-1.5586-1.5352-2.5312-3.6484-2.5312-5.9688v-133.55c0-2.3203 0.96875-4.4375 2.5312-5.9688 1.5586-1.5352 3.7031-2.4922 6.0625-2.4922zm0-16.34c6.9297 0 13.227 2.7891 17.781 7.2773 4.5586 4.4883 7.3828 10.691 7.3828 17.523v133.55c0 6.832-2.8281 13.027-7.3828 17.523-4.5586 4.4883-10.852 7.2773-17.781 7.2773-6.9297 0-13.227-2.7891-17.781-7.2773-4.5586-4.4883-7.3828-10.691-7.3828-17.523v-133.55c0-6.832 2.8281-13.027 7.3828-17.523 4.5586-4.4883 10.852-7.2773 17.781-7.2773zm-214.38 74.719c4.5703 4.5039 7.3984 10.73 7.3984 17.609s-2.8281 13.105-7.3984 17.609c-4.5703 4.5039-10.891 7.293-17.863 7.293-6.9766 0-13.293-2.7891-17.863-7.293-4.5703-4.5039-7.3984-10.73-7.3984-17.609s2.8281-13.105 7.3984-17.609c4.5703-4.5039 10.891-7.293 17.863-7.293 6.9766 0 13.293 2.7891 17.863 7.293zm-17.863-23.633c11.555 0 22.016 4.6172 29.594 12.078 7.5703 7.4648 12.258 17.773 12.258 29.164 0 11.387-4.6836 21.695-12.258 29.164-7.5703 7.4648-18.039 12.078-29.594 12.078-11.555 0-22.016-4.6172-29.594-12.078-7.5703-7.4648-12.258-17.773-12.258-29.164 0-11.387 4.6836-21.695 12.258-29.164 7.5703-7.4648 18.039-12.078 29.594-12.078zm-98.719 307.82h-43.871v43.234h43.871zm380.86 0h-43.871v43.234h43.871z" fill-rule="evenodd"/>
-                                        </g>
-                                    </svg>
+                                    <img src="<?php echo $siteUrl . $puzzle["iconPath"] . ".svg" ?>" alt="<?php echo $puzzle["name"] ?>" />
                                 </div>
                                 <div class="puzzle-item" data-wp-bind--hidden="!callbacks.checkSolved">
-
-                                    <svg width="80" height="80" version="1.1" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <clipPath id="a">
-                                                <path d="m222.14 235h755.71v730h-755.71z"/>
-                                            </clipPath>
-                                        </defs>
-                                        <rect width="1200" height="1200" fill="transparent"/>
-                                        <g clip-path="url(#a)">
-                                            <path d="m953.43 298.79h-135.53l-108.7-61.211-3.6523-1.7656h-3.2734c-7.8125 0-14.109 6.3008-14.109 14.109v11.082h-100.76v37.785h-340.83c-13.477 0-24.434 10.961-24.434 24.438v555.57c0 13.602 10.957 24.562 24.434 24.562h0.75781v50.383h125.95v-50.383h214.12v37.785h100.76v9.0703c0 7.8086 6.2969 14.105 14.105 14.105l4.0312-0.25 107.82-60.711h12.594v50.383h125.95v-50.383h0.75391c13.477 0 24.434-10.957 24.434-24.434l0.003906-555.7c0-13.477-10.957-24.438-24.434-24.438zm-605.33 629.76h-75.57v-25.191h75.57zm25.191-49.875v-0.50391h-125.95v0.75391l-0.75781-554.95h340.83v25.191h-285.28c-16.375 0-29.598 13.223-29.598 29.598v444.61c0 16.375 13.223 29.598 29.598 29.598h285.28v25.191zm214.12-378.36h-37.785v-113.36h-226.71v113.36h-25.191v-121.54c0-2.3906 2.0156-4.4062 4.4102-4.4062h285.28zm-239.31 277.1h50.383v12.594h-50.383zm50.379-25.191h-50.383v-12.594h50.383zm-50.379 62.977h50.383v12.594h-50.383zm75.57-75.57h25.191v88.168h-25.191zm50.383 37.785h50.383v12.594h-50.383zm50.379-25.191h-50.383v-12.594h50.383zm-50.379 62.977h50.383v12.594h-50.383zm75.57-100.76h-226.71v113.36h-20.781c-2.3945 0-4.4102-2.0156-4.4102-4.4062v-134.14h289.69v138.55h-37.785zm-25.191-88.168h-50.383v-12.594h50.383zm-50.379 25.191h50.383v12.594h-50.383zm50.379-62.977h-50.383v-12.594h50.383zm-75.57 75.57h-25.191v-88.168h25.191zm-100.76-50.379h50.383v12.594h-50.383zm50.379-25.191h-50.383v-12.594h50.383zm-50.379 62.977h50.383v12.594h-50.383zm239.31 12.594h-37.785v-113.36h-226.71v113.36h-25.191v-138.55h289.69zm-62.977-201.52h-50.383v-12.594h50.383zm-50.379 25.191h50.383v12.594h-50.383zm50.379-62.977h-50.383v-12.594h50.383zm-75.57 75.57h-25.191v-88.168h25.191zm-100.76-50.379h50.383v12.594h-50.383zm50.379-25.191h-50.383v-12.594h50.383zm-50.379 62.977h50.383v12.594h-50.383zm264.5 428.24v-629.76h75.57v629.76zm100.76-647.02 53.152 29.848h-1.8906l125.07 70.281v43.078c-6.9258 0-12.594 5.668-12.594 12.594s5.668 12.594 12.594 12.594v12.594c-6.9258 0-12.594 5.668-12.594 12.594s5.668 12.594 12.594 12.594v251.91c-6.9258 0-12.594 5.668-12.594 12.594s5.668 12.594 12.594 12.594v12.594c-6.9258 0-12.594 5.668-12.594 12.594s5.668 12.594 12.594 12.594v41.941l-176.33 99.25zm214.12 659.61h-75.57v-25.191h75.57zm25.191-50.379h-91.82l54.035-30.48v-57.688h12.594c6.9258 0 12.594-5.668 12.594-12.594s-5.668-12.594-12.594-12.594h-12.594v-12.594h12.594c6.9258 0 12.594-5.668 12.594-12.594s-5.668-12.594-12.594-12.594h-12.594v-251.91h12.594c6.9258 0 12.594-5.668 12.594-12.594 0-6.9258-5.668-12.594-12.594-12.594h-12.594v-12.594h12.594c6.9258 0 12.594-5.668 12.594-12.594 0-6.9258-5.668-12.594-12.594-12.594h-12.594v-58.828l-52.648-29.598 90.434-0.50391z"/>
-                                        </g>
-                                        <path d="m662.98 310.38c0 6.957-5.6367 12.594-12.594 12.594-6.957 0-12.594-5.6367-12.594-12.594s5.6367-12.598 12.594-12.598c6.957 0 12.594 5.6406 12.594 12.598"/>
-                                        <path d="m662.98 385.95c0 6.957-5.6367 12.594-12.594 12.594-6.957 0-12.594-5.6367-12.594-12.594 0-6.957 5.6367-12.594 12.594-12.594 6.957 0 12.594 5.6367 12.594 12.594"/>
-                                        <path d="m662.98 814.18c0 6.957-5.6367 12.594-12.594 12.594-6.957 0-12.594-5.6367-12.594-12.594 0-6.957 5.6367-12.594 12.594-12.594 6.957 0 12.594 5.6367 12.594 12.594"/>
-                                        <path d="m662.98 738.61c0 6.957-5.6367 12.594-12.594 12.594-6.957 0-12.594-5.6367-12.594-12.594s5.6367-12.598 12.594-12.598c6.957 0 12.594 5.6406 12.594 12.598"/>
-                                        <path d="m662.98 461.52c0 6.957-5.6367 12.598-12.594 12.598-6.957 0-12.594-5.6406-12.594-12.598 0-6.9531 5.6367-12.594 12.594-12.594 6.957 0 12.594 5.6406 12.594 12.594"/>
-                                        <path d="m662.98 889.75c0 6.957-5.6367 12.598-12.594 12.598-6.957 0-12.594-5.6406-12.594-12.598 0-6.9531 5.6367-12.594 12.594-12.594 6.957 0 12.594 5.6406 12.594 12.594"/>
-                                        <path d="m738.55 663.04c-6.9258 0-12.594 5.668-12.594 12.594 0 6.9258 5.668 12.594 12.594 12.594 27.836 0 50.508-22.672 50.508-50.508v-75.32c0-27.836-22.672-50.508-50.508-50.508-6.9258 0-12.594 5.668-12.594 12.594s5.668 12.594 12.594 12.594c13.98 0 25.316 11.336 25.316 25.316v75.32c0 13.863-11.336 25.324-25.316 25.324z"/>
-                                        <path d="m738.55 461.52c-6.9258 0-12.594 5.668-12.594 12.594s5.668 12.594 12.594 12.594c41.691 0 75.699 34.008 75.699 75.699v75.32c0 41.691-34.008 75.699-75.699 75.699-6.9258 0-12.594 5.668-12.594 12.594s5.668 12.594 12.594 12.594c55.672 0 100.89-45.219 100.89-100.89v-75.32c0-55.668-45.219-100.89-100.89-100.89z"/>
-                                    </svg>
+                                    <img src="<?php echo $siteUrl . $puzzle["iconPath"] . "-open.svg" ?>" alt="<?php echo $puzzle["name"] ?>" />
+                                    <div><?php echo $puzzle['clue'] ?></div>
                                 </div>
                             </div>
                         </div>
@@ -785,7 +779,11 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                     </div>
                     <?php $puzIndex++; } ?>
                 </div>
-                <div class="item-header">Clues</div>
+                <div class="item-header">Clues
+                    <img data-wp-on--click="actions.setClueHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
+                    <img data-wp-on--click="actions.setClueHelpVisible" class="question"  src="<?php echo $siteUrl . $assetDir . "question.svg" ?>" alt="question about zones" data-wp-bind--hidden="state.isDark" />
+
+                </div>
                 <div class="clue-holder">
                     <?php foreach($gameContext['clueArray'] as $clue) { ?>
                         <div class="clue-item"  <?php echo wp_interactivity_data_wp_context($clue) ?> data-wp-bind--hidden="callbacks.hideItemByZone">
@@ -813,7 +811,11 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
                         </div>
                     <?php } ?>
                 </div>
-                <div class="item-header">Hints</div>
+                <div class="item-header">Hints
+                    <img data-wp-on--click="actions.setHintHelpVisible" class="question" src="<?php echo $siteUrl . $assetDir . "question-FFFFFF.svg" ?>" alt="question about zones" data-wp-bind--hidden="!state.isDark" />
+                    <img data-wp-on--click="actions.setHintHelpVisible" class="question"  src="<?php echo $siteUrl . $assetDir . "question.svg" ?>" alt="question about zones" data-wp-bind--hidden="state.isDark" />
+
+                </div>
                 <div class="hint-holder">
                     <?php foreach($gameContext['hintArray'] as $hint) { ?>
                         <div class="hint-item"  <?php echo wp_interactivity_data_wp_context($hint) ?> data-wp-bind--hidden="callbacks.hideItemByZone">
@@ -857,8 +859,12 @@ $gameContext = array( 'shift' => $attributes['shift'], 'showClueArray' => [], 'f
 
             </div><!-- end game-container -->
             <div class="help-container" data-wp-bind--hidden="!state.helpVisible">
-                <div class='help-inner'>
-                    <div data-wp-bind--hidden="!state.zoneHelpVisible"><?php echo $attributes["zoneText"] ?></div>
+                <div class='help-inner' style="background-color:<?php echo $attributes['bgColor']?>">
+                    <div data-wp-bind--hidden="!state.zoneHelpVisible"><strong>Zones</strong><br /><?php echo $attributes["zoneText"] ?></div>
+                    <div data-wp-bind--hidden="!state.puzzleHelpVisible"><strong>Puzzles</strong><br /><?php echo $attributes["puzzleText"] ?></div>
+                    <div data-wp-bind--hidden="!state.clueHelpVisible"><strong>Clues</strong><br /><?php echo $attributes["clueText"] ?></div>
+                    <div data-wp-bind--hidden="!state.hintHelpVisible"><strong>Hints</strong><br /><?php echo $attributes["hintText"] ?></div>
+
                     <button class="button"
                             data-wp-on--click="actions.closeHelp"
                             aria-controls="<?php echo esc_attr( $unique_id ); ?>"
