@@ -26,6 +26,10 @@
     "textColor": {
       "type": "string",
       "default": "#000000"
+    },
+    "linkColor": {
+      "type": "string",
+      "default": "#0B441D"
     }
   },
   "supports": {

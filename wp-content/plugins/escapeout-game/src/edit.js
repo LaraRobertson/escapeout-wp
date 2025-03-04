@@ -243,7 +243,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<div {...blockProps}>
 			<div className="game-block-edit-block" style={{backgroundColor: attributes.bgColor}}>
-
+				<div className="like-label">Note: (on right for EO Game) Please set Level, Location (include location, city), and category (city - to match on location)</div>
 				<FlexButtons attributes={attributes} setAttributes={setAttributes}/>
 				<TextControl label="Game Name:" value={attributes.gameName} onChange={updateGameName}
 							 style={{fontSize: "20px"}}/>

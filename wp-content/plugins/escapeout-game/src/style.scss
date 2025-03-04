@@ -26,12 +26,7 @@
 	--escaepout-game-textarea-background-color: #ccc;
 	--escaepout-game-textarea-border-color: #ddd;
 }
-.small {
-	font-size:.7em;
-}
-.italics {
-	font-style: italic;
-}
+
 .leaderBoard-row {
 	text-align:left;
 }
@@ -52,12 +47,12 @@
 	margin-bottom: 35px;
 
 	&.dark-theme {
-		background: #333 !important;
+		background-color: #333 !important;
 		color: #fff;
 
 		button {
-			background: #555;
-			color: #fff;
+			background-color: #555 !important;
+			color: #fff !important;
 			/*border: 1px solid #777;*/
 		}
 
@@ -68,8 +63,8 @@
 			background: #333;
 		}
 		.modalContainer .modal{
-			background: #333;
-			color: #ddd;
+			background-color: #333 !important;
+			color: #ddd !important;
 		}
 	}
 
@@ -135,6 +130,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		gap: 10px;
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -161,9 +157,12 @@
 
 	.correct-message {
 		background-color: rgb(156, 226, 177);
+		/*background-color: #0B441D;*/
+		color:black;
 	}
 	.incorrect-message {
 		background-color: rgb(224, 176, 176);
+		color:black;
 	}
 
 	/* game styles */
@@ -171,7 +170,6 @@
 		padding:20px;
 	}
 	.show-score {
-		padding: 20px;
 		margin: 0 20px;
 	}
 	.game-score {
@@ -310,10 +308,12 @@
 		line-height: 1em;
 		box-shadow: 0 0 5px #cccccc;
 	}
+	.check-answer {
+		padding: .7em;
+	}
 	.alert-inner .button, .help-inner .button {
 		font-weight:bold;
 		padding: .3em .5em;
-		background-color: white !important;
 	}
 	.puzzle-solved {
 		text-align: center;
@@ -328,14 +328,7 @@
 		display: flex;
 		gap: 1rem;
 	}
-	.question {
-		margin-bottom:5px;
-		/*fill: rgb(0, 158, 47);
-		margin-right: 5px;
-		margin-bottom: -5px;
-		filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);*/
 
-	}
 	.text-area {
 		width: 100%;
 		box-sizing: border-box;
@@ -400,8 +393,23 @@
 	.game-header {
 		margin:0;
 	}
+	/* filter colors for icons */
+	.question {
+		margin-bottom:5px;
+		/*fill: rgb(0, 158, 47);
+		margin-right: 5px;
+		margin-bottom: -5px;
+		filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);*/
+
+	}
 	.red-alert {
 		color: var(--red-alert);
+	}
+	.icon-black {
+		filter: invert(0%) sepia(1%) saturate(7491%) hue-rotate(324deg) brightness(91%) contrast(94%);
+	}
+	.icon-white {
+		filter: invert(100%) sepia(91%) saturate(38%) hue-rotate(254deg) brightness(110%) contrast(110%);
 	}
 }
 
@@ -425,17 +433,13 @@
 }
 .waiver-top {
 	text-align: center;
-	background: white;
-	color: black;
-	padding: 20px;
-	font-size: 20px;
+	padding: 1em;
+	font-size: 1em;
 }
 .waiver-body {
 	text-align: center;
-	background: white;
-	color: black;
-	padding: 10px;
-	font-size: 15px;
+	padding: .8em;
+	font-size: .8em;
 }
 /* for edit.js */
 .buttons {
@@ -538,7 +542,7 @@
 	left: 0;
 	opacity: 0;
 	position: fixed;
-	top: 50px;
+	top: 80px;
 	transition: all .2s ease;
 	visibility: hidden;
 	width: 100%;
@@ -592,7 +596,13 @@
 		padding: 1rem 0;
 	}
 
-
+	.ratings {
+		background-color: #f6eee3;
+		padding:5px 10px;
+	}
+	.ratings-chosen {
+		background-color: rgb(98, 220, 1);
+	}
 	@media all and (max-width: 400px) {
 		.modalContainer .modal_content {
 			font-size: .9rem;
@@ -612,7 +622,7 @@
 		cursor: pointer;
 	}
 
-	modal_footer .submit {
+	.modal_footer .submit {
 		background-color: #364348;
 		color: #fff;
 		margin-right: 1rem;
@@ -779,4 +789,16 @@
 
 :where(.escaepout-game__textarea):focus {
 	opacity: 0.95;
+}
+.center {
+	text-align: center;
+}
+.small {
+	font-size:.7em;
+}
+.italics {
+	font-style: italic;
+}
+.no-margin {
+	margin:0;
 }

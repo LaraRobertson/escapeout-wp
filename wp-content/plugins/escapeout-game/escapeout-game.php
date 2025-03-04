@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       EscapeOut Game
  * Description:       Allows user to create a game
- * Version:           0.1.6
+ * Version:           0.1.7
  * Requires at least: 6.6
  * Requires PHP:      7.2
  * Author:            EscapeOut.Games
@@ -34,8 +34,10 @@ function my_enqueue_scripts(){
         'root' => esc_url_raw( rest_url() ),
         'nonce' => wp_create_nonce( 'wp_rest' )
     ) );
+
 }
 add_action( 'enqueue_block_editor_assets',  'my_enqueue_scripts' );
+
 
 
 register_activation_hook( __FILE__, 'escapeout_table' );
@@ -56,6 +58,7 @@ function escapeout_table() {
       gameRating varchar (100),
       gameCommentPrivate varchar (200),
       gameCommentPublic varchar (200),
+      gameCommentPublicApproved varchar (100),
       timeStart varchar (100),
       formattedDate varchar (100),
       timeEnd varchar (100),
@@ -64,6 +67,9 @@ function escapeout_table() {
       firstTime varchar (100),
       teamName varchar (100),
       completed varchar (100),
+      userDelete varchar (100),
+      adminDelete varchar (100),
+      testing varchar (100),
       PRIMARY KEY  (id)
     )";
 
@@ -78,6 +84,7 @@ function escapeout_table() {
 add_action( 'rest_api_init', 'escapeout_register_routes' );
 function escapeout_register_routes() {
     // Register the routes
+
 	// protect game info
 	register_rest_route(
 		'escapeout/v1',
@@ -111,14 +118,39 @@ function escapeout_register_routes() {
     );
 
     /**
-     * Put
+     * PATCH
      */
     register_rest_route(
         'escapeout/v1',
-        '/game-score/(?P<id>\d+)',
+        '/game-score-complete/(?P<id>\d+)',
         array(
-            'methods'  => 'PUT',
-            'callback' => 'escapeout_update_game_score',
+            'methods'  => 'PATCH',
+            'callback' => 'escapeout_update_game_score_complete',
+            'permission_callback' => 'logged_in_permission_callback'
+        )
+    );
+    /**
+     * PATCH
+     */
+    register_rest_route(
+        'escapeout/v1',
+        '/game-score-comment/(?P<id>\d+)',
+        array(
+            'methods'  => 'PATCH',
+            'callback' => 'escapeout_update_game_score_comment',
+            'permission_callback' => 'logged_in_permission_callback'
+        )
+    );
+
+    /**
+     * PATCH
+     */
+    register_rest_route(
+        'escapeout/v1',
+        '/game-score-comment-approve/(?P<id>\d+)',
+        array(
+            'methods'  => 'PATCH',
+            'callback' => 'escapeout_update_game_score_comment_approve',
             'permission_callback' => 'logged_in_permission_callback'
         )
     );
@@ -154,10 +186,94 @@ function escapeout_register_routes() {
 			'permission_callback' => 'nonce_permission_callback'
 		)
 	);
+
+    // send email
+    register_rest_route(
+        'escapeout/v1',
+        '/game-score-email/',
+        array(
+            'methods'  => 'POST',
+            'callback' => 'escapeout_send_email',
+            'permission_callback' => 'nonce_permission_callback'
+        )
+    );
 }
+
+//https://developer.wordpress.org/reference/functions/wp_mail/
+function escapeout_send_email( $request) {
+    $to = $request['to'];
+    $subject = $request['subject'];
+    $message = $request['message'];
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+
+    wp_mail($to, $subject, $message, $headers);
+    wp_die();
+}
+
+
+function escapeout_update_game_score_complete( $request ) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'game_score';
+
+    $rows = $wpdb->update(
+        $table_name,
+        array(
+            'timeEnd' => $request['timeEnd'],
+            'totalTime' => $request['totalTime'],
+            'hintTime' => $request['hintTime'],
+            'completed' => $request['completed'],
+        ),
+
+        array(
+            'id' => $request['id'],
+        ),
+    );
+
+    return $rows;
+}
+
+function escapeout_update_game_score_comment( $request ) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'game_score';
+
+    $rows = $wpdb->update(
+        $table_name,
+        array(
+            'gameCommentPrivate' => $request['gameCommentPrivate'],
+            'gameCommentPublic' => $request['gameCommentPublic'],
+            'gameRating' => $request['gameRating'],
+        ),
+
+        array(
+            'id' => $request['id'],
+        ),
+    );
+
+    return $rows;
+}
+
+function escapeout_update_game_score_comment_approve( $request ) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'game_score';
+
+    $rows = $wpdb->update(
+        $table_name,
+        array(
+            'gameCommentPublicApprove' => $request['gameCommentPublicApprove'],
+        ),
+
+        array(
+            'id' => $request['id'],
+        ),
+    );
+
+    return $rows;
+}
+
 function escapeout_admin_require_permissions() {
     return current_user_can( 'edit_posts' );
 }
+
 function nonce_permission_callback($request) {
 	// Check if nonce is provided and validate it
 	//$nonce = $request->get_param('_wpnonce');
@@ -209,6 +325,7 @@ function escapeout_get_game_score($request) {
 	$designerName = $request->get_param('designerName');
 	$gameCommentPublic = $request->get_param('gameCommentPublic');
 	$gameCommentPrivate = $request->get_param('gameCommentPrivate');
+    $gameCommentPublicApproved = $request->get_param('gameCommentPublicApproved');
 	$gameRating = $request->get_param('gameRating');
 	$userEmail = $request->get_param('userEmail');
     $timeStart = $request->get_param('timeStart');
@@ -251,6 +368,7 @@ function escapeout_create_game_score( $request ){
             'gameID' => $request['gameID'],
             'gameName' => $request['gameName'],
             'gameCommentPublic' => $request['gameCommentPublic'],
+            'gameCommentPublicApproved' => $request['gameCommentPublicApproved'],
             'gameCommentPrivate' => $request['gameCommentPrivate'],
             'gameRating' => $request['gameRating'],
             'userEmail' => $request['userEmail'],
@@ -263,6 +381,7 @@ function escapeout_create_game_score( $request ){
             'hintTime' => $request['hintTime'],
             'firstTime' => $request['firstTime'],
             'teamName' => $request['teamName'],
+            'testing' => $request['testing'],
             'completed' => $request['completed'],
         )
     );
@@ -288,30 +407,6 @@ function escapeout_get_eo_game_by_id( $request ) {
 	return $results[0];
 }
 
-
-function escapeout_update_game_score( $request ) {
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'game_score';
-
-    $rows = $wpdb->update(
-        $table_name,
-        array(
-            'timeEnd' => $request['timeEnd'],
-            'totalTime' => $request['totalTime'],
-            'hintTime' => $request['hintTime'],
-            'completed' => $request['completed'],
-            'gameCommentPrivate' => $request['gameCommentPrivate'],
-            'gameCommentPublic' => $request['gameCommentPublic'],
-            'gameRating' => $request['gameRating'],
-        ),
-
-        array(
-            'id' => $request['id'],
-        ),
-    );
-
-    return $rows;
-}
 function escapeout_get_eo_game_attributes($request) {
 	$id = $request['id'];
 	global $wpdb;
@@ -405,6 +500,8 @@ function cptui_register_my_cpts() {
 	];
 
 	register_post_type( "eo-game", $args );
+    register_post_meta('eo-game', '_wporg_meta_key',  array(
+        'show_in_rest' => true ));
 }
 
 add_action( 'init', 'cptui_register_my_cpts' );
@@ -585,12 +682,22 @@ function cptui_register_my_taxes_location() {
 	register_taxonomy( "location", [ "eo-game" ], $args );
 }
 add_action( 'init', 'cptui_register_my_taxes_location' );
+
+
+/* do I want to do this?? */
 function tg_include_custom_post_types_in_archive_pages( $query ) {
 	if ( $query->is_main_query() && ! is_admin() && ( is_category() || is_tag() && empty( $query->query_vars['suppress_filters'] ) ) ) {
 		$query->set( 'post_type', array( 'eo-game', 'post' ) );
 	}
 }
 add_action( 'pre_get_posts', 'tg_include_custom_post_types_in_archive_pages' );
+
+function tg_include_custom_post_types_in_archive_pages2( $query ) {
+    if ( $query->is_main_query() && ! is_admin() && ( is_category() || is_tag() && empty( $query->query_vars['suppress_filters'] ) ) ) {
+        $query->set( 'post_status', 'publish' ); // we only want published posts, no drafts or private
+    }
+}
+add_action( 'pre_get_posts', 'tg_include_custom_post_types_in_archive_pages2' );
 
 /* causes a little error in author post screen
 function tg_include_custom_post_types_in_author_pages( $query ) {
@@ -607,6 +714,19 @@ function reg_tag() {
 	register_taxonomy_for_object_type('post_tag', 'eo-game');
 }
 add_action('init', 'reg_tag');
+
+/* am hiding "status-private" so that you can see private posts in query but can access directly */
+add_action( 'init', 'add_subscriber_private_page_capability' );
+function add_subscriber_private_page_capability() {
+    $role = get_role( 'subscriber' );
+    if ( $role ) {
+        $role->add_cap( 'read_private_posts' );
+    }
+    $role2 = get_role( 'author' );
+    if ( $role2 ) {
+        $role2->add_cap( 'read_private_posts' );
+    }
+}
 
 /* added meta box so only admin can change test vs live on post by authors
  - see below for extra classes and styles to hide meta box */
@@ -644,6 +764,13 @@ function wporg_save_postdata( $post_id ) {
 }
 add_action( 'save_post', 'wporg_save_postdata' );
 /* end add meta box */
+
+function auto_select_testing_tag( $post_ID ) {
+    $testing_tag = get_term_by('slug', 'testing', 'post_tag');
+    if ( !has_term( 'testing', 'post_tag', $post_ID ) && !has_term( 'live', 'post_tag', $post_ID ) ) {
+        wp_set_post_tags( $post_ID, array( $testing_tag->term_id ), true );
+    }
+} add_action( 'save_post', 'auto_select_testing_tag' );
 
 /* added class so can hide meta box with test vs live on post by authors */
 add_filter( 'admin_body_class', 'admin_body_class' );

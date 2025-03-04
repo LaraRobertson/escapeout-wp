@@ -56,7 +56,7 @@ export default function Edit({ attributes, setAttributes } ) {
 							color={attributes.bgColor}
 							onChange={x => setAttributes({bgColor: x})}
 							enableAlpha
-							defaultValue="#000"
+							defaultValue="#EBEBEB"
 						/>
 					</PanelRow>
 				</PanelBody>
@@ -67,6 +67,16 @@ export default function Edit({ attributes, setAttributes } ) {
 							onChange={x => setAttributes({textColor: x})}
 							enableAlpha
 							defaultValue="#000"
+						/>
+					</PanelRow>
+				</PanelBody>
+				<PanelBody title="Link Color" initialOpen={true}>
+					<PanelRow>
+						<ColorPicker
+							color={attributes.linkColor}
+							onChange={x => setAttributes({linkColor: x})}
+							enableAlpha
+							defaultValue="#0B441D"
 						/>
 					</PanelRow>
 				</PanelBody>
@@ -121,19 +131,18 @@ export default function Edit({ attributes, setAttributes } ) {
 						<div className="eo-test-game-test">TESTING</div>
 						<div className="inner-game-card">
 							<div className="game-card-full">
-								<h2><a href="#">the title of game</a>
+								<h2><a style={{color: attributes.linkColor}}  href="#">the title of game</a>
 								</h2>
 							</div>
-							<div className="game-card-full small">
+							<div style={{color: attributes.textColor}} className="game-card-full small">
 								excerpt of the game
 							</div>
 						</div>
 						<div className="inner-game-card1">
-							<div style={{color: attributes.textColor}}>city: <a href="#">city link</a></div>
-							<div style={{color: attributes.textColor}}><a href="#">location link</a></div>
+							<div style={{color: attributes.textColor}}>city: <a style={{color: attributes.linkColor}} href="#">city link</a></div>
+							<div style={{color: attributes.textColor}}><a style={{color: attributes.linkColor}} href="#">location link</a></div>
 							<div style={{color: attributes.textColor}}>level:</div>
-							<small style={{color: attributes.textColor}}>published on February 17th, 2025 by <a
-								href="#">link to designer page</a> </small>
+							<small style={{color: attributes.textColor}}>published on February 17th, 2025 by <a style={{color: attributes.linkColor}} href="#">link to designer page</a> </small>
 						</div>
 					</div>
 				</div>
